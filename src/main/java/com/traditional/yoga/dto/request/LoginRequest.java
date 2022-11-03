@@ -1,6 +1,6 @@
-package com.traditional.yoga.dto;
+package com.traditional.yoga.dto.request;
 
-public class LoginDto {
+public class LoginRequest {
 
 	private String userName;
 	private String password;

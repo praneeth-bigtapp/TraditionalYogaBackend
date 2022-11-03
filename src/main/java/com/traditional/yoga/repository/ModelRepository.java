@@ -5,12 +5,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.traditional.yoga.model.RoleModel;
+import com.traditional.yoga.model.ModuleModel;
 
 @Repository
-public interface RoleRepository extends JpaRepository<RoleModel, Integer> {
+public interface ModelRepository extends JpaRepository<ModuleModel, Long> {
 
-	@Query(value = "SELECT * FROM `role` WHERE `role_Id`=:roleId", nativeQuery = true)
-	RoleModel getRoleById(@Param("roleId") int roleId);
+	@Query(value = "SELECT * FROM `module` WHERE `module_id`=:moduleId", nativeQuery = true)
+	ModuleModel getModuleById(@Param("moduleId") int moduleId);
 
 }

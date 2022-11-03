@@ -22,8 +22,8 @@ public class RoleModel {
 	@Column(name = "active")
 	private String active;
 
-	@Column(name = "delete_flag")
-	private int deleteFlag;
+//	@Column(name = "delete_flag")
+//	private int deleteFlag;
 
 	public int getId() {
 		return id;
@@ -57,12 +57,12 @@ public class RoleModel {
 		this.active = active;
 	}
 
-	public int getDeleteFlag() {
-		return deleteFlag;
-	}
-
-	public void setDeleteFlag(int deleteFlag) {
-		this.deleteFlag = deleteFlag;
-	}
+//	public int getDeleteFlag() {
+//		return deleteFlag;
+//	}
+//
+//	public void setDeleteFlag(int deleteFlag) {
+//		this.deleteFlag = deleteFlag;
+//	}
 	
 }

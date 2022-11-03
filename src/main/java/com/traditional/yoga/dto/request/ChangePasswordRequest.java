@@ -1,6 +1,6 @@
-package com.traditional.yoga.dto;
+package com.traditional.yoga.dto.request;
 
-public class ChangePasswordDto {
+public class ChangePasswordRequest {
 
 	private String oldPassword;
 	private String newPassword;
