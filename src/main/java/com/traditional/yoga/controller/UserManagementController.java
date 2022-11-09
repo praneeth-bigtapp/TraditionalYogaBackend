@@ -35,4 +35,9 @@ public class UserManagementController {
 		authenticate(token);
 		return userManagementService.getAll(operation);
 	}
+	
+	@GetMapping("/getRegRole")
+	public Object getAllDetails() {
+		return userManagementService.getAll("roles");
+	}
 }

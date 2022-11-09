@@ -42,9 +42,9 @@ public class UserManagementService {
 		try {
 			if (operationType.equals("users")) {
 				return userRepository.findAll();
-			} else if (operationType.equals("modules")) {
+			} else if (operationType.equals("menus")) {
 				return modelRepository.findAll();
-			} else if (operationType.equals("submodules")) {
+			} else if (operationType.equals("subMenus")) {
 				return subModelRepository.findAll();
 			} else if (operationType.equals("roles")) {
 				System.out.println("sads");
