@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.traditional.yoga.model.RolePermissionModel;
 
-public interface RolePermissionRepository extends JpaRepository<RolePermissionModel, Long> {
+public interface RolePermissionRepository extends JpaRepository<RolePermissionModel, Integer> {
 
 	@Query(value = "SELECT * FROM `role_permissions` WHERE `role_Id`=:roleId", nativeQuery = true)
 	List<RolePermissionModel> getPermissionByroleId(@Param("roleId") int roleId);

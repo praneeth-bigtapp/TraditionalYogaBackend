@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.traditional.yoga.model.SubModuleModel;
 
 @Repository
-public interface SubModelRepository extends JpaRepository<SubModuleModel, Long> {
+public interface SubModelRepository extends JpaRepository<SubModuleModel, Integer> {
 
 	@Query(value = "SELECT * FROM `submodule` WHERE `sub_module_id`=:subModuleId", nativeQuery = true)
 	SubModuleModel getSubModuleById(@Param("subModuleId") int subModuleId);

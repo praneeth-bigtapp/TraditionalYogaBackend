@@ -111,6 +111,7 @@ public class UserManagementService {
 	private void deleteUsers(UserRequest userDto) {
 		UserModel menuDb = userRepository.getUserById(userDto.getId());
 		if (menuDb != null) {
+			userRepository.deleteById(userDto.getId());
 			message = "User deleted sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
@@ -193,7 +194,7 @@ public class UserManagementService {
 	private void deleteRole(RoleRequest roleDto) {
 		RoleModel roleDb = roleRepository.getRoleById(roleDto.getRoleId());
 		if (roleDb != null) {
-//			roleRepository.deleteById(roleDb.getRoleId());
+			roleRepository.deleteById(roleDb.getRoleId());
 //			LOG.info(roleRepository.findMaxId());
 			message = "Role deleted sucessfully";
 			LOG.info(message);
@@ -279,6 +280,7 @@ public class UserManagementService {
 	private void deleteMenu(MenuRequest menuDto) {
 		ModuleModel menuDb = modelRepository.getModuleById(menuDto.getMenuId());
 		if (menuDb != null) {
+			modelRepository.deleteById(menuDto.getMenuId());
 			message = "Menu deleted sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
@@ -361,6 +363,7 @@ public class UserManagementService {
 	private void deleteSubMenu(SubMenuRequest subMenuDto) {
 		SubModuleModel subMenuDb = subModelRepository.getSubModuleById(subMenuDto.getSubMenuId());
 		if (subMenuDb != null) {
+			subModelRepository.deleteById(subMenuDto.getSubMenuId());
 			message = "Sub-Menu deleted sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
