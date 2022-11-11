@@ -5,13 +5,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.traditional.yoga.model.LoginUser;
+import com.traditional.yoga.model.UserModel;
 
 @Repository
-public interface LoginUserRepository extends JpaRepository<LoginUser, Integer> {
+public interface UserRepository extends JpaRepository<UserModel, Integer> {
+	
+	@Query(value="SELECT * FROM `user` WHERE `id`=:id",nativeQuery=true)
+	UserModel getUserById(@Param("id") int id);
 	
 	@Query(value="SELECT * FROM `user` WHERE `name`=:userName",nativeQuery=true)
-	LoginUser getUserById(@Param("userName") String userName);
+	UserModel getUserByName(@Param("userName") String userName);
 	
 }
 	

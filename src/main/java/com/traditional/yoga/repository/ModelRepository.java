@@ -13,4 +13,7 @@ public interface ModelRepository extends JpaRepository<ModuleModel, Long> {
 	@Query(value = "SELECT * FROM `module` WHERE `module_id`=:moduleId", nativeQuery = true)
 	ModuleModel getModuleById(@Param("moduleId") int moduleId);
 
+	@Query(value = "SELECT * FROM `module` WHERE `module_name`=:moduleName", nativeQuery = true)
+	ModuleModel getModuleByName(@Param("moduleName") String moduleName);
+
 }

@@ -12,4 +12,7 @@ public interface SubModelRepository extends JpaRepository<SubModuleModel, Long> 
 
 	@Query(value = "SELECT * FROM `submodule` WHERE `sub_module_id`=:subModuleId", nativeQuery = true)
 	SubModuleModel getSubModuleById(@Param("subModuleId") int subModuleId);
+	
+	@Query(value = "SELECT * FROM `submodule` WHERE `sub_module_name`=:subModuleName", nativeQuery = true)
+	SubModuleModel getSubModuleByName(@Param("subModuleName") String subModuleName);
 }

@@ -14,12 +14,12 @@ import com.traditional.yoga.dto.RolePermissions;
 import com.traditional.yoga.dto.SubModules;
 import com.traditional.yoga.dto.request.LoginRequest;
 import com.traditional.yoga.dto.response.LoginResponse;
-import com.traditional.yoga.model.LoginUser;
+import com.traditional.yoga.model.UserModel;
 import com.traditional.yoga.model.ModuleModel;
 import com.traditional.yoga.model.RoleModel;
 import com.traditional.yoga.model.RolePermissionModel;
 import com.traditional.yoga.model.SubModuleModel;
-import com.traditional.yoga.repository.LoginUserRepository;
+import com.traditional.yoga.repository.UserRepository;
 import com.traditional.yoga.repository.ModelRepository;
 import com.traditional.yoga.repository.RolePermissionRepository;
 import com.traditional.yoga.repository.RoleRepository;
@@ -31,7 +31,7 @@ public class LoginService {
 	private static final Logger LOG = LoggerFactory.getLogger(LoginService.class);
 
 	@Autowired
-	LoginUserRepository loginUserRepository;
+	UserRepository loginUserRepository;
 
 	@Autowired
 	RoleRepository roleRepository;
@@ -52,7 +52,7 @@ public class LoginService {
 		LOG.info("Checking for bad Request");
 		Boolean validateUser = userDetails.getUserName() == null || userDetails.getUserName().isBlank();
 		if (Boolean.FALSE.equals(validateUser)) {
-			LoginUser userData = loginUserRepository.getUserById(userDetails.getUserName());
+			UserModel userData = loginUserRepository.getUserByName(userDetails.getUserName());
 
 			LOG.info("Checking for user exsits");
 			Boolean checkingUser = userData == null || userData.getUserName().isBlank();
