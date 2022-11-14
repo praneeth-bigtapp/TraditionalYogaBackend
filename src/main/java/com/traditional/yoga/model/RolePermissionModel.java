@@ -22,6 +22,9 @@ public class RolePermissionModel {
 	@Column(name = "sub_module_id")
 	private int subModuleId;
 
+	@Column(name = "permission_id")
+	private int permissionId;
+
 	public int getRolePermissionId() {
 		return rolePermissionId;
 	}
@@ -52,6 +55,14 @@ public class RolePermissionModel {
 
 	public void setSubModuleId(int subModuleId) {
 		this.subModuleId = subModuleId;
+	}
+
+	public int getPermissionId() {
+		return permissionId;
+	}
+
+	public void setPermissionId(int permissionId) {
+		this.permissionId = permissionId;
 	}
 
 }
