@@ -20,11 +20,12 @@ import com.traditional.yoga.model.RoleModel;
 import com.traditional.yoga.model.RolePermissionModel;
 import com.traditional.yoga.model.SubModuleModel;
 import com.traditional.yoga.model.UserModel;
-import com.traditional.yoga.repository.UserRepository;
 import com.traditional.yoga.repository.ModelRepository;
+import com.traditional.yoga.repository.PermissionRepository;
 import com.traditional.yoga.repository.RolePermissionRepository;
 import com.traditional.yoga.repository.RoleRepository;
 import com.traditional.yoga.repository.SubModelRepository;
+import com.traditional.yoga.repository.UserRepository;
 
 @Service
 public class UserManagementService {
@@ -46,6 +47,9 @@ public class UserManagementService {
 	@Autowired
 	RolePermissionRepository rolePermissionRepository;
 
+	@Autowired
+	PermissionRepository permissionRepository;
+
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
 	String message;
@@ -64,6 +68,8 @@ public class UserManagementService {
 				return subModelRepository.findAll();
 			} else if (operationType.equals("roles")) {
 				return roleRepository.findAll();
+			} else if (operationType.equals("pemissions")) {
+				return permissionRepository.findAll();
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -81,26 +87,24 @@ public class UserManagementService {
 		}
 
 	}
-	
+
 //	User
 	public Object manageUsers(String operation, UserRequest userDto) {
 
 		this.httpStatus = HttpStatus.OK;
-		UserModel userReqMain = new UserModel();
 		UserModel userReq = new UserModel();
 		userReq.setUserName(userDto.getUserName());
 		userReq.setPassword(userDto.getPassword());
 		try {
-			
-			
+
 			if (operation.equals("add")) {
-				
+
 				addUsers(userDto);
 			} else if (operation.equals("save")) {
-				
+
 				updateUsers(userDto);
 			} else if (operation.equals("delete")) {
-				
+
 				deleteUsers(userDto);
 			} else {
 				message = "Operation Doesn't exist";
@@ -185,7 +189,7 @@ public class UserManagementService {
 			newUser.setAgeTo(userDto.getAgeTo());
 			newUser.setStatus(userDto.getStatus());
 			newUser.setMobile(userDto.getMobile());
-			
+
 			userRepository.save(newUser);
 			message = "User added sucessfully";
 			LOG.info(message);
@@ -283,8 +287,7 @@ public class UserManagementService {
 			response = new Response(message, httpStatus.value(), message);
 		}
 	}
-	
-	
+
 //	Menu
 	public Object manageMenu(String operation, MenuRequest menuDto) {
 
@@ -367,7 +370,7 @@ public class UserManagementService {
 			response = new Response(message, httpStatus.value(), message);
 		}
 	}
-	
+
 //	Sub Menu
 	public Object manageSubMenu(String operation, SubMenuRequest subMenuDto) {
 
@@ -450,15 +453,15 @@ public class UserManagementService {
 			response = new Response(message, httpStatus.value(), message);
 		}
 	}
-	
-	
+
 //	Role Permission
 	public Object getPermissionsByRole(int roleId) {
 		this.httpStatus = HttpStatus.OK;
 		List<RolePermissionModel> rolePermissions = new ArrayList<>();
 		try {
-			rolePermissions = rolePermissionRepository.findPermissionsByRoleId(roleId);
-			message = "";
+			rolePermissions = rolePermissionRepository.getPermissionByroleId(roleId);
+			message = "Role permission fetched sucessfully";
+			LOG.info(message);
 		} catch (Exception e) {
 			message = "";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
