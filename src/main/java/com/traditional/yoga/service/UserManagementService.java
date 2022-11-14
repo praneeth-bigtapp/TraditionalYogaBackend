@@ -85,12 +85,22 @@ public class UserManagementService {
 //	User
 	public Object manageUsers(String operation, UserRequest userDto) {
 
+		this.httpStatus = HttpStatus.OK;
+		UserModel userReqMain = new UserModel();
+		UserModel userReq = new UserModel();
+		userReq.setUserName(userDto.getUserName());
+		userReq.setPassword(userDto.getPassword());
 		try {
+			
+			
 			if (operation.equals("add")) {
+				
 				addUsers(userDto);
 			} else if (operation.equals("save")) {
+				
 				updateUsers(userDto);
 			} else if (operation.equals("delete")) {
+				
 				deleteUsers(userDto);
 			} else {
 				message = "Operation Doesn't exist";
@@ -128,7 +138,18 @@ public class UserManagementService {
 		if (userDb != null) {
 			UserModel userCheck = userRepository.getUserByName(userDto.getUserName());
 			if (userCheck == null) {
+				userDb.setId(userDto.getId());
 				userDb.setUserName(userDto.getUserName());
+				userDb.setPassword(userDto.getPassword());
+				userDb.setEmail(userDto.getEmail());
+				userDb.setRegion(userDto.getRegion());
+				userDb.setCountry(userDto.getCountry());
+				userDb.setGender(userDto.getGender());
+				userDb.setRoleId(userDto.getRoleId());
+				userDb.setAgeFrom(userDto.getAgeFrom());
+				userDb.setAgeTo(userDto.getAgeTo());
+				userDb.setStatus(userDto.getStatus());
+				userDb.setMobile(userDto.getMobile());
 				userRepository.save(userDb);
 				message = "User saved sucessfully";
 				LOG.info(message);
@@ -152,7 +173,19 @@ public class UserManagementService {
 		UserModel userNew = userRepository.getUserByName(userDto.getUserName());
 		if (userNew == null) {
 			UserModel newUser = new UserModel();
+			newUser.setId(userDto.getId());
 			newUser.setUserName(userDto.getUserName());
+			newUser.setPassword(userDto.getPassword());
+			newUser.setEmail(userDto.getEmail());
+			newUser.setRegion(userDto.getRegion());
+			newUser.setCountry(userDto.getCountry());
+			newUser.setGender(userDto.getGender());
+			newUser.setRoleId(userDto.getRoleId());
+			newUser.setAgeFrom(userDto.getAgeFrom());
+			newUser.setAgeTo(userDto.getAgeTo());
+			newUser.setStatus(userDto.getStatus());
+			newUser.setMobile(userDto.getMobile());
+			
 			userRepository.save(newUser);
 			message = "User added sucessfully";
 			LOG.info(message);
@@ -195,7 +228,6 @@ public class UserManagementService {
 		RoleModel roleDb = roleRepository.getRoleById(roleDto.getRoleId());
 		if (roleDb != null) {
 			roleRepository.deleteById(roleDb.getRoleId());
-//			LOG.info(roleRepository.findMaxId());
 			message = "Role deleted sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
@@ -213,6 +245,7 @@ public class UserManagementService {
 			RoleModel roleCheck = roleRepository.getRoleByName(roleDto.getRoleName());
 			if (roleCheck == null) {
 				roleDb.setRoleName(roleDto.getRoleName());
+				roleDb.setRoleId(roleDto.getRoleId());
 				roleRepository.save(roleDb);
 				message = "Role saved sucessfully";
 				LOG.info(message);
@@ -237,6 +270,7 @@ public class UserManagementService {
 		if (roleNew == null) {
 			RoleModel newRole = new RoleModel();
 			newRole.setRoleName(roleDto.getRoleName());
+			newRole.setRoleId(roleDto.getRoleId());
 			newRole.setActive("Y");
 			roleRepository.save(newRole);
 			message = "Role added sucessfully";
