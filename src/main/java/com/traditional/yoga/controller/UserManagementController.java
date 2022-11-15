@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.traditional.yoga.dto.request.MenuRequest;
+import com.traditional.yoga.dto.request.RolePermissionRequest;
 import com.traditional.yoga.dto.request.RoleRequest;
 import com.traditional.yoga.dto.request.SubMenuRequest;
 import com.traditional.yoga.dto.request.UserRequest;
@@ -125,7 +126,7 @@ public class UserManagementController {
 	}
 
 	/**
-	 * For getting RolePermissions
+	 * For getting Role Permissions
 	 * 
 	 * @param token
 	 * @param roleId
@@ -135,5 +136,32 @@ public class UserManagementController {
 	public Object getPermissionsByRoleId(@RequestHeader("token") String token, @RequestParam("roleId") int roleId) {
 		return userManagementService.getPermissionsByRole(roleId);
 	}
+	
+	/**
+	 * Update Role Permissions
+	 * 
+	 * @param token
+	 * @param rolePermissions
+	 * @return
+	 */
+	@PostMapping("/saveRolePermission")
+	public Object updateRolePermission(@RequestHeader("token") String token,
+			@RequestBody RolePermissionRequest rolePermissions) {
+		authenticate(token);
+		return userManagementService.saveRolePermission(rolePermissions);
+	}
 
+	/**
+	 * Adding Default Role Permissions
+	 * 
+	 * @param token
+	 * @param rolePermissions
+	 * @return
+	 */
+	@PostMapping("/saveDefaultRolePermission")
+	public Object defaultRolePermission(@RequestHeader("token") String token,
+			@RequestBody RolePermissionRequest rolePermissions) {
+		authenticate(token);
+		return userManagementService.addDefaultPermissions(rolePermissions.getRoleId());
+	}
 }

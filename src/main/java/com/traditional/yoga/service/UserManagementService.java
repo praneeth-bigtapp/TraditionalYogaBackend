@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.MenuRequest;
+import com.traditional.yoga.dto.request.RolePermissionRequest;
 import com.traditional.yoga.dto.request.RoleRequest;
 import com.traditional.yoga.dto.request.SubMenuRequest;
 import com.traditional.yoga.dto.request.UserRequest;
@@ -26,6 +27,7 @@ import com.traditional.yoga.repository.RolePermissionRepository;
 import com.traditional.yoga.repository.RoleRepository;
 import com.traditional.yoga.repository.SubModelRepository;
 import com.traditional.yoga.repository.UserRepository;
+import com.traditional.yoga.utils.UserManagementUtil;
 
 @Service
 public class UserManagementService {
@@ -49,6 +51,9 @@ public class UserManagementService {
 
 	@Autowired
 	PermissionRepository permissionRepository;
+
+	@Autowired
+	UserManagementUtil userManagementUtil;
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -454,7 +459,12 @@ public class UserManagementService {
 		}
 	}
 
-//	Role Permission
+	/**
+	 * Get Role Permission By ID
+	 * 
+	 * @param roleId
+	 * @return
+	 */
 	public Object getPermissionsByRole(int roleId) {
 		this.httpStatus = HttpStatus.OK;
 		List<RolePermissionModel> rolePermissions = new ArrayList<>();
@@ -467,5 +477,87 @@ public class UserManagementService {
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 		}
 		return new ResponseEntity<>(rolePermissions, httpStatus);
+	}
+
+	/**
+	 * Update permission in Role Permission
+	 * 
+	 * @param rolePermissions
+	 * @return
+	 */
+	public Object saveRolePermission(RolePermissionRequest rolePermissions) {
+		RolePermissionModel updateRolePermission = new RolePermissionModel();
+		updateRolePermission = userManagementUtil.rolePermissionsDtoToEntity(rolePermissions, updateRolePermission);
+		try {
+			rolePermissionRepository.save(updateRolePermission);
+			message = "Permissions set sucessfully";
+			LOG.info(message);
+			httpStatus = HttpStatus.OK;
+			response = new Response(message, httpStatus.value(), null);
+		} catch (Exception e) {
+			message = "Exception while saving permission to role permission";
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
+//	public boolean addDefaultPermissions(int roleId, int maxRpId) {
+//		boolean idDefautltPermissionsSaved = false;
+//		List<RolePermissionModel> roleDefatultRolePermissions = constructDefaultpermissios(roleId);
+////		int counter = maxRpId + 1;
+//		for (RolePermissionModel eachRolePermissions : roleDefatultRolePermissions) {
+////			eachRolePermissions.setId(counter);
+//			rolePermissionRepository.save(eachRolePermissions);
+////			counter++;
+//		}
+//		idDefautltPermissionsSaved = true;
+//		return idDefautltPermissionsSaved;
+//	}
+
+	public Object addDefaultPermissions(int roleId) {
+		List<RolePermissionModel> roleDefatultRolePermissions = constructDefaultpermissios(roleId);
+		try {
+			for (RolePermissionModel eachRolePermissions : roleDefatultRolePermissions) {
+				rolePermissionRepository.save(eachRolePermissions);
+			}
+			message = "Default Permissions set sucessfully";
+			LOG.info(message);
+			httpStatus = HttpStatus.OK;
+			response = new Response(message, httpStatus.value(), null);
+		} catch (Exception e) {
+			message = "Exception while saving default permission to role permission";
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	public List<RolePermissionModel> constructDefaultpermissios(int roleId) {
+		List<RolePermissionModel> rolePermissionsList = new ArrayList<>();
+		List<ModuleModel> moduleList = modelRepository.findAll();
+		List<SubModuleModel> moduleSubModuleList;
+		RolePermissionModel rolePermissions;
+
+		int moduleId = 0;
+		int subModuleId = 0;
+		for (ModuleModel eachModule : moduleList) {
+			moduleId = eachModule.getModuleId();
+			moduleSubModuleList = subModelRepository.getSubModuleByModuleId(moduleId);
+			for (SubModuleModel eachSubModule : moduleSubModuleList) {
+				subModuleId = eachSubModule.getSubModuleId();
+				rolePermissions = new RolePermissionModel();
+				rolePermissions.setPermissionId(6);
+				rolePermissions.setModuleId(moduleId);
+				rolePermissions.setRoleId(roleId);
+				rolePermissions.setSubModuleId(subModuleId);
+				rolePermissionsList.add(rolePermissions);
+			}
+		}
+		return rolePermissionsList;
 	}
 }

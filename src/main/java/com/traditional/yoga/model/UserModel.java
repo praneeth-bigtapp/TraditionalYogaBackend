@@ -2,35 +2,50 @@ package com.traditional.yoga.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "user")
 public class UserModel {
+	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
 	private int id;
+	
 	@Column(name = "name")
 	private String userName;
+	
 	@Column(name = "password")
 	private String password;
+	
 	@Column(name = "email_address")
 	private String email;
+	
 	@Column(name = "mobile")
 	private Integer mobile;
+	
 	@Column(name = "role_id")
 	private Integer roleId;
+	
 	@Column(name = "age_from")
 	private Integer ageFrom;
+	
 	@Column(name = "age_to")
 	private Integer ageTo;
+	
 	@Column(name = "region")
 	private String region;
+	
 	@Column(name = "gender")
 	private String gender;
+	
 	@Column(name = "country")
 	private String country;
+	
 	@Column(name = "status")
 	private String status;
 
