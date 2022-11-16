@@ -2,6 +2,8 @@ package com.traditional.yoga.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -10,37 +12,38 @@ import javax.persistence.Table;
 public class DonationModel {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "donation_id")
-	private String donationId;
+	private int donationId;
 
 	@Column(name = "student_id")
-	private String studentId;
+	private int studentId;
 
 	@Column(name = "date")
 	private String date;
 
-	@Column(name = "amount_donation")
-	private String amountDonation;
+	@Column(name = "amount_donated")
+	private String amountDonated;
 
 	@Column(name = "description")
 	private String description;
 
-	@Column(name = "mode_of_payment")
+	@Column(name = "mode_of_payement")
 	private String modeOfPayment;
 
-	public String getDonationId() {
+	public int getDonationId() {
 		return donationId;
 	}
 
-	public void setDonationId(String donationId) {
+	public void setDonationId(int donationId) {
 		this.donationId = donationId;
 	}
 
-	public String getStudentId() {
+	public int getStudentId() {
 		return studentId;
 	}
 
-	public void setStudentId(String studentId) {
+	public void setStudentId(int studentId) {
 		this.studentId = studentId;
 	}
 
@@ -52,12 +55,12 @@ public class DonationModel {
 		this.date = date;
 	}
 
-	public String getAmountDonation() {
-		return amountDonation;
+	public String getAmountDonated() {
+		return amountDonated;
 	}
 
-	public void setAmountDonation(String amountDonation) {
-		this.amountDonation = amountDonation;
+	public void setAmountDonated(String amountDonated) {
+		this.amountDonated = amountDonated;
 	}
 
 	public String getDescription() {
