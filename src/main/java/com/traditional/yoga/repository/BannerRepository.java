@@ -10,6 +10,6 @@ import com.traditional.yoga.model.BannerModel;
 public interface BannerRepository extends JpaRepository<BannerModel, Integer> {
 	
 	@Query(value = "SELECT * FROM `banner` WHERE `banner_id`=:bannerId;",nativeQuery = true)
-	BannerModel getDonationById(@Param("bannerId") int bannerId);
+	BannerModel getbannerById(@Param("bannerId") int bannerId);
 
 }
