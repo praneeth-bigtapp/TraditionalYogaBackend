@@ -4,6 +4,7 @@ public class RoleRequest {
 
 	private int roleId;
 	private String roleName;
+	private String active;
 
 	public int getRoleId() {
 		return roleId;
@@ -19,6 +20,14 @@ public class RoleRequest {
 
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
+	}
+
+	public String getActive() {
+		return active;
+	}
+
+	public void setActive(String active) {
+		this.active = active;
 	}
 
 }

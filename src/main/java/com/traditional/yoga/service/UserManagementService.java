@@ -103,13 +103,12 @@ public class UserManagementService {
 		try {
 
 			if (operation.equals("add")) {
-
 				addUsers(userDto);
 			} else if (operation.equals("save")) {
-
 				updateUsers(userDto);
+			} else if (operation.equals("active")) {
+				activeUsers(userDto);
 			} else if (operation.equals("delete")) {
-
 				deleteUsers(userDto);
 			} else {
 				message = "Operation Doesn't exist";
@@ -178,6 +177,34 @@ public class UserManagementService {
 		}
 	}
 
+	private void activeUsers(UserRequest userDto) {
+		UserModel userDb = userRepository.getUserById(userDto.getId());
+		if (userDb != null) {
+			userDb.setId(userDto.getId());
+			userDb.setUserName(userDto.getUserName());
+			userDb.setPassword(userDto.getPassword());
+			userDb.setEmail(userDto.getEmail());
+			userDb.setRegion(userDto.getRegion());
+			userDb.setCountry(userDto.getCountry());
+			userDb.setGender(userDto.getGender());
+			userDb.setRoleId(userDto.getRoleId());
+			userDb.setAgeFrom(userDto.getAgeFrom());
+			userDb.setAgeTo(userDto.getAgeTo());
+			userDb.setStatus(userDto.getStatus());
+			userDb.setMobile(userDto.getMobile());
+			userRepository.save(userDb);
+			message = "User saved sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+
+		} else {
+			message = "User Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
 	private void addUsers(UserRequest userDto) {
 		UserModel userNew = userRepository.getUserByName(userDto.getUserName());
 		if (userNew == null) {
@@ -194,7 +221,6 @@ public class UserManagementService {
 			newUser.setAgeTo(userDto.getAgeTo());
 			newUser.setStatus(userDto.getStatus());
 			newUser.setMobile(userDto.getMobile());
-
 			userRepository.save(newUser);
 			message = "User added sucessfully";
 			LOG.info(message);
@@ -215,6 +241,8 @@ public class UserManagementService {
 				addRole(roleDto);
 			} else if (operation.equals("save")) {
 				updateRole(roleDto);
+			} else if (operation.equals("active")) {
+				activeRole(roleDto);
 			} else if (operation.equals("delete")) {
 				deleteRole(roleDto);
 			} else {
@@ -255,6 +283,7 @@ public class UserManagementService {
 			if (roleCheck == null) {
 				roleDb.setRoleName(roleDto.getRoleName());
 				roleDb.setRoleId(roleDto.getRoleId());
+				roleDb.setActive(roleDto.getActive());
 				roleRepository.save(roleDb);
 				message = "Role saved sucessfully";
 				LOG.info(message);
@@ -266,6 +295,24 @@ public class UserManagementService {
 				response = new Response(message, httpStatus.value(), message);
 			}
 
+		} else {
+			message = "Role Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void activeRole(RoleRequest roleDto) {
+		RoleModel roleDb = roleRepository.getRoleById(roleDto.getRoleId());
+		if (roleDb != null) {
+			roleDb.setRoleName(roleDto.getRoleName());
+			roleDb.setRoleId(roleDto.getRoleId());
+			roleDb.setActive(roleDto.getActive());
+			roleRepository.save(roleDb);
+			message = "Role saved sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
 		} else {
 			message = "Role Doesn't exist";
 			httpStatus = HttpStatus.CONFLICT;
@@ -301,6 +348,8 @@ public class UserManagementService {
 				addMenu(menuDto);
 			} else if (operation.equals("save")) {
 				updateMenu(menuDto);
+			} else if (operation.equals("active")) {
+				activeMenu(menuDto);
 			} else if (operation.equals("delete")) {
 				deleteMenu(menuDto);
 			} else {
@@ -320,9 +369,9 @@ public class UserManagementService {
 	}
 
 	private void deleteMenu(MenuRequest menuDto) {
-		ModuleModel menuDb = modelRepository.getModuleById(menuDto.getMenuId());
+		ModuleModel menuDb = modelRepository.getModuleById(menuDto.getModuleId());
 		if (menuDb != null) {
-			modelRepository.deleteById(menuDto.getMenuId());
+			modelRepository.deleteById(menuDto.getModuleId());
 			message = "Menu deleted sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
@@ -335,13 +384,16 @@ public class UserManagementService {
 	}
 
 	private void updateMenu(MenuRequest menuDto) {
-		ModuleModel menuDb = modelRepository.getModuleById(menuDto.getMenuId());
+		ModuleModel menuDb = modelRepository.getModuleById(menuDto.getModuleId());
 		if (menuDb != null) {
-			ModuleModel menuCheck = modelRepository.getModuleByName(menuDto.getMenuName());
+			ModuleModel menuCheck = modelRepository.getModuleByName(menuDto.getModuleName());
 			if (menuCheck == null) {
-				menuDb.setModuleName(menuDto.getMenuName());
+				menuDb.setModuleId(menuDto.getModuleId());
+				menuDb.setModuleName(menuDto.getModuleName());
+				menuDb.setStatus(menuDto.getStatus());
 				modelRepository.save(menuDb);
 				message = "Menu saved sucessfully";
+				httpStatus = HttpStatus.OK;
 				LOG.info(message);
 				response = new Response(message, httpStatus.value(), null);
 			} else {
@@ -359,11 +411,29 @@ public class UserManagementService {
 		}
 	}
 
+	private void activeMenu(MenuRequest menuDto) {
+		ModuleModel menuDb = modelRepository.getModuleById(menuDto.getModuleId());
+		if (menuDb != null) {
+			menuDb.setModuleId(menuDto.getModuleId());
+			menuDb.setModuleName(menuDto.getModuleName());
+			menuDb.setStatus(menuDto.getStatus());
+			modelRepository.save(menuDb);
+			message = "Menu saved sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "Menu Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
 	private void addMenu(MenuRequest menuDto) {
-		ModuleModel menuNew = modelRepository.getModuleByName(menuDto.getMenuName());
+		ModuleModel menuNew = modelRepository.getModuleByName(menuDto.getModuleName());
 		if (menuNew == null) {
 			ModuleModel newMenu = new ModuleModel();
-			newMenu.setModuleName(menuDto.getMenuName());
+			newMenu.setModuleName(menuDto.getModuleName());
 			modelRepository.save(newMenu);
 			message = "Menu added sucessfully";
 			LOG.info(message);
@@ -384,6 +454,8 @@ public class UserManagementService {
 				addSubMenu(subMenuDto);
 			} else if (operation.equals("save")) {
 				updateSubMenu(subMenuDto);
+			} else if (operation.equals("active")) {
+				activeSubMenu(subMenuDto);
 			} else if (operation.equals("delete")) {
 				deleteSubMenu(subMenuDto);
 			} else {
@@ -422,7 +494,10 @@ public class UserManagementService {
 		if (subMenuDb != null) {
 			SubModuleModel menuCheck = subModelRepository.getSubModuleByName(subMenuDto.getSubMenuName());
 			if (menuCheck == null) {
+				subMenuDb.setSubModuleId(subMenuDto.getSubMenuId());
+				subMenuDb.setModuleId(subMenuDto.getMenuId());
 				subMenuDb.setSubModuleName(subMenuDto.getSubMenuName());
+				subMenuDb.setStatus(subMenuDto.getStatus());
 				subModelRepository.save(subMenuDb);
 				message = "Sub-Menu saved sucessfully";
 				LOG.info(message);
@@ -442,20 +517,57 @@ public class UserManagementService {
 		}
 	}
 
+	private void activeSubMenu(SubMenuRequest subMenuDto) {
+		SubModuleModel subMenuDb = subModelRepository.getSubModuleById(subMenuDto.getSubMenuId());
+		if (subMenuDb != null) {
+			subMenuDb.setSubModuleId(subMenuDto.getSubMenuId());
+			subMenuDb.setModuleId(subMenuDto.getMenuId());
+			subMenuDb.setSubModuleName(subMenuDto.getSubMenuName());
+			subMenuDb.setStatus(subMenuDto.getStatus());
+			subModelRepository.save(subMenuDb);
+			message = "Sub-Menu saved sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "Updated Sub-Menu is already exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
 	private void addSubMenu(SubMenuRequest subMenuDto) {
 		SubModuleModel subMenuNew = subModelRepository.getSubModuleByName(subMenuDto.getSubMenuName());
 		if (subMenuNew == null) {
 			SubModuleModel newMenu = new SubModuleModel();
+			newMenu.setModuleId(subMenuDto.getMenuId());
 			newMenu.setSubModuleName(subMenuDto.getSubMenuName());
+			newMenu.setStatus("Y");
 			subModelRepository.save(newMenu);
 			message = "Sub-Menu added sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
+			setRolePermission(subMenuDto.getSubMenuName());
 		} else {
 			message = "Sub-Menu is already exist";
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	public void setRolePermission(String subMenuName) {
+		SubModuleModel subMenu = subModelRepository.getSubModuleByName(subMenuName);
+		if (subMenu != null) {
+			List<RoleModel> role = roleRepository.findAll();
+			for (RoleModel eachRole : role) {
+				RolePermissionModel updateRolePermission = new RolePermissionModel();
+				updateRolePermission.setRoleId(eachRole.getRoleId());
+				updateRolePermission.setModuleId(subMenu.getModuleId());
+				updateRolePermission.setSubModuleId(subMenu.getSubModuleId());
+				updateRolePermission.setPermissionId(6);
+				rolePermissionRepository.save(updateRolePermission);
+			}
 		}
 	}
 

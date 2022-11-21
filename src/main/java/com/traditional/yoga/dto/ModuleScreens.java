@@ -1,11 +1,20 @@
 package com.traditional.yoga.dto;
 
-public class SubModules {
-
+public class ModuleScreens {
+	
+	private String moduleName;
 	private int subModuleId;
 	private String subModuleName;
 	private int permissionId;
 	private String permissionName;
+
+	public String getModuleName() {
+		return moduleName;
+	}
+
+	public void setModuleName(String moduleName) {
+		this.moduleName = moduleName;
+	}
 
 	public int getSubModuleId() {
 		return subModuleId;

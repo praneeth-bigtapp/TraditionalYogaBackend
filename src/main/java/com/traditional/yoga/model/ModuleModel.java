@@ -19,6 +19,9 @@ public class ModuleModel {
 	@Column(name = "module_name")
 	private String moduleName;
 
+	@Column(name = "is_active")
+	private String status;
+
 	public int getModuleId() {
 		return moduleId;
 	}
@@ -33,6 +36,14 @@ public class ModuleModel {
 
 	public void setModuleName(String moduleName) {
 		this.moduleName = moduleName;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

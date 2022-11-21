@@ -22,6 +22,9 @@ public class SubModuleModel {
 	@Column(name = "sub_module_name")
 	private String subModuleName;
 
+	@Column(name = "status")
+	private String status;
+
 	public int getSubModuleId() {
 		return subModuleId;
 	}
@@ -44,6 +47,14 @@ public class SubModuleModel {
 
 	public void setSubModuleName(String subModuleName) {
 		this.subModuleName = subModuleName;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

@@ -5,7 +5,7 @@ import java.util.List;
 public class RolePermissions {
 
 	private String moduleName;
-	private List<SubModules> subModules;
+	private List<SubModulesScreen> subModules;
 
 	public String getModuleName() {
 		return moduleName;
@@ -15,11 +15,11 @@ public class RolePermissions {
 		this.moduleName = moduleName;
 	}
 
-	public List<SubModules> getSubModules() {
+	public List<SubModulesScreen> getSubModules() {
 		return subModules;
 	}
 
-	public void setSubModules(List<SubModules> subModules) {
+	public void setSubModules(List<SubModulesScreen> subModules) {
 		this.subModules = subModules;
 	}
 
