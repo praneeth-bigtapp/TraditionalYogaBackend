@@ -6,10 +6,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.traditional.yoga.model.BannerModel;
-@Repository
-public interface BannerRepository extends JpaRepository<BannerModel, Integer> {
-	
-	@Query(value = "SELECT * FROM `banner` WHERE `banner_id`=:bannerId;",nativeQuery = true)
-	BannerModel getbannerById(@Param("bannerId") int bannerId);
+import com.traditional.yoga.model.BannerViewModel;
 
+@Repository
+public interface BannerViewRepository extends JpaRepository<BannerViewModel, Integer> {
+
+	@Query(value = "SELECT * FROM `banner_view` WHERE `banner_id`= :bannerId",nativeQuery = true)
+	BannerViewModel getbannerbyId(@Param("bannerId") int bannerId);
 }
