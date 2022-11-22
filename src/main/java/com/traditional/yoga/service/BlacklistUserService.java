@@ -8,6 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.traditional.yoga.dto.Response;
+import com.traditional.yoga.dto.request.AlertRequest;
+import com.traditional.yoga.dto.request.BlackListRequest;
+import com.traditional.yoga.model.AlertModel;
+import com.traditional.yoga.model.BlackListModel;
 import com.traditional.yoga.repository.BlackListUserRepository;
 @Service
 public class BlacklistUserService {
@@ -39,5 +43,52 @@ public class BlacklistUserService {
 			response = new Response(message, httpStatus.value(), httpStatus.getReasonPhrase());
 			return new ResponseEntity<>(response, httpStatus);
 		}
+	}
+	
+	
+	public Object blacklistmanage(String operation, BlackListRequest blacklistdto) {
+
+		this.httpStatus = HttpStatus.OK;
+		BlackListModel blackListReq = new BlackListModel();
+		blackListReq.setBlacklistuserId(blacklistdto.getBlacklistuserId());
+		blackListReq.setBlacklistUserEmail(blacklistdto.getBlacklistUserEmail());
+		blackListReq.setDate(blacklistdto.getDate());
+		blackListReq.setComments(blacklistdto.getComments());
+		
+
+		try {
+
+			if (operation.equals("add")) {
+				addBlackListUser(blacklistdto);
+			}else {
+				message = "Operation Doesn't exist";
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Exception in blacklistuser";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+	
+	
+	private void addBlackListUser(BlackListRequest blacklistdto) {
+		BlackListModel blacklistnew = blackListUserRepository.getblacklistuserById(blacklistdto.getBlacklistuserId());
+		if (blacklistnew == null) {
+			BlackListModel newList =new BlackListModel();
+			newList.setBlacklistuserId(blacklistdto.getBlacklistuserId());
+			newList.setBlacklistUserEmail(blacklistdto.getBlacklistUserEmail());
+			newList.setDate(blacklistdto.getDate());
+			newList.setComments(blacklistdto.getComments());
+			blackListUserRepository.save(newList);
+			message = "new blacklist user is  added sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} 
 	}
 }

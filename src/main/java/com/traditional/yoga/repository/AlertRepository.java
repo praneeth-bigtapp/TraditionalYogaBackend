@@ -10,7 +10,7 @@ import com.traditional.yoga.model.AlertModel;
 @Repository
 public interface AlertRepository  extends JpaRepository<AlertModel, Integer> {
 
-	@Query(value = "SELECT * FROM `alert` WHERE `alert_id``=:alertId;",nativeQuery = true)
+	@Query(value = "SELECT * FROM `alert` WHERE `alert_id`= :alertId",nativeQuery = true)
 	AlertModel getalertById(@Param("alertId") int alertId);
 }
 

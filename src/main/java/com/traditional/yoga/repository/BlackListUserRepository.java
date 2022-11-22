@@ -10,6 +10,6 @@ import com.traditional.yoga.model.BlackListModel;
 @Repository
 public interface BlackListUserRepository extends JpaRepository<BlackListModel, Integer> {
 
-	@Query(value = "SELECT * FROM `blacklist_users` WHERE `backlistuser_id`=:blacklistuserId;",nativeQuery = true)
-	BannerModel getblacklistuserById(@Param("blacklistuserId") int blacklistuserId);
+	@Query(value = "SELECT * FROM `blacklist_users` WHERE `backlistuser_id`= :blacklistuserId",nativeQuery = true)
+	BlackListModel getblacklistuserById(@Param("blacklistuserId") int blacklistuserId);
 }
