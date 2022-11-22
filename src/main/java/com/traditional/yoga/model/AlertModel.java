@@ -16,7 +16,7 @@ public class AlertModel {
 	@Column(name = "alert_id")
 	private int alertId;
 	@Column(name = "category_id")
-	private String CategoryId;
+	private String categoryId;
 	@Column(name = "alert_description")
 	private String alertDescription;
 	@Column(name = "start_date")
@@ -33,11 +33,11 @@ public class AlertModel {
 	}
 
 	public String getCategoryId() {
-		return CategoryId;
+		return categoryId;
 	}
 
 	public void setCategoryId(String categoryId) {
-		CategoryId = categoryId;
+		this.categoryId = categoryId;
 	}
 
 	public String getAlertDescription() {
