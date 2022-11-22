@@ -10,9 +10,12 @@ import org.springframework.stereotype.Service;
 import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.AlertRequest;
 import com.traditional.yoga.dto.request.BlackListRequest;
+import com.traditional.yoga.dto.request.UserRequest;
 import com.traditional.yoga.model.AlertModel;
 import com.traditional.yoga.model.BlackListModel;
+import com.traditional.yoga.model.UserModel;
 import com.traditional.yoga.repository.BlackListUserRepository;
+
 @Service
 public class BlacklistUserService {
 	private static final Logger LOG = LoggerFactory.getLogger(BlacklistUserService.class);
@@ -44,8 +47,7 @@ public class BlacklistUserService {
 			return new ResponseEntity<>(response, httpStatus);
 		}
 	}
-	
-	
+
 	public Object blacklistmanage(String operation, BlackListRequest blacklistdto) {
 
 		this.httpStatus = HttpStatus.OK;
@@ -54,12 +56,13 @@ public class BlacklistUserService {
 		blackListReq.setBlacklistUserEmail(blacklistdto.getBlacklistUserEmail());
 		blackListReq.setDate(blacklistdto.getDate());
 		blackListReq.setComments(blacklistdto.getComments());
-		
 
 		try {
 
 			if (operation.equals("add")) {
 				addBlackListUser(blacklistdto);
+			} else if (operation.equals("delete")) {
+				deleteUsers(blacklistdto);
 			}else {
 				message = "Operation Doesn't exist";
 				httpStatus = HttpStatus.CONFLICT;
@@ -75,12 +78,11 @@ public class BlacklistUserService {
 		}
 		return new ResponseEntity<>(response, httpStatus);
 	}
-	
-	
+
 	private void addBlackListUser(BlackListRequest blacklistdto) {
 		BlackListModel blacklistnew = blackListUserRepository.getblacklistuserById(blacklistdto.getBlacklistuserId());
 		if (blacklistnew == null) {
-			BlackListModel newList =new BlackListModel();
+			BlackListModel newList = new BlackListModel();
 			newList.setBlacklistuserId(blacklistdto.getBlacklistuserId());
 			newList.setBlacklistUserEmail(blacklistdto.getBlacklistUserEmail());
 			newList.setDate(blacklistdto.getDate());
@@ -89,6 +91,22 @@ public class BlacklistUserService {
 			message = "new blacklist user is  added sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
-		} 
+		}
 	}
+
+	private void deleteUsers(BlackListRequest blacklistdto) {
+		BlackListModel blacklistDb = blackListUserRepository.getblacklistuserById(blacklistdto.getBlacklistuserId());
+		if (blacklistDb != null) {
+			blackListUserRepository.deleteById(blacklistdto.getBlacklistuserId());
+			message = "BlackListUser deleted sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "backlistuser Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
 }
