@@ -1,5 +1,7 @@
 package com.traditional.yoga.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,5 +14,8 @@ public interface EpurchaseInformation extends JpaRepository<EPurchaseInformation
 
 	@Query(value = "SELECT * FROM `epurchaseinformation` WHERE `epurchase_id`=:epurchaseId;", nativeQuery = true)
 	EPurchaseInformation getepurchaseInformationById(@Param("epurchaseId") int epurchaseId);
+	
+	@Query(value = "SELECT * FROM `epurchaseinformation` WHERE `student_id`= :studentId", nativeQuery = true)
+	List<EPurchaseInformation> getPurchaseByStudentId(@Param("studentId") int studentId);
 
 }
