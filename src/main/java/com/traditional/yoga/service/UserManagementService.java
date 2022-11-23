@@ -493,15 +493,29 @@ public class UserManagementService {
 		SubModuleModel subMenuDb = subModelRepository.getSubModuleById(subMenuDto.getSubMenuId());
 		if (subMenuDb != null) {
 			SubModuleModel menuCheck = subModelRepository.getSubModuleByName(subMenuDto.getSubMenuName());
+			Boolean menuStatus = (subMenuDto.getMenuId() == subMenuDb.getModuleId());
 			if (menuCheck == null) {
 				subMenuDb.setSubModuleId(subMenuDto.getSubMenuId());
 				subMenuDb.setModuleId(subMenuDto.getMenuId());
 				subMenuDb.setSubModuleName(subMenuDto.getSubMenuName());
 				subMenuDb.setStatus(subMenuDto.getStatus());
 				subModelRepository.save(subMenuDb);
+				httpStatus = HttpStatus.OK;
 				message = "Sub-Menu saved sucessfully";
 				LOG.info(message);
 				response = new Response(message, httpStatus.value(), null);
+			} else if (Boolean.FALSE.equals(menuStatus)) {
+				LOG.info("Updating Menu change");
+				subMenuDb.setSubModuleId(subMenuDto.getSubMenuId());
+				subMenuDb.setModuleId(subMenuDto.getMenuId());
+				subMenuDb.setSubModuleName(subMenuDto.getSubMenuName());
+				subMenuDb.setStatus(subMenuDto.getStatus());
+				subModelRepository.save(subMenuDb);
+				httpStatus = HttpStatus.OK;
+				message = "Menu change Sub-Menu saved sucessfully";
+				LOG.info(message);
+				response = new Response(message, httpStatus.value(), null);
+//				updateRolePermission(subMenuDb);
 			} else {
 				message = "Updated Sub-Menu is already exist";
 				httpStatus = HttpStatus.CONFLICT;
@@ -569,6 +583,19 @@ public class UserManagementService {
 				rolePermissionRepository.save(updateRolePermission);
 			}
 		}
+	}
+
+	public void updateRolePermission(SubModuleModel subMenuDb) {
+		List<RoleModel> role = roleRepository.findAll();
+		for (RoleModel eachRole : role) {
+			RolePermissionModel updateRolePermission = new RolePermissionModel();
+			updateRolePermission.setRoleId(eachRole.getRoleId());
+//			updateRolePermission.setModuleId(subMenu.getModuleId());
+//			updateRolePermission.setSubModuleId(subMenu.getSubModuleId());
+			updateRolePermission.setPermissionId(6);
+			rolePermissionRepository.save(updateRolePermission);
+		}
+
 	}
 
 	/**
