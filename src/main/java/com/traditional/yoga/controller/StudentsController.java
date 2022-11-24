@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.traditional.yoga.dto.request.BlackListRequest;
+import com.traditional.yoga.dto.request.EPurchaseRequest;
 import com.traditional.yoga.dto.request.StudentRequest;
+import com.traditional.yoga.dto.request.VolunteerRequest;
 import com.traditional.yoga.service.StudentService;
 
 @CrossOrigin("*")
@@ -44,17 +47,36 @@ public class StudentsController {
 		LOG.info("Entering into get donation Method");
 		return studentService.studentDonation(studentDto);
 	}
-	
+
 	@PostMapping("/purchase")
 	public Object getStudentPurchase(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto) {
 		LOG.info("Entering into get purchase Method");
 		return studentService.studentPurchase(studentDto);
 	}
 	
+	@PostMapping("/purchase/add")
+	public Object addStudentPurchase(@RequestHeader("token") String token, @RequestBody EPurchaseRequest purchaseDto) {
+		LOG.info("Entering into get purchase Method");
+		return studentService.addStudentPurchase(purchaseDto);
+	}
+
 	@PostMapping("/volunteer")
 	public Object getStudentVolunter(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto) {
 		LOG.info("Entering into get volunter Method");
 		return studentService.studentVolunter(studentDto);
+	}
+	
+	@PostMapping("/volunteer/add")
+	public Object addStudentVolunter(@RequestHeader("token") String token, @RequestBody VolunteerRequest volunteerDto) {
+		LOG.info("Entering into get volunter Method");
+		return studentService.addStudentVolunter(volunteerDto);
+	}
+
+	@PostMapping("/blockListUsers")
+	public Object manageBlockListUsers(@RequestHeader("token") String token, @RequestBody BlackListRequest blockListDto,
+			@RequestParam("operation") String operation) {
+//		authenticate(token);
+		return studentService.blockListUsersManage(operation, blockListDto);
 	}
 
 }

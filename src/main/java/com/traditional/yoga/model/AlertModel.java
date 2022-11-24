@@ -15,12 +15,16 @@ public class AlertModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "alert_id")
 	private int alertId;
+	
 	@Column(name = "category_id")
 	private String categoryId;
+	
 	@Column(name = "alert_description")
 	private String alertDescription;
+	
 	@Column(name = "start_date")
 	private String startDate;
+	
 	@Column(name = "end_date")
 	private String endDate;
 

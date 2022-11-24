@@ -5,11 +5,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.traditional.yoga.model.BannerModel;
 import com.traditional.yoga.model.BlackListModel;
 @Repository
 public interface BlackListUserRepository extends JpaRepository<BlackListModel, Integer> {
 
 	@Query(value = "SELECT * FROM `blacklist_users` WHERE `backlistuser_id`= :blacklistuserId",nativeQuery = true)
-	BlackListModel getblacklistuserById(@Param("blacklistuserId") int blacklistuserId);
+	BlackListModel getBlackListById(@Param("blacklistuserId") int blacklistuserId);
+	
+	@Query(value = "SELECT * FROM `blacklist_users` WHERE `blacklistuser_email`= :blacklistuserEmail",nativeQuery = true)
+	BlackListModel getBlackListByEmail(@Param("blacklistuserEmail") String blacklistuserEmail);
 }

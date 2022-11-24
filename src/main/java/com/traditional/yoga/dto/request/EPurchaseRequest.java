@@ -1,31 +1,11 @@
-package com.traditional.yoga.model;
+package com.traditional.yoga.dto.request;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+public class EPurchaseRequest {
 
-@Entity
-@Table(name = "epurchaseinformation")
-public class EPurchaseInformation {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "epurchase_id")
 	private int epurchaseId;
-
-	@Column(name = "student_id")
 	private int studentId;
-
-	@Column(name = "date")
 	private String date;
-
-	@Column(name = "purchase_amount")
 	private int purchaseAmount;
-
-	@Column(name = "products_purchase")
 	private String productPurchase;
 
 	public int getEpurchaseId() {

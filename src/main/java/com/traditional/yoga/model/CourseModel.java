@@ -16,6 +16,9 @@ public class CourseModel {
 	@Column(name = "course_Id")
 	private int courseId;
 
+	@Column(name = "category")
+	private String category;
+
 	@Column(name = "course_name")
 	private String courseName;
 
@@ -25,11 +28,20 @@ public class CourseModel {
 	@Column(name = "section")
 	private String section;
 
+	@Column(name = "start_date")
+	private String startDate;
+
+	@Column(name = "end_date")
+	private String endDate;
+
 	@Column(name = "course_duration")
 	private String courseDuration;
 
 	@Column(name = "verfication_required")
 	private String verficationRequired;
+
+	@Column(name = "current_status")
+	private String currentStatus;
 
 	public int getCourseId() {
 		return courseId;
@@ -37,6 +49,14 @@ public class CourseModel {
 
 	public void setCourseId(int courseId) {
 		this.courseId = courseId;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	public String getCourseName() {
@@ -63,6 +83,22 @@ public class CourseModel {
 		this.section = section;
 	}
 
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+
 	public String getCourseDuration() {
 		return courseDuration;
 	}
@@ -77,6 +113,14 @@ public class CourseModel {
 
 	public void setVerficationRequired(String verficationRequired) {
 		this.verficationRequired = verficationRequired;
+	}
+
+	public String getCurrentStatus() {
+		return currentStatus;
+	}
+
+	public void setCurrentStatus(String currentStatus) {
+		this.currentStatus = currentStatus;
 	}
 
 }

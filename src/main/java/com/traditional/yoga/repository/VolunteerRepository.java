@@ -14,4 +14,7 @@ public interface VolunteerRepository extends JpaRepository<VolunteerModel, Integ
 
 	@Query(value = "SELECT * FROM `volunteer` WHERE `student_id`= :studentId", nativeQuery = true)
 	List<VolunteerModel> getVolunteerByStudentId(@Param("studentId") int studentId);
+
+	@Query(value = "SELECT * FROM `volunteer` WHERE `student_id`= :studentId AND `category_name` = :categoryName", nativeQuery = true)
+	VolunteerModel checkVolunteer(@Param("studentId") int studentId, @Param("categoryName") String categoryName);
 }
