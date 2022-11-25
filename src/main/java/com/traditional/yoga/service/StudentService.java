@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.BlackListRequest;
+import com.traditional.yoga.dto.request.DonationRequest;
 import com.traditional.yoga.dto.request.EPurchaseRequest;
 import com.traditional.yoga.dto.request.StudentRequest;
 import com.traditional.yoga.dto.request.VolunteerRequest;
@@ -99,8 +100,15 @@ public class StudentService {
 		return new ResponseEntity<>(std, httpStatus);
 	}
 
+//	Donation
 	public Object studentDonation(StudentRequest studentDto) {
 		List<DonationModel> std = donationRepository.getDonationByStudentId(studentDto.getStudentId());
+		httpStatus = HttpStatus.OK;
+		return new ResponseEntity<>(std, httpStatus);
+	}
+	
+	public Object viewDonation(DonationRequest donationDto) {
+		DonationModel std = donationRepository.getDonationById(donationDto.getDonationId());
 		httpStatus = HttpStatus.OK;
 		return new ResponseEntity<>(std, httpStatus);
 	}
@@ -212,5 +220,7 @@ public class StudentService {
 			response = new Response(message, httpStatus.value(), message);
 		}
 	}
+	
+	
 
 }

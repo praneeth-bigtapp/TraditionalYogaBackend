@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.traditional.yoga.dto.request.BlackListRequest;
+import com.traditional.yoga.dto.request.DonationRequest;
 import com.traditional.yoga.dto.request.EPurchaseRequest;
 import com.traditional.yoga.dto.request.StudentRequest;
 import com.traditional.yoga.dto.request.VolunteerRequest;
@@ -77,6 +78,12 @@ public class StudentsController {
 			@RequestParam("operation") String operation) {
 //		authenticate(token);
 		return studentService.blockListUsersManage(operation, blockListDto);
+	}
+	
+	@PostMapping("/donationView")
+	public Object getDonation(@RequestHeader("token") String token, @RequestBody DonationRequest donationDto) {
+		LOG.info("Entering into get donation Method");
+		return studentService.viewDonation(donationDto);
 	}
 
 }

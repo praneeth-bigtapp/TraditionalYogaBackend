@@ -12,8 +12,8 @@ import com.traditional.yoga.model.DonationModel;
 @Repository
 public interface DonationRepository extends JpaRepository<DonationModel, Integer> {
 
-//	@Query(value = "SELECT * FROM `donation` WHERE `student_id`=:student_id;", nativeQuery = true)
-//	DonationModel getDonationById(@Param("studentId") int studentId);
+	@Query(value = "SELECT * FROM `donation` WHERE `donation_id`= :donationId", nativeQuery = true)
+	DonationModel getDonationById(@Param("donationId") int donationId);
 
 	@Query(value = "SELECT * FROM `donation` WHERE `student_id`= :studentId", nativeQuery = true)
 	List<DonationModel> getDonationByStudentId(@Param("studentId") int studentId);
