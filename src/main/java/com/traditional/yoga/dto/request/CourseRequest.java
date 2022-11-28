@@ -1,46 +1,16 @@
-package com.traditional.yoga.model;
+package com.traditional.yoga.dto.request;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+public class CourseRequest {
 
-@Entity
-@Table(name = "m_course")
-public class CourseModel {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "course_Id")
 	private int courseId;
-
-	@Column(name = "category")
 	private String category;
-
-	@Column(name = "course_name")
 	private String courseName;
-
-	@Column(name = "course_type")
 	private String courseType;
-
-	@Column(name = "section")
 	private String section;
-
-	@Column(name = "start_date")
 	private String startDate;
-
-	@Column(name = "end_date")
 	private String endDate;
-
-	@Column(name = "course_duration")
 	private int courseDuration;
-
-	@Column(name = "verfication_required")
 	private String verficationRequired;
-
-	@Column(name = "current_status")
 	private String currentStatus;
 
 	public int getCourseId() {

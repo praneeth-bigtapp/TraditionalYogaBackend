@@ -51,6 +51,9 @@ public class WebSiteManagementService {
 			} else if (operationType.equals("alerts")) {
 				httpStatus = HttpStatus.OK;
 				return alertRepository.findAll();
+			} else if (operationType.equals("alertCategory")) {
+				httpStatus = HttpStatus.OK;
+//				return alertRepository.findAll();
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;

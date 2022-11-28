@@ -1,10 +1,13 @@
 package com.traditional.yoga.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -16,8 +19,9 @@ public class DonationModel {
 	@Column(name = "donation_id")
 	private int donationId;
 
-	@Column(name = "student_id")
-	private int studentId;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "student_id", referencedColumnName = "student_id")
+	private StudentModel student;
 
 	@Column(name = "date")
 	private String date;
@@ -39,16 +43,16 @@ public class DonationModel {
 		this.donationId = donationId;
 	}
 
-	public int getStudentId() {
-		return studentId;
-	}
-
-	public void setStudentId(int studentId) {
-		this.studentId = studentId;
-	}
-
 	public String getDate() {
 		return date;
+	}
+
+	public StudentModel getStudent() {
+		return student;
+	}
+
+	public void setStudent(StudentModel student) {
+		this.student = student;
 	}
 
 	public void setDate(String date) {
