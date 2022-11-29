@@ -10,12 +10,20 @@ import org.springframework.stereotype.Service;
 import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.AlertRequest;
 import com.traditional.yoga.dto.request.BannerViewRequest;
+import com.traditional.yoga.dto.request.NotificationRequest;
+import com.traditional.yoga.dto.request.PageRequest;
+import com.traditional.yoga.dto.request.RoleRequest;
 import com.traditional.yoga.dto.request.ScripcturesRequest;
 import com.traditional.yoga.model.AlertModel;
 import com.traditional.yoga.model.BannerViewModel;
+import com.traditional.yoga.model.NotificationModel;
+import com.traditional.yoga.model.PageModel;
+import com.traditional.yoga.model.RoleModel;
 import com.traditional.yoga.model.ScripcturesModel;
 import com.traditional.yoga.repository.AlertRepository;
 import com.traditional.yoga.repository.BannerViewRepository;
+import com.traditional.yoga.repository.NoticationRepository;
+import com.traditional.yoga.repository.PageRepository;
 import com.traditional.yoga.repository.ScripcturesRepository;
 
 @Service
@@ -31,6 +39,12 @@ public class WebSiteManagementService {
 
 	@Autowired
 	ScripcturesRepository scripcturesRepository;
+
+	@Autowired
+	NoticationRepository noticationRepository;
+
+	@Autowired
+	PageRepository pageRepository;
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -63,6 +77,12 @@ public class WebSiteManagementService {
 			} else if (operationType.equals("scripctures")) {
 				httpStatus = HttpStatus.OK;
 				return scripcturesRepository.findAll();
+			} else if (operationType.equals("notication")) {
+				httpStatus = HttpStatus.OK;
+				return noticationRepository.findAll();
+			} else if (operationType.equals("page")) {
+				httpStatus = HttpStatus.OK;
+				return pageRepository.findAll();
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -148,7 +168,8 @@ public class WebSiteManagementService {
 		httpStatus = HttpStatus.OK;
 		try {
 			if (operation.equals("add")) {
-				ScripcturesModel scripcturesModelnew = scripcturesRepository.checkscripcturesId(scripcuturesdto.getScripcturesId());
+				ScripcturesModel scripcturesModelnew = scripcturesRepository
+						.checkscripcturesId(scripcuturesdto.getScripcturesId());
 				if (scripcturesModelnew == null) {
 					ScripcturesModel scripctureslist = new ScripcturesModel();
 //					scripctureslist.setScripcturesId(scripcuturesdto.getScripcturesId());
@@ -157,7 +178,7 @@ public class WebSiteManagementService {
 					scripctureslist.setTitle(scripcuturesdto.getTitle());
 					scripctureslist.setDescription(scripcuturesdto.getDescription());
 					scripctureslist.setMetaKeyWords(scripcuturesdto.getMetaKeyWords());
-					
+
 					scripcturesRepository.save(scripctureslist);
 					message = "new scripctures is  added sucessfully";
 					LOG.info(message);
@@ -179,4 +200,168 @@ public class WebSiteManagementService {
 		return new ResponseEntity<>(response, httpStatus);
 
 	}
+
+	public Object managenotification(String operation, NotificationRequest notificationdto) {
+		httpStatus = HttpStatus.OK;
+		try {
+			if (operation.equals("add")) {
+				NotificationModel notificationModelnew = noticationRepository
+						.getnotificationById(notificationdto.getNoticationId());
+				if (notificationModelnew == null) {
+					NotificationModel noticationlist = new NotificationModel();
+
+					noticationlist.setCategoryId(notificationdto.getCategoryId());
+					noticationlist.setUploadFile(notificationdto.getUploadFile());
+					noticationlist.setMessage(notificationdto.getMessage());
+					noticationRepository.save(noticationlist);
+					message = "new notification is  added sucessfully";
+					LOG.info(message);
+					response = new Response(message, httpStatus.value(), null);
+				} else {
+					message = "Operation Doesn't exist";
+					httpStatus = HttpStatus.CONFLICT;
+					LOG.error(message);
+					response = new Response(message, httpStatus.value(), message);
+				}
+			}
+		} catch (Exception e) {
+			message = "Exception in scriptures creation";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+
+	}
+
+//	public Object managepage(String operation, PageRequest pagedto) {
+//		httpStatus = HttpStatus.OK;
+//		try {
+//			if (operation.equals("add"))
+//
+//			{
+//				PageModel pageModelnew = pageRepository.getpageById(pagedto.getPageId());
+//				if (pageModelnew == null) {
+//					PageModel pagelist = new PageModel();
+//					pagelist.setPageTitle(pagedto.getPageTitle());
+//					pagelist.setPageText(pagedto.getPageText());
+//					pagelist.setHoverTitle(pagedto.getHoverTitle());
+//					pagelist.setRelatedTags(pagedto.getRelatedTags());
+//					pagelist.setDescription(pagedto.getDescription());
+//					pagelist.setSubject(pagedto.getSubject());
+//					pagelist.setCaptcha(pagedto.getCaptcha());
+//					pageRepository.save(pagelist);
+//					message = "new page is  added sucessfully";
+//					LOG.info(message);
+//					response = new Response(message, httpStatus.value(), null);
+//				} else {
+//					message = "Operation Doesn't exist";
+//					httpStatus = HttpStatus.CONFLICT;
+//					LOG.error(message);
+//					response = new Response(message, httpStatus.value(), message);
+//				}
+//			}
+//		} catch (Exception e) {
+//			message = "Exception in page creation";
+//			httpStatus = HttpStatus.EXPECTATION_FAILED;
+//			LOG.error(message);
+//			LOG.error(e.getLocalizedMessage());
+//			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+//		}
+//		return new ResponseEntity<>(response, httpStatus);
+//
+//	}
+
+	public Object managepage(String operation, PageRequest pagedto) {
+
+		try {
+			if (operation.equals("add")) {
+				addpage(pagedto);
+			} else if (operation.equals("update")) {
+				updatepage(pagedto);
+			}else if (operation.equals("delete")) {
+				deleteRole(pagedto);
+			} else {
+				message = "Operation Doesn't exist";
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Exception in Role";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	private void deleteRole(PageRequest pagedto) {
+		PageModel pageModelnew = pageRepository.getpageById(pagedto.getPageId());
+		if (pageModelnew != null) {
+			pageRepository.deleteById(pageModelnew.getPageId());
+			message = "page deleted sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "page Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void updatepage(PageRequest pagedto) {
+		PageModel pageModelnew = pageRepository.getpageById(pagedto.getPageId());
+		if (pageModelnew != null) {
+			PageModel pageCheck=pageRepository.getpageByname(pagedto.getPageTitle());
+			if (pageCheck == null) {
+				pageModelnew.setPageTitle(pagedto.getPageTitle());
+				pageModelnew.setPageText(pagedto.getPageText());
+				pageModelnew.setHoverTitle(pagedto.getHoverTitle());
+				pageModelnew.setRelatedTags(pagedto.getRelatedTags());
+				pageModelnew.setDescription(pagedto.getDescription());
+				pageModelnew.setSubject(pagedto.getSubject());
+				pageModelnew.setCaptcha(pagedto.getCaptcha());
+				message = "page saved sucessfully";
+				LOG.info(message);
+				response = new Response(message, httpStatus.value(), null);
+			} 
+			else {
+				message = "Updated Role is already exist";
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+
+		} else {
+			message = "page Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+		
+	}
+
+	private void addpage(PageRequest pagedto) {
+
+		PageModel pageModelnew = pageRepository.getpageById(pagedto.getPageId());
+		if (pageModelnew == null) {
+			PageModel pagelist = new PageModel();
+			pagelist.setPageTitle(pagedto.getPageTitle());
+			pagelist.setPageText(pagedto.getPageText());
+			pagelist.setHoverTitle(pagedto.getHoverTitle());
+			pagelist.setRelatedTags(pagedto.getRelatedTags());
+			pagelist.setDescription(pagedto.getDescription());
+			pagelist.setSubject(pagedto.getSubject());
+			pagelist.setCaptcha(pagedto.getCaptcha());
+			pageRepository.save(pagelist);
+			message = "new page is  added sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		}
+	}
+
 }

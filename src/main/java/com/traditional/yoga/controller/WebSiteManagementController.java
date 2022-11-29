@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.traditional.yoga.dto.request.AlertRequest;
 import com.traditional.yoga.dto.request.BannerViewRequest;
+import com.traditional.yoga.dto.request.NotificationRequest;
+import com.traditional.yoga.dto.request.PageRequest;
 import com.traditional.yoga.dto.request.ScripcturesRequest;
 import com.traditional.yoga.service.WebSiteManagementService;
 
@@ -56,6 +58,20 @@ public class WebSiteManagementController {
 			@RequestParam("operation") String operation) {
 //		authenticate(token);
 		return webSiteManagementService.managescripcutures(operation, scripcuturesdto);
+	}
+	
+	@PostMapping("/notifcation")
+	public Object manageUser(@RequestHeader("token") String token, @RequestBody NotificationRequest notificationdto,
+			@RequestParam("operation") String operation) {
+//		authenticate(token);
+		return webSiteManagementService.managenotification(operation, notificationdto);
+	}
+	
+	@PostMapping("/page")
+	public Object manageUser(@RequestHeader("token") String token, @RequestBody  PageRequest pagedto,
+			@RequestParam("operation") String operation) {
+//		authenticate(token);
+		return webSiteManagementService.managepage(operation, pagedto);
 	}
 
 	
