@@ -10,10 +10,13 @@ import org.springframework.stereotype.Service;
 import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.AlertRequest;
 import com.traditional.yoga.dto.request.BannerViewRequest;
+import com.traditional.yoga.dto.request.ScripcturesRequest;
 import com.traditional.yoga.model.AlertModel;
 import com.traditional.yoga.model.BannerViewModel;
+import com.traditional.yoga.model.ScripcturesModel;
 import com.traditional.yoga.repository.AlertRepository;
 import com.traditional.yoga.repository.BannerViewRepository;
+import com.traditional.yoga.repository.ScripcturesRepository;
 
 @Service
 public class WebSiteManagementService {
@@ -25,6 +28,9 @@ public class WebSiteManagementService {
 
 	@Autowired
 	BannerViewRepository bannerRepository;
+
+	@Autowired
+	ScripcturesRepository scripcturesRepository;
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -54,6 +60,9 @@ public class WebSiteManagementService {
 			} else if (operationType.equals("alertCategory")) {
 				httpStatus = HttpStatus.OK;
 //				return alertRepository.findAll();
+			} else if (operationType.equals("scripctures")) {
+				httpStatus = HttpStatus.OK;
+				return scripcturesRepository.findAll();
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -109,9 +118,9 @@ public class WebSiteManagementService {
 				BannerViewModel bannernew = bannerRepository.getbannerbyId(bannerViewdto.getBannerId());
 				if (bannernew == null) {
 					BannerViewModel bannerList = new BannerViewModel();
-					bannerList.setBannerId(bannerList.getBannerId());
-					bannerList.setCategoryId(bannerList.getCategoryId());
-					bannerList.setBannerName(bannerList.getBannerName());
+//					bannerList.setBannerId(bannerViewdto.getBannerId());
+					bannerList.setCategoryId(bannerViewdto.getCategoryId());
+					bannerList.setBannerName(bannerViewdto.getBannerName());
 					bannerList.setDate(bannerList.getDate());
 
 					bannerRepository.save(bannerList);
@@ -133,5 +142,41 @@ public class WebSiteManagementService {
 			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
 		}
 		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	public Object managescripcutures(String operation, ScripcturesRequest scripcuturesdto) {
+		httpStatus = HttpStatus.OK;
+		try {
+			if (operation.equals("add")) {
+				ScripcturesModel scripcturesModelnew = scripcturesRepository.checkscripcturesId(scripcuturesdto.getScripcturesId());
+				if (scripcturesModelnew == null) {
+					ScripcturesModel scripctureslist = new ScripcturesModel();
+//					scripctureslist.setScripcturesId(scripcuturesdto.getScripcturesId());
+					scripctureslist.setUploadFile(scripcuturesdto.getUploadFile());
+					scripctureslist.setCoverImage(scripcuturesdto.getCoverImage());
+					scripctureslist.setTitle(scripcuturesdto.getTitle());
+					scripctureslist.setDescription(scripcuturesdto.getDescription());
+					scripctureslist.setMetaKeyWords(scripcuturesdto.getMetaKeyWords());
+					
+					scripcturesRepository.save(scripctureslist);
+					message = "new scripctures is  added sucessfully";
+					LOG.info(message);
+					response = new Response(message, httpStatus.value(), null);
+				} else {
+					message = "Operation Doesn't exist";
+					httpStatus = HttpStatus.CONFLICT;
+					LOG.error(message);
+					response = new Response(message, httpStatus.value(), message);
+				}
+			}
+		} catch (Exception e) {
+			message = "Exception in scriptures creation";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+
 	}
 }

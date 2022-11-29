@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.traditional.yoga.dto.request.AlertRequest;
 import com.traditional.yoga.dto.request.BannerViewRequest;
+import com.traditional.yoga.dto.request.ScripcturesRequest;
 import com.traditional.yoga.service.WebSiteManagementService;
 
 @CrossOrigin("*")
@@ -48,5 +49,15 @@ public class WebSiteManagementController {
 //		authenticate(token);
 		return webSiteManagementService.bannerMange(operation, BannerViewdto);
 	}
+	
+	
+	@PostMapping("/scripctures")
+	public Object manageUser(@RequestHeader("token") String token, @RequestBody ScripcturesRequest scripcuturesdto,
+			@RequestParam("operation") String operation) {
+//		authenticate(token);
+		return webSiteManagementService.managescripcutures(operation, scripcuturesdto);
+	}
 
+	
+	
 }
