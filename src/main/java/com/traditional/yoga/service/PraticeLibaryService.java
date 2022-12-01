@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.PraticeLibaryRequest;
 import com.traditional.yoga.model.PraticeLibaryModel;
+import com.traditional.yoga.repository.CategoryLibaryRepository;
 import com.traditional.yoga.repository.PraticeLibaryRepository;
 
 @Service
@@ -19,6 +20,8 @@ public class PraticeLibaryService {
 
 	@Autowired
 	PraticeLibaryRepository praticeLibaryRepository;
+	@Autowired
+	CategoryLibaryRepository categoryLibaryRepository;
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -31,7 +34,9 @@ public class PraticeLibaryService {
 			if (operationType.equals("praticelibary")) {
 				httpStatus = HttpStatus.OK;
 				return new ResponseEntity<>(praticeLibaryRepository.findAll(), httpStatus);
-			} else {
+			}  else if(operationType.equals("categorylibary")) {
+				return new ResponseEntity<>(categoryLibaryRepository.findAll(), httpStatus);
+			}else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
 				LOG.error(message);
