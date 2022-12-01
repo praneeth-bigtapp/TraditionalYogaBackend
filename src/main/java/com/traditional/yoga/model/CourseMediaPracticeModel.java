@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "course_media_files")
+@Table(name = "course_media_practice")
 public class CourseMediaPracticeModel {
 
 	@Id
