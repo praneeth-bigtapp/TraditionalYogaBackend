@@ -22,6 +22,9 @@ public class StudentModel {
 	@Column(name = "name")
 	private String name;
 
+	@Column(name = "student_category")
+	private String studentCategory;
+
 	@Column(name = "profession_id")
 	private int professionId;
 
@@ -77,6 +80,14 @@ public class StudentModel {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getStudentCategory() {
+		return studentCategory;
+	}
+
+	public void setStudentCategory(String studentCategory) {
+		this.studentCategory = studentCategory;
 	}
 
 	public int getProfessionId() {

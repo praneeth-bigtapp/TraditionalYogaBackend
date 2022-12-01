@@ -4,6 +4,7 @@ public class StudentRequest {
 
 	private int studentId;
 	private String name;
+	private String studentCategory;
 	private int roleId;
 	private int professionId;
 	private int qulificationId;
@@ -31,6 +32,14 @@ public class StudentRequest {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getStudentCategory() {
+		return studentCategory;
+	}
+
+	public void setStudentCategory(String studentCategory) {
+		this.studentCategory = studentCategory;
 	}
 
 	public int getRoleId() {

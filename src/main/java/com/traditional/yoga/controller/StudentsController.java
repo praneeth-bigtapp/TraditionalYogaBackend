@@ -85,5 +85,11 @@ public class StudentsController {
 		LOG.info("Entering into get donation Method");
 		return studentService.viewDonation(donationDto);
 	}
+	
+	@PostMapping("/mapUserCourse")
+	public Object mapStudent(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto) {
+		LOG.info("Entering into get volunter Method");
+		return studentService.mapStudentCourse(studentDto);
+	}
 
 }

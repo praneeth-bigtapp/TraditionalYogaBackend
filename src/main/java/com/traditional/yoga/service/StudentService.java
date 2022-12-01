@@ -106,7 +106,7 @@ public class StudentService {
 		httpStatus = HttpStatus.OK;
 		return new ResponseEntity<>(std, httpStatus);
 	}
-	
+
 	public Object viewDonation(DonationRequest donationDto) {
 		DonationModel std = donationRepository.getDonationById(donationDto.getDonationId());
 		httpStatus = HttpStatus.OK;
@@ -127,7 +127,7 @@ public class StudentService {
 		newPurchase.setPurchaseAmount(purchaseDto.getPurchaseAmount());
 		newPurchase.setProductPurchase(purchaseDto.getProductPurchase());
 		epurchaseInformation.save(newPurchase);
-		
+
 		httpStatus = HttpStatus.OK;
 		message = "Purchase added sucessfully";
 		LOG.info(message);
@@ -153,7 +153,7 @@ public class StudentService {
 		newVolunteer.setServedAs(volunteerDto.getServedAs());
 		newVolunteer.setNoOfMembers(volunteerDto.getNoOfMembers());
 		volunteerRepository.save(newVolunteer);
-		
+
 		httpStatus = HttpStatus.OK;
 		message = "Volunter added sucessfully";
 		LOG.info(message);
@@ -220,7 +220,27 @@ public class StudentService {
 			response = new Response(message, httpStatus.value(), message);
 		}
 	}
-	
-	
+
+//	Map User To Course
+	public Object mapStudentCourse(StudentRequest studentDto) {
+		StudentModel mapCourse = studentRepository.getStudentById(studentDto.getStudentId());
+		if (mapCourse != null) {
+//			mapCourse.setStudentId(studentDto.getStudentId());
+			mapCourse.setStudentCategory(studentDto.getStudentCategory());
+			mapCourse.setCourseName(studentDto.getCourseName());
+			studentRepository.save(mapCourse);
+			httpStatus = HttpStatus.OK;
+			message = "Student Mapped sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+			return new ResponseEntity<>(response, httpStatus);
+		} else {
+			message = "Student details Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+			return new ResponseEntity<>(response, httpStatus);
+		}
+	}
 
 }

@@ -8,13 +8,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.traditional.yoga.dto.Response;
+import com.traditional.yoga.dto.request.CourseMediaPracticeRequest;
 import com.traditional.yoga.dto.request.CourseMediaRequest;
 import com.traditional.yoga.dto.request.CourseRequest;
 import com.traditional.yoga.model.CourseMediaModel;
+import com.traditional.yoga.model.CourseMediaPracticeModel;
 import com.traditional.yoga.model.CourseModel;
 import com.traditional.yoga.repository.ClassMediaRepository;
 import com.traditional.yoga.repository.CourseCategoryRepository;
 import com.traditional.yoga.repository.CourseMediaCategoryRepository;
+import com.traditional.yoga.repository.CourseMediaPracticeRepository;
 import com.traditional.yoga.repository.CourseMediaRepository;
 import com.traditional.yoga.repository.CourseRepository;
 
@@ -38,6 +41,9 @@ public class CourseManagementService {
 	@Autowired
 	CourseMediaCategoryRepository courseMediaCategoryRepository;
 
+	@Autowired
+	CourseMediaPracticeRepository courseMediaPracticeRepository;
+
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
 	String message;
@@ -55,6 +61,9 @@ public class CourseManagementService {
 			} else if (operationType.equals("courseMediaCategory")) {
 				httpStatus = HttpStatus.OK;
 				return new ResponseEntity<>(courseMediaCategoryRepository.findAll(), httpStatus);
+			} else if (operationType.equals("courseMediaPractice")) {
+				httpStatus = HttpStatus.OK;
+				return new ResponseEntity<>(courseMediaPracticeRepository.findAll(), httpStatus);
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -144,6 +153,33 @@ public class CourseManagementService {
 			LOG.error(e.getLocalizedMessage());
 			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
 		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	public Object courseMediaPraticeManage(CourseMediaPracticeRequest courseMediaDto) {
+
+		try {
+			CourseMediaPracticeModel newCourseMedia = new CourseMediaPracticeModel();
+			newCourseMedia.setUploadMediaFile(courseMediaDto.getUploadMediaFile());
+			newCourseMedia.setVideoLink(courseMediaDto.getVideoLink());
+			newCourseMedia.setTitle(courseMediaDto.getTitle());
+			newCourseMedia.setDescription(courseMediaDto.getDescription());
+			newCourseMedia.setDuration(courseMediaDto.getDuration());
+			newCourseMedia.setMetaKeyword(courseMediaDto.getMetaKeyword());	
+			courseMediaPracticeRepository.save(newCourseMedia);
+			httpStatus = HttpStatus.OK;
+			message = "Course Media added sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+
+		} catch (Exception e) {
+			message = "Exception in Role";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+
 		return new ResponseEntity<>(response, httpStatus);
 	}
 

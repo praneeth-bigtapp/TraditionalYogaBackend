@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.traditional.yoga.dto.request.CourseMediaPracticeRequest;
 import com.traditional.yoga.dto.request.CourseMediaRequest;
 import com.traditional.yoga.dto.request.CourseRequest;
 import com.traditional.yoga.service.CourseManagementService;
@@ -46,6 +47,13 @@ public class CourseManagementController {
 			@RequestBody CourseMediaRequest courseMediaDto, @RequestParam("type") String type) {
 		LOG.info("Entering into Course Media");
 		return courseManagementService.courseMediaManage(courseMediaDto, type);
+	}
+
+	@PostMapping("/addCourseMediaPractice")
+	public Object courseMediaPraticeManage(@RequestHeader("token") String token,
+			@RequestBody CourseMediaPracticeRequest courseMediaDto) {
+		LOG.info("Entering into Course Media");
+		return courseManagementService.courseMediaPraticeManage(courseMediaDto);
 	}
 
 }
