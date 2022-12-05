@@ -1,10 +1,13 @@
 package com.traditional.yoga.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -15,6 +18,10 @@ public class ClassMediaModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "class_media_id")
 	private int classMediaId;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "course_id", referencedColumnName = "course_id")
+	private CourseModel courseId;
 
 	@Column(name = "date")
 	private String date;
@@ -31,6 +38,14 @@ public class ClassMediaModel {
 
 	public void setClassMediaId(int classMediaId) {
 		this.classMediaId = classMediaId;
+	}
+
+	public CourseModel getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(CourseModel courseId) {
+		this.courseId = courseId;
 	}
 
 	public String getDate() {
