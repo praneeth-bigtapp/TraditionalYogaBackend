@@ -3,12 +3,17 @@ package com.traditional.yoga.dto.request;
 public class StudentRequest {
 
 	private int studentId;
+	private int courseId;
 	private String name;
 	private String studentCategory;
 	private int roleId;
 	private int professionId;
 	private int qulificationId;
 	private int genderId;
+	private String mentorId;
+	private String mentorStatus;
+	private String mentorRegion;
+	private String chiefMentorId;
 	private int age;
 	private String mobile;
 	private String address;
@@ -16,7 +21,6 @@ public class StudentRequest {
 	private String regesiterDate;
 	private String registedIpAddress;
 	private String active;
-	private String courseName;
 
 	public int getStudentId() {
 		return studentId;
@@ -24,6 +28,14 @@ public class StudentRequest {
 
 	public void setStudentId(int studentId) {
 		this.studentId = studentId;
+	}
+
+	public int getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(int courseId) {
+		this.courseId = courseId;
 	}
 
 	public String getName() {
@@ -72,6 +84,38 @@ public class StudentRequest {
 
 	public void setGenderId(int genderId) {
 		this.genderId = genderId;
+	}
+
+	public String getMentorId() {
+		return mentorId;
+	}
+
+	public void setMentorId(String mentorId) {
+		this.mentorId = mentorId;
+	}
+
+	public String getMentorStatus() {
+		return mentorStatus;
+	}
+
+	public void setMentorStatus(String mentorStatus) {
+		this.mentorStatus = mentorStatus;
+	}
+
+	public String getMentorRegion() {
+		return mentorRegion;
+	}
+
+	public void setMentorRegion(String mentorRegion) {
+		this.mentorRegion = mentorRegion;
+	}
+
+	public String getChiefMentorId() {
+		return chiefMentorId;
+	}
+
+	public void setChiefMentorId(String chiefMentorId) {
+		this.chiefMentorId = chiefMentorId;
 	}
 
 	public int getAge() {
@@ -128,14 +172,6 @@ public class StudentRequest {
 
 	public void setActive(String active) {
 		this.active = active;
-	}
-
-	public String getCourseName() {
-		return courseName;
-	}
-
-	public void setCourseName(String courseName) {
-		this.courseName = courseName;
 	}
 
 }

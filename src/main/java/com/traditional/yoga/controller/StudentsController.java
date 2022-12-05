@@ -37,6 +37,13 @@ public class StudentsController {
 		return studentService.getAll(operation);
 	}
 
+	@GetMapping("/getAllByCourse")
+	public Object getAllStudentByCourse(@RequestHeader("token") String token, @RequestParam("type") String type,
+			@RequestParam("courseId") int courseId) {
+		LOG.info("Entering into getAll{} Method");
+		return studentService.getAllByCourse(type, courseId);
+	}
+
 	@PostMapping("/profile")
 	public Object getStudentDetails(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto) {
 		LOG.info("Entering into get Student Method");
@@ -54,7 +61,7 @@ public class StudentsController {
 		LOG.info("Entering into get purchase Method");
 		return studentService.studentPurchase(studentDto);
 	}
-	
+
 	@PostMapping("/purchase/add")
 	public Object addStudentPurchase(@RequestHeader("token") String token, @RequestBody EPurchaseRequest purchaseDto) {
 		LOG.info("Entering into get purchase Method");
@@ -66,7 +73,7 @@ public class StudentsController {
 		LOG.info("Entering into get volunter Method");
 		return studentService.studentVolunter(studentDto);
 	}
-	
+
 	@PostMapping("/volunteer/add")
 	public Object addStudentVolunter(@RequestHeader("token") String token, @RequestBody VolunteerRequest volunteerDto) {
 		LOG.info("Entering into get volunter Method");
@@ -79,17 +86,41 @@ public class StudentsController {
 //		authenticate(token);
 		return studentService.blockListUsersManage(operation, blockListDto);
 	}
-	
+
 	@PostMapping("/donationView")
 	public Object getDonation(@RequestHeader("token") String token, @RequestBody DonationRequest donationDto) {
 		LOG.info("Entering into get donation Method");
 		return studentService.viewDonation(donationDto);
 	}
-	
+
 	@PostMapping("/mapUserCourse")
 	public Object mapStudent(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto) {
 		LOG.info("Entering into get volunter Method");
 		return studentService.mapStudentCourse(studentDto);
+	}
+
+//	@PostMapping("/mapMember")
+//	public Object mapMenber(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto) {
+//		LOG.info("Mapping members to students");
+//		return studentService.mapStudentCourse(studentDto); // TODO
+//	}
+
+	@PostMapping("/mapMentor")
+	public Object mapMentor(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto) {
+		LOG.info("Mapping mentor to students");
+		return studentService.mapStudentMentor(studentDto);
+	}
+
+	@PostMapping("/mapChiefMentor")
+	public Object mapChiefMenber(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto) {
+		LOG.info("Mapping chief mentor to students");
+		return studentService.mapStudentChiefMentor(studentDto);
+	}
+	
+	@PostMapping("/mapMentorRegion")
+	public Object mapMenberRegion(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto) {
+		LOG.info("Mapping Region to Mentor to students");
+		return studentService.mapRegionMentor(studentDto);
 	}
 
 }
