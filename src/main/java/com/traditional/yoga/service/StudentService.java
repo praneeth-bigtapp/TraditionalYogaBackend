@@ -15,7 +15,9 @@ import com.traditional.yoga.dto.request.DonationRequest;
 import com.traditional.yoga.dto.request.EPurchaseRequest;
 import com.traditional.yoga.dto.request.StudentRequest;
 import com.traditional.yoga.dto.request.VolunteerRequest;
+import com.traditional.yoga.dto.response.MemberResponse;
 import com.traditional.yoga.model.BlackListModel;
+import com.traditional.yoga.model.CourseModel;
 import com.traditional.yoga.model.DonationModel;
 import com.traditional.yoga.model.EPurchaseInformation;
 import com.traditional.yoga.model.StudentModel;
@@ -71,6 +73,58 @@ public class StudentService {
 			} else if (operationType.equals("donation")) {
 				httpStatus = HttpStatus.OK;
 				return donationRepository.findAll();
+			} else if (operationType.equals("ePurchase")) {
+				httpStatus = HttpStatus.OK;
+				return epurchaseInformation.findAll();
+			} else if (operationType.equals("blackListUser")) {
+				httpStatus = HttpStatus.OK;
+				return blackListUserRepository.findAll();
+			} else {
+				message = "Unknown Operation";
+				httpStatus = HttpStatus.NOT_ACCEPTABLE;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), httpStatus.getReasonPhrase());
+				return new ResponseEntity<>(response, httpStatus);
+			}
+
+		} catch (Exception e) {
+			message = "Unknown Error";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			response = new Response(message, httpStatus.value(), httpStatus.getReasonPhrase());
+			return new ResponseEntity<>(response, httpStatus);
+		}
+	}
+
+//	By course
+	public Object getAllByCourse(String operationType, int courseId) {
+		LOG.info("Fetching Student related {} data", operationType);
+
+		try {
+			int maxStd = studentRepository.getCountByCourseId(courseId);
+			int mappedStd = studentRepository.getCountByMentor(courseId);
+			int notMapped = maxStd - mappedStd;
+			if (operationType.equals("member")) {
+				MemberResponse member = new MemberResponse();
+				member.setUserApplied(notMapped);
+				member.setUserMapped(mappedStd);
+				member.setStudents(studentRepository.getStudentByCourseId(courseId));
+				httpStatus = HttpStatus.OK;
+				return new ResponseEntity<>(member, httpStatus);
+			} else if (operationType.equals("mentor")) {
+				MemberResponse member = new MemberResponse();
+				member.setUserApplied(notMapped);
+				member.setUserMapped(mappedStd);
+				member.setStudents(studentRepository.getStudentByMentor(courseId));
+				httpStatus = HttpStatus.OK;
+				return new ResponseEntity<>(member, httpStatus);
+			} else if (operationType.equals("chiefMentor")) {
+				LOG.info("Chief Mentor Map");
+				MemberResponse member = new MemberResponse();
+				member.setUserApplied(notMapped);
+				member.setUserMapped(mappedStd);
+				member.setStudents(studentRepository.getStudentByMentor(courseId));
+				httpStatus = HttpStatus.OK;
+				return new ResponseEntity<>(member, httpStatus);
 			} else if (operationType.equals("ePurchase")) {
 				httpStatus = HttpStatus.OK;
 				return epurchaseInformation.findAll();
@@ -225,9 +279,11 @@ public class StudentService {
 	public Object mapStudentCourse(StudentRequest studentDto) {
 		StudentModel mapCourse = studentRepository.getStudentById(studentDto.getStudentId());
 		if (mapCourse != null) {
+			CourseModel course = new CourseModel();
 //			mapCourse.setStudentId(studentDto.getStudentId());
 			mapCourse.setStudentCategory(studentDto.getStudentCategory());
-			mapCourse.setCourseName(studentDto.getCourseName());
+			course.setCourseId(studentDto.getCourseId());
+			mapCourse.setCourseId(course);
 			studentRepository.save(mapCourse);
 			httpStatus = HttpStatus.OK;
 			message = "Student Mapped sucessfully";
@@ -236,6 +292,66 @@ public class StudentService {
 			return new ResponseEntity<>(response, httpStatus);
 		} else {
 			message = "Student details Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+			return new ResponseEntity<>(response, httpStatus);
+		}
+	}
+
+//	Map User to Mentor
+	public Object mapStudentMentor(StudentRequest studentDto) {
+		StudentModel mapCourse = studentRepository.getStudentById(studentDto.getStudentId());
+		if (mapCourse != null) {
+			mapCourse.setMentorId(studentDto.getMentorId());
+			studentRepository.save(mapCourse);
+			httpStatus = HttpStatus.OK;
+			message = "User Mapped to Mentor sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+			return new ResponseEntity<>(response, httpStatus);
+		} else {
+			message = "Student details Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+			return new ResponseEntity<>(response, httpStatus);
+		}
+	}
+
+//	Map User to Chief Mentor
+	public Object mapStudentChiefMentor(StudentRequest studentDto) {
+		StudentModel mapCourse = studentRepository.getStudentById(studentDto.getStudentId());
+		if (mapCourse != null) {
+			mapCourse.setChiefMentorId(studentDto.getChiefMentorId());
+			studentRepository.save(mapCourse);
+			httpStatus = HttpStatus.OK;
+			message = "User Mapped to Chief Mentor sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+			return new ResponseEntity<>(response, httpStatus);
+		} else {
+			message = "Student details Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+			return new ResponseEntity<>(response, httpStatus);
+		}
+	}
+	
+//	Map Region to Mentor
+	public Object mapRegionMentor(StudentRequest studentDto) {
+		StudentModel mapCourse = studentRepository.getStudentById(studentDto.getStudentId());
+		if (mapCourse != null) {
+			mapCourse.setMentorRegion(studentDto.getMentorRegion());
+			studentRepository.save(mapCourse);
+			httpStatus = HttpStatus.OK;
+			message = "Mentor Region is Mapped sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+			return new ResponseEntity<>(response, httpStatus);
+		} else {
+			message = "Student details Doesn't exist for Mentor Region";
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);

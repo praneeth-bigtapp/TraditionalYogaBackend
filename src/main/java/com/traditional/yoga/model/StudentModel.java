@@ -1,10 +1,13 @@
 package com.traditional.yoga.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -19,6 +22,10 @@ public class StudentModel {
 	@Column(name = "role_id")
 	private int roleId;
 
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "course_id", referencedColumnName = "course_id")
+	private CourseModel courseId;
+
 	@Column(name = "name")
 	private String name;
 
@@ -26,16 +33,28 @@ public class StudentModel {
 	private String studentCategory;
 
 	@Column(name = "profession_id")
-	private int professionId;
+	private Integer professionId;
 
 	@Column(name = "qulification_id")
-	private int qulificationId;
+	private Integer qulificationId;
 
 	@Column(name = "gender_id")
-	private int genderId;
+	private Integer genderId;
+
+	@Column(name = "mentor_id")
+	private String mentorId;
+
+	@Column(name = "mentor_status")
+	private String mentorStatus;
+
+	@Column(name = "mentor_region")
+	private String mentorRegion;
+
+	@Column(name = "chief_mentor_id")
+	private String chiefMentorId;
 
 	@Column(name = "age")
-	private int age;
+	private Integer age;
 
 	@Column(name = "mobile")
 	private String mobile;
@@ -46,7 +65,7 @@ public class StudentModel {
 	@Column(name = "email_id")
 	private String emailId;
 
-	@Column(name = "regesiter_date")
+	@Column(name = "student_register_date")
 	private String regesiterDate;
 
 	@Column(name = "registed_ip_address")
@@ -54,9 +73,6 @@ public class StudentModel {
 
 	@Column(name = "is_active")
 	private String active;
-
-	@Column(name = "course_name")
-	private String courseName;
 
 	public int getStudentId() {
 		return studentId;
@@ -72,6 +88,14 @@ public class StudentModel {
 
 	public void setRoleId(int roleId) {
 		this.roleId = roleId;
+	}
+
+	public CourseModel getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(CourseModel courseId) {
+		this.courseId = courseId;
 	}
 
 	public String getName() {
@@ -90,35 +114,67 @@ public class StudentModel {
 		this.studentCategory = studentCategory;
 	}
 
-	public int getProfessionId() {
+	public Integer getProfessionId() {
 		return professionId;
 	}
 
-	public void setProfessionId(int professionId) {
+	public void setProfessionId(Integer professionId) {
 		this.professionId = professionId;
 	}
 
-	public int getQulificationId() {
+	public Integer getQulificationId() {
 		return qulificationId;
 	}
 
-	public void setQulificationId(int qulificationId) {
+	public void setQulificationId(Integer qulificationId) {
 		this.qulificationId = qulificationId;
 	}
 
-	public int getGenderId() {
+	public Integer getGenderId() {
 		return genderId;
 	}
 
-	public void setGenderId(int genderId) {
+	public void setGenderId(Integer genderId) {
 		this.genderId = genderId;
 	}
 
-	public int getAge() {
+	public String getMentorId() {
+		return mentorId;
+	}
+
+	public void setMentorId(String mentorId) {
+		this.mentorId = mentorId;
+	}
+
+	public String getMentorStatus() {
+		return mentorStatus;
+	}
+
+	public void setMentorStatus(String mentorStatus) {
+		this.mentorStatus = mentorStatus;
+	}
+
+	public String getMentorRegion() {
+		return mentorRegion;
+	}
+
+	public void setMentorRegion(String mentorRegion) {
+		this.mentorRegion = mentorRegion;
+	}
+
+	public String getChiefMentorId() {
+		return chiefMentorId;
+	}
+
+	public void setChiefMentorId(String chiefMentorId) {
+		this.chiefMentorId = chiefMentorId;
+	}
+
+	public Integer getAge() {
 		return age;
 	}
 
-	public void setAge(int age) {
+	public void setAge(Integer age) {
 		this.age = age;
 	}
 
@@ -168,14 +224,6 @@ public class StudentModel {
 
 	public void setActive(String active) {
 		this.active = active;
-	}
-
-	public String getCourseName() {
-		return courseName;
-	}
-
-	public void setCourseName(String courseName) {
-		this.courseName = courseName;
 	}
 
 }

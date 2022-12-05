@@ -13,7 +13,7 @@ public class CourseModel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "course_Id")
+	@Column(name = "course_id")
 	private int courseId;
 
 	@Column(name = "category")
