@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.traditional.yoga.dto.request.CourseMediaPracticeRequest;
 import com.traditional.yoga.dto.request.CourseMediaRequest;
 import com.traditional.yoga.dto.request.CourseRequest;
+import com.traditional.yoga.dto.request.PerformaceRatingRequest;
 import com.traditional.yoga.service.CourseManagementService;
 
 @CrossOrigin("*")
@@ -54,6 +55,20 @@ public class CourseManagementController {
 			@RequestBody CourseMediaPracticeRequest courseMediaDto) {
 		LOG.info("Entering into Course Media");
 		return courseManagementService.courseMediaPraticeManage(courseMediaDto);
+	}
+
+//	Parameters performance rating
+	@GetMapping("/performance/data")
+	public Object getRating(@RequestHeader("token") String token, @RequestParam("courseId") int courseId) {
+		LOG.info("Entering into getAll{} Method");
+		return courseManagementService.getRating(courseId);
+	}
+
+	@PostMapping("/performance/updateRating")
+	public Object manageRating(@RequestHeader("token") String token,
+			@RequestBody PerformaceRatingRequest performanceRatingDto) {
+		LOG.info("Entering into getAll{} Method");
+		return courseManagementService.manageRating(performanceRatingDto);
 	}
 
 }

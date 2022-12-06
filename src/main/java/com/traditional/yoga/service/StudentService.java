@@ -125,13 +125,7 @@ public class StudentService {
 				member.setStudents(studentRepository.getStudentByMentor(courseId));
 				httpStatus = HttpStatus.OK;
 				return new ResponseEntity<>(member, httpStatus);
-			} else if (operationType.equals("ePurchase")) {
-				httpStatus = HttpStatus.OK;
-				return epurchaseInformation.findAll();
-			} else if (operationType.equals("blackListUser")) {
-				httpStatus = HttpStatus.OK;
-				return blackListUserRepository.findAll();
-			} else {
+			}  else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
 				LOG.error(message);
@@ -301,10 +295,10 @@ public class StudentService {
 
 //	Map User to Mentor
 	public Object mapStudentMentor(StudentRequest studentDto) {
-		StudentModel mapCourse = studentRepository.getStudentById(studentDto.getStudentId());
-		if (mapCourse != null) {
-			mapCourse.setMentorId(studentDto.getMentorId());
-			studentRepository.save(mapCourse);
+		StudentModel mapMentor = studentRepository.getStudentById(studentDto.getStudentId());
+		if (mapMentor != null) {
+			mapMentor.setMentorId(studentDto.getMentorId());
+			studentRepository.save(mapMentor);
 			httpStatus = HttpStatus.OK;
 			message = "User Mapped to Mentor sucessfully";
 			LOG.info(message);
