@@ -18,13 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.traditional.yoga.dto.request.CourseRequest;
 import com.traditional.yoga.dto.request.CoursesListRequest;
 import com.traditional.yoga.dto.request.OnlineExamReqest;
+import com.traditional.yoga.dto.request.TaskRequest;
 import com.traditional.yoga.dto.request.UserRequest;
 import com.traditional.yoga.service.CoursesandOnlineexamService;
 
 @CrossOrigin("*")
 @RestController
 @RequestMapping(value = "/courseList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-public class CoursesListAndOnlineExam {
+public class CoursesListAndOnlineExamController {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(CourseManagementController.class);
 	
@@ -44,6 +45,7 @@ public class CoursesListAndOnlineExam {
 	public Object manageUser(@RequestHeader("token") String token, @RequestBody CoursesListRequest courseListDto,
 			@RequestParam("operation") String operation) {
 //		authenticate(token);
+		LOG.info("Entering into coursesList{} Method", operation);
 		return coursesListService.managecourses(operation, courseListDto);
 	}
 	
@@ -51,7 +53,17 @@ public class CoursesListAndOnlineExam {
 	public Object onlineexams(@RequestHeader("token") String token, @RequestBody OnlineExamReqest onlineexamDto,
 			@RequestParam("operation") String operation) {
 //		authenticate(token);
+		LOG.info("Entering into onlineexam{} Method", operation);
 		return coursesListService.onlineexams(operation, onlineexamDto);
+	}
+	
+	
+	@PostMapping("/task")
+	public Object managetask(@RequestHeader("token") String token, @RequestBody TaskRequest taskDto,
+			@RequestParam("operation") String operation) {
+//		authenticate(token);
+		LOG.info("Entering into task{} Method", operation);
+		return coursesListService.managetask(operation, taskDto);
 	}
 	
 	

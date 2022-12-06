@@ -12,11 +12,14 @@ import org.springframework.stereotype.Service;
 import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.CoursesListRequest;
 import com.traditional.yoga.dto.request.OnlineExamReqest;
+import com.traditional.yoga.dto.request.TaskRequest;
 import com.traditional.yoga.model.CourseListModel;
+import com.traditional.yoga.model.TaskModel;
 import com.traditional.yoga.model.onlineexamsModel;
 import com.traditional.yoga.repository.CoursesListRepository;
 import com.traditional.yoga.repository.LevelofTestRepository;
 import com.traditional.yoga.repository.OnlineExamRepository;
+import com.traditional.yoga.repository.TaskRepository;
 import com.traditional.yoga.repository.TypeofTestRepository;
 
 @Service
@@ -35,6 +38,8 @@ public class CoursesandOnlineexamService {
 
 	@Autowired
 	OnlineExamRepository onlineExamRepository;
+	@Autowired
+	TaskRepository taskRepository;
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -55,7 +60,10 @@ public class CoursesandOnlineexamService {
 			} else if (operationType.equals("onlineexam")) {
 				httpStatus = HttpStatus.OK;
 				return onlineExamRepository.findAll();
-			}
+			}else if (operationType.equals("task")) {
+				httpStatus = HttpStatus.OK;
+				return taskRepository.findAll();
+			} 
 			else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -121,8 +129,6 @@ public class CoursesandOnlineexamService {
 			response = new Response(message, httpStatus.value(), message);
 		}
 	}
-	
-	
 
 	public Object onlineexams(String operation, OnlineExamReqest onlineexamDto) {
 
@@ -132,7 +138,7 @@ public class CoursesandOnlineexamService {
 			if (operation.equals("add")) {
 				onlineexams(onlineexamDto);
 			} else if (operation.equals("")) {
-				
+
 			} else if (operation.equals("active")) {
 //				activeUsers(userDto);
 			} else if (operation.equals("delete")) {
@@ -152,7 +158,7 @@ public class CoursesandOnlineexamService {
 		}
 		return new ResponseEntity<>(response, httpStatus);
 	}
-	
+
 	private void onlineexams(OnlineExamReqest onlineexamDto) {
 		onlineexamsModel examNew = onlineExamRepository.getexamdetailsById(onlineexamDto.getExamsId());
 		if (examNew == null) {
@@ -174,6 +180,62 @@ public class CoursesandOnlineexamService {
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
 		}
-		
+
+	}
+	
+	
+	
+	
+	
+	
+	public Object managetask(String operation, TaskRequest taskDto) {
+
+		this.httpStatus = HttpStatus.OK;
+		try {
+
+			if (operation.equals("add")) {
+				addTask(taskDto);
+			} else if (operation.equals("")) {
+
+			} else if (operation.equals("active")) {
+//				activeUsers(userDto);
+			} else if (operation.equals("delete")) {
+//				deleteUsers(userDto);
+			} else {
+				message = "Operation Doesn't exist";
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Exception in adding courses";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+	
+	private void addTask(TaskRequest taskDto) {
+		TaskModel tasknew = taskRepository.getTaskById(taskDto.getTaskId());
+		if (tasknew == null) {
+			TaskModel tasklist = new TaskModel();
+			tasklist.setTaskName(taskDto.getTaskName());
+			tasklist.setDescription(taskDto.getDescription());
+			tasklist.setMediafile(taskDto.getMediafile());
+			tasklist.setDueDate(taskDto.getDueDate());
+			tasklist.setIsActive("Y");
+			taskRepository.save(tasklist);
+			message = "new task added sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "task already exists";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+
 	}
 }

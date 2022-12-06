@@ -77,7 +77,7 @@ public class WebSiteManagementController {
 
 	
 	@PostMapping("/region")
-	public Object regionMange(@RequestHeader("token") String token, @RequestBody RegionRequest regiondto,
+	public Object regionMange(@RequestHeader("token") String token,@RequestBody RegionRequest regiondto,
 			@RequestParam("operation") String operation) {
 //		authenticate(token);
 		return webSiteManagementService.regionMange(operation, regiondto);
