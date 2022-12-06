@@ -1,7 +1,5 @@
 package com.traditional.yoga.service;
 
-import javax.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +11,16 @@ import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.CoursesListRequest;
 import com.traditional.yoga.dto.request.OnlineExamReqest;
 import com.traditional.yoga.dto.request.TaskRequest;
+import com.traditional.yoga.dto.request.TestimoalRequest;
 import com.traditional.yoga.model.CourseListModel;
 import com.traditional.yoga.model.TaskModel;
+import com.traditional.yoga.model.TestimonalsModel;
 import com.traditional.yoga.model.onlineexamsModel;
 import com.traditional.yoga.repository.CoursesListRepository;
 import com.traditional.yoga.repository.LevelofTestRepository;
 import com.traditional.yoga.repository.OnlineExamRepository;
 import com.traditional.yoga.repository.TaskRepository;
+import com.traditional.yoga.repository.TestimonalRepository;
 import com.traditional.yoga.repository.TypeofTestRepository;
 
 @Service
@@ -38,8 +39,13 @@ public class CoursesandOnlineexamService {
 
 	@Autowired
 	OnlineExamRepository onlineExamRepository;
+	
+	
 	@Autowired
 	TaskRepository taskRepository;
+	
+	@Autowired
+	TestimonalRepository testimonalRepository;
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -63,6 +69,9 @@ public class CoursesandOnlineexamService {
 			}else if (operationType.equals("task")) {
 				httpStatus = HttpStatus.OK;
 				return taskRepository.findAll();
+			} else if (operationType.equals("testimonal")) {
+				httpStatus = HttpStatus.OK;
+				return testimonalRepository.findAll();
 			} 
 			else {
 				message = "Unknown Operation";
@@ -221,6 +230,7 @@ public class CoursesandOnlineexamService {
 		TaskModel tasknew = taskRepository.getTaskById(taskDto.getTaskId());
 		if (tasknew == null) {
 			TaskModel tasklist = new TaskModel();
+			tasklist.setCoursesId(taskDto.getCoursesId());
 			tasklist.setTaskName(taskDto.getTaskName());
 			tasklist.setDescription(taskDto.getDescription());
 			tasklist.setMediafile(taskDto.getMediafile());
@@ -228,6 +238,59 @@ public class CoursesandOnlineexamService {
 			tasklist.setIsActive("Y");
 			taskRepository.save(tasklist);
 			message = "new task added sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "task already exists";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+
+	}
+	
+	
+	public Object manageTestimonal(String operation, TestimoalRequest testimonalDto) {
+		
+		this.httpStatus = HttpStatus.OK;
+		try {
+
+			if (operation.equals("add")) {
+				addTestimonal(testimonalDto);
+			} else if (operation.equals("")) {
+
+			} else if (operation.equals("active")) {
+//				activeUsers(userDto);
+			} else if (operation.equals("delete")) {
+//				deleteUsers(userDto);
+			} else {
+				message = "Operation Doesn't exist";
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Exception in adding courses";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+		
+	private void addTestimonal(TestimoalRequest testimonalDto) {
+		TestimonalsModel testimonalnew = testimonalRepository.getTestmonialsById(testimonalDto.getTestimonalId());
+		if (testimonalnew == null) {
+			TestimonalsModel testimonallist = new TestimonalsModel();
+//			
+			testimonallist.setContent(testimonalDto.getContent());
+			testimonallist.setGivenByName(testimonalDto.getGivenByName());
+			testimonallist.setVideo_link(testimonalDto.getVideo_link());
+			testimonallist.setDescription(testimonalDto.getDescription());
+			testimonallist.setIsActive("Y");
+			testimonalRepository.save(testimonallist);
+			message = "new testimonial is added sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {

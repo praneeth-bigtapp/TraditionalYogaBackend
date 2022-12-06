@@ -19,6 +19,7 @@ import com.traditional.yoga.dto.request.CourseRequest;
 import com.traditional.yoga.dto.request.CoursesListRequest;
 import com.traditional.yoga.dto.request.OnlineExamReqest;
 import com.traditional.yoga.dto.request.TaskRequest;
+import com.traditional.yoga.dto.request.TestimoalRequest;
 import com.traditional.yoga.dto.request.UserRequest;
 import com.traditional.yoga.service.CoursesandOnlineexamService;
 
@@ -66,6 +67,13 @@ public class CoursesListAndOnlineExamController {
 		return coursesListService.managetask(operation, taskDto);
 	}
 	
+	@PostMapping("/testimonal")
+	public Object manageTestimonal(@RequestHeader("token") String token, @RequestBody TestimoalRequest testimonalDto,
+			@RequestParam("operation") String operation) {
+//		authenticate(token);
+		LOG.info("Entering into testimonal{} Method", operation);
+		return coursesListService.manageTestimonal(operation, testimonalDto);
+	}
 	
 	
 

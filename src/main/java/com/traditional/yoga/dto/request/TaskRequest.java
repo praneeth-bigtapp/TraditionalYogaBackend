@@ -1,9 +1,12 @@
 package com.traditional.yoga.dto.request;
 
+import com.traditional.yoga.model.CourseListModel;
+
 public class TaskRequest {
 
 	private int taskId;
 	private String taskName;
+	private CourseListModel coursesId;
 	private String description;
 	private String mediafile;
 	private String dueDate;
@@ -94,4 +97,14 @@ public class TaskRequest {
 		this.isActive = isActive;
 	}
 
+	public CourseListModel getCoursesId() {
+		return coursesId;
+	}
+
+	public void setCoursesId(CourseListModel coursesId) {
+		this.coursesId = coursesId;
+	}
+
+	
+	
 }

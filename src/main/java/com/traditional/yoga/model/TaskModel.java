@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -18,6 +20,10 @@ public class TaskModel {
 
 	@Column(name = "task_name")
 	private String taskName;
+	
+	@OneToOne
+	@JoinColumn(name = "courses_id", referencedColumnName = "courses_id")
+	private CourseListModel coursesId;
 
 	@Column(name = "description")
 	private String description;
@@ -122,5 +128,15 @@ public class TaskModel {
 	public void setIsActive(String isActive) {
 		this.isActive = isActive;
 	}
+
+	public CourseListModel getCoursesId() {
+		return coursesId;
+	}
+
+	public void setCoursesId(CourseListModel coursesId) {
+		this.coursesId = coursesId;
+	}
+	
+	
 
 }
