@@ -12,18 +12,19 @@ import com.traditional.yoga.dto.request.AlertRequest;
 import com.traditional.yoga.dto.request.BannerViewRequest;
 import com.traditional.yoga.dto.request.NotificationRequest;
 import com.traditional.yoga.dto.request.PageRequest;
-import com.traditional.yoga.dto.request.RoleRequest;
+import com.traditional.yoga.dto.request.RegionRequest;
 import com.traditional.yoga.dto.request.ScripcturesRequest;
 import com.traditional.yoga.model.AlertModel;
 import com.traditional.yoga.model.BannerViewModel;
 import com.traditional.yoga.model.NotificationModel;
 import com.traditional.yoga.model.PageModel;
-import com.traditional.yoga.model.RoleModel;
+import com.traditional.yoga.model.RegionModel;
 import com.traditional.yoga.model.ScripcturesModel;
 import com.traditional.yoga.repository.AlertRepository;
 import com.traditional.yoga.repository.BannerViewRepository;
 import com.traditional.yoga.repository.NoticationRepository;
 import com.traditional.yoga.repository.PageRepository;
+import com.traditional.yoga.repository.RegionRepository;
 import com.traditional.yoga.repository.ScripcturesRepository;
 
 @Service
@@ -45,6 +46,10 @@ public class WebSiteManagementService {
 
 	@Autowired
 	PageRepository pageRepository;
+	
+	@Autowired
+	RegionRepository regionRepository;
+	
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -83,7 +88,10 @@ public class WebSiteManagementService {
 			} else if (operationType.equals("page")) {
 				httpStatus = HttpStatus.OK;
 				return pageRepository.findAll();
-			} else {
+			} else if (operationType.equals("region")) {
+				httpStatus = HttpStatus.OK;
+				return regionRepository.findAll();
+			}else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
 				LOG.error(message);
@@ -235,43 +243,6 @@ public class WebSiteManagementService {
 
 	}
 
-//	public Object managepage(String operation, PageRequest pagedto) {
-//		httpStatus = HttpStatus.OK;
-//		try {
-//			if (operation.equals("add"))
-//
-//			{
-//				PageModel pageModelnew = pageRepository.getpageById(pagedto.getPageId());
-//				if (pageModelnew == null) {
-//					PageModel pagelist = new PageModel();
-//					pagelist.setPageTitle(pagedto.getPageTitle());
-//					pagelist.setPageText(pagedto.getPageText());
-//					pagelist.setHoverTitle(pagedto.getHoverTitle());
-//					pagelist.setRelatedTags(pagedto.getRelatedTags());
-//					pagelist.setDescription(pagedto.getDescription());
-//					pagelist.setSubject(pagedto.getSubject());
-//					pagelist.setCaptcha(pagedto.getCaptcha());
-//					pageRepository.save(pagelist);
-//					message = "new page is  added sucessfully";
-//					LOG.info(message);
-//					response = new Response(message, httpStatus.value(), null);
-//				} else {
-//					message = "Operation Doesn't exist";
-//					httpStatus = HttpStatus.CONFLICT;
-//					LOG.error(message);
-//					response = new Response(message, httpStatus.value(), message);
-//				}
-//			}
-//		} catch (Exception e) {
-//			message = "Exception in page creation";
-//			httpStatus = HttpStatus.EXPECTATION_FAILED;
-//			LOG.error(message);
-//			LOG.error(e.getLocalizedMessage());
-//			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
-//		}
-//		return new ResponseEntity<>(response, httpStatus);
-//
-//	}
 
 	public Object managepage(String operation, PageRequest pagedto) {
 
@@ -362,6 +333,69 @@ public class WebSiteManagementService {
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		}
+	}
+	
+	
+//	public Object alertManage(String operation, RegionRequest regiondto) {
+//		httpStatus = HttpStatus.OK;
+//		try {
+//			if (operation.equals("add")) {
+//				RegionModel newAlert = new RegionModel();
+//				newAlert.setCategoryId(alertdto.getCategoryId());
+//				newAlert.setAlertDescription(alertdto.getAlertDescription());
+//				newAlert.setStartDate(alertdto.getStartDate());
+//				newAlert.setEndDate(alertdto.getEndDate());
+//				alertRepository.save(newAlert);
+//				message = "New Alert added Sucessfully";
+//				LOG.info(message);
+//				response = new Response(message, httpStatus.value(), null);
+//			} else {
+//				message = "Operation Doesn't exist";
+//				httpStatus = HttpStatus.CONFLICT;
+//				LOG.error(message);
+//				response = new Response(message, httpStatus.value(), message);
+//			}
+//		} catch (Exception e) {
+//			message = "Exception in alert";
+//			httpStatus = HttpStatus.EXPECTATION_FAILED;
+//			LOG.error(message);
+//			LOG.error(e.getLocalizedMessage());
+//			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+//		}
+//		return new ResponseEntity<>(response, httpStatus);
+//	}
+	
+	
+	public Object regionMange(String operation, RegionRequest regiondto) {
+		httpStatus = HttpStatus.OK;
+		try {
+			if (operation.equals("add")) {
+				RegionModel newregion= regionRepository.getRegionById(regiondto.getRegionId());
+				if (newregion == null) {
+					RegionModel regionList = new RegionModel();
+					regionList.setRegionName(regiondto.getRegionName());
+					regionList.setCountryName(regiondto.getCountryName());
+					regionList.setPartId(regiondto.getPartId());
+					regionList.setStates(regiondto.getStates());
+					regionRepository.save(regionList);
+					message = "new region is  added sucessfully";
+					LOG.info(message);
+					response = new Response(message, httpStatus.value(), null);
+				}
+			} else {
+				message = "Operation Doesn't exist";
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Exception in banner creation";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
 	}
 
 }

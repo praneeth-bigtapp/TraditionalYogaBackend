@@ -17,6 +17,7 @@ import com.traditional.yoga.dto.request.AlertRequest;
 import com.traditional.yoga.dto.request.BannerViewRequest;
 import com.traditional.yoga.dto.request.NotificationRequest;
 import com.traditional.yoga.dto.request.PageRequest;
+import com.traditional.yoga.dto.request.RegionRequest;
 import com.traditional.yoga.dto.request.ScripcturesRequest;
 import com.traditional.yoga.service.WebSiteManagementService;
 
@@ -75,5 +76,10 @@ public class WebSiteManagementController {
 	}
 
 	
-	
+	@PostMapping("/region")
+	public Object regionMange(@RequestHeader("token") String token, @RequestBody RegionRequest regiondto,
+			@RequestParam("operation") String operation) {
+//		authenticate(token);
+		return webSiteManagementService.regionMange(operation, regiondto);
+	}
 }
