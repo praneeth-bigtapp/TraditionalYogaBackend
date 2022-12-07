@@ -16,6 +16,7 @@ import com.traditional.yoga.model.CourseListModel;
 import com.traditional.yoga.model.TaskModel;
 import com.traditional.yoga.model.TestimonalsModel;
 import com.traditional.yoga.model.onlineexamsModel;
+import com.traditional.yoga.repository.CategoryRepository;
 import com.traditional.yoga.repository.CoursesListRepository;
 import com.traditional.yoga.repository.LevelofTestRepository;
 import com.traditional.yoga.repository.OnlineExamRepository;
@@ -40,6 +41,8 @@ public class CoursesandOnlineexamService {
 	@Autowired
 	OnlineExamRepository onlineExamRepository;
 	
+	@Autowired
+	CategoryRepository categoryRepository;
 	
 	@Autowired
 	TaskRepository taskRepository;
@@ -57,7 +60,11 @@ public class CoursesandOnlineexamService {
 			if (operationType.equals("coursesList")) {
 				httpStatus = HttpStatus.OK;
 				return coursesListRepository.findAll();
-			} else if (operationType.equals("typeoftest")) {
+			} else if (operationType.equals("categoryList")) {
+				httpStatus = HttpStatus.OK;
+				return categoryRepository.findAll();
+			}
+			else if (operationType.equals("typeoftest")) {
 				httpStatus = HttpStatus.OK;
 				return typeofTestRepository.findAll();
 			} else if (operationType.equals("leveloftest")) {
@@ -124,9 +131,11 @@ public class CoursesandOnlineexamService {
 			CourseListModel newlist = new CourseListModel();
 
 			newlist.setCoursesName(courseListDto.getCoursesName());
+			newlist.setCategorieId(courseListDto.getCategorieId());
 			newlist.setDescription(courseListDto.getDescription());
 			newlist.setStartDate(courseListDto.getStartDate());
 			newlist.setEndDate(courseListDto.getEndDate());
+			newlist.setApplicationClouserDate(courseListDto.getApplicationClouserDate());
 			coursesListRepository.save(newlist);
 			message = "new courses  added sucessfully";
 			LOG.info(message);

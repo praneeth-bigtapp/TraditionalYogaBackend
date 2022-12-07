@@ -14,7 +14,7 @@ public interface CoursesListRepository extends JpaRepository<CourseListModel, In
 
 	
 	
-	@Query(value = "SELECT * FROM `m_courses_category` WHERE `courses_id`=:coursesId", nativeQuery = true)
+	@Query(value = "SELECT * FROM `my_course_material` WHERE `courses_id`=:coursesId", nativeQuery = true)
 	CourseListModel getcoursesListById(@Param("coursesId") int coursesId);
 	
 	
