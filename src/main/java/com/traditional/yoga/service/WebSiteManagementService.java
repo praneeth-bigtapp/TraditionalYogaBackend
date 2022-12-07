@@ -1,36 +1,49 @@
 package com.traditional.yoga.service;
 
+import java.io.File;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.AlertRequest;
 import com.traditional.yoga.dto.request.BannerViewRequest;
 import com.traditional.yoga.dto.request.NotificationRequest;
 import com.traditional.yoga.dto.request.PageRequest;
+import com.traditional.yoga.dto.request.PhotoGalleryRequest;
 import com.traditional.yoga.dto.request.RegionRequest;
 import com.traditional.yoga.dto.request.ScripcturesRequest;
 import com.traditional.yoga.model.AlertModel;
 import com.traditional.yoga.model.BannerViewModel;
 import com.traditional.yoga.model.NotificationModel;
 import com.traditional.yoga.model.PageModel;
+import com.traditional.yoga.model.PhotoGalleryModel;
 import com.traditional.yoga.model.RegionModel;
 import com.traditional.yoga.model.ScripcturesModel;
 import com.traditional.yoga.repository.AlertRepository;
 import com.traditional.yoga.repository.BannerViewRepository;
+import com.traditional.yoga.repository.ImageGalleryRepository;
 import com.traditional.yoga.repository.NoticationRepository;
 import com.traditional.yoga.repository.PageRepository;
+import com.traditional.yoga.repository.PhotoGalleryRepository;
 import com.traditional.yoga.repository.RegionRepository;
 import com.traditional.yoga.repository.ScripcturesRepository;
+import com.traditional.yoga.utils.GeneralUtils;
 
 @Service
 public class WebSiteManagementService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(WebSiteManagementService.class);
+
+	@Autowired
+	GeneralUtils generalUtils;
 
 	@Autowired
 	AlertRepository alertRepository;
@@ -46,10 +59,15 @@ public class WebSiteManagementService {
 
 	@Autowired
 	PageRepository pageRepository;
-	
+
 	@Autowired
 	RegionRepository regionRepository;
-	
+
+	@Autowired
+	PhotoGalleryRepository photoGalleryRepository;
+
+	@Autowired
+	ImageGalleryRepository imageGalleryRepository;
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -63,7 +81,7 @@ public class WebSiteManagementService {
 //				return studentRepository.findAll();
 			} else if (operationType.equals("photoGallery")) {
 				httpStatus = HttpStatus.OK;
-//				return courseRepository.findAll();
+				return photoGalleryRepository.findAll();
 			} else if (operationType.equals("videoGallery")) {
 				httpStatus = HttpStatus.OK;
 //				return donationRepository.findAll();
@@ -91,7 +109,7 @@ public class WebSiteManagementService {
 			} else if (operationType.equals("region")) {
 				httpStatus = HttpStatus.OK;
 				return regionRepository.findAll();
-			}else {
+			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
 				LOG.error(message);
@@ -243,7 +261,6 @@ public class WebSiteManagementService {
 
 	}
 
-
 	public Object managepage(String operation, PageRequest pagedto) {
 
 		try {
@@ -251,7 +268,7 @@ public class WebSiteManagementService {
 				addpage(pagedto);
 			} else if (operation.equals("update")) {
 				updatepage(pagedto);
-			}else if (operation.equals("delete")) {
+			} else if (operation.equals("delete")) {
 				deleteRole(pagedto);
 			} else {
 				message = "Operation Doesn't exist";
@@ -287,7 +304,7 @@ public class WebSiteManagementService {
 	private void updatepage(PageRequest pagedto) {
 		PageModel pageModelnew = pageRepository.getpageById(pagedto.getPageId());
 		if (pageModelnew != null) {
-			PageModel pageCheck=pageRepository.getpageByname(pagedto.getPageTitle());
+			PageModel pageCheck = pageRepository.getpageByname(pagedto.getPageTitle());
 			if (pageCheck == null) {
 				pageModelnew.setPageTitle(pagedto.getPageTitle());
 				pageModelnew.setPageText(pagedto.getPageText());
@@ -299,8 +316,7 @@ public class WebSiteManagementService {
 				message = "page saved sucessfully";
 				LOG.info(message);
 				response = new Response(message, httpStatus.value(), null);
-			} 
-			else {
+			} else {
 				message = "Updated Role is already exist";
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
@@ -313,7 +329,7 @@ public class WebSiteManagementService {
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
 		}
-		
+
 	}
 
 	private void addpage(PageRequest pagedto) {
@@ -334,8 +350,7 @@ public class WebSiteManagementService {
 			response = new Response(message, httpStatus.value(), null);
 		}
 	}
-	
-	
+
 //	public Object alertManage(String operation, RegionRequest regiondto) {
 //		httpStatus = HttpStatus.OK;
 //		try {
@@ -364,13 +379,12 @@ public class WebSiteManagementService {
 //		}
 //		return new ResponseEntity<>(response, httpStatus);
 //	}
-	
-	
+
 	public Object regionMange(String operation, RegionRequest regiondto) {
 		httpStatus = HttpStatus.OK;
 		try {
 			if (operation.equals("add")) {
-				RegionModel newregion= regionRepository.getRegionById(regiondto.getRegionId());
+				RegionModel newregion = regionRepository.getRegionById(regiondto.getRegionId());
 				if (newregion == null) {
 					RegionModel regionList = new RegionModel();
 					regionList.setRegionName(regiondto.getRegionName());
@@ -395,6 +409,75 @@ public class WebSiteManagementService {
 			LOG.error(e.getLocalizedMessage());
 			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
 		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
+//	Photo Gallery
+	public Object createGallary(PhotoGalleryRequest photoGalleryRequestDto) {
+		try {
+			PhotoGalleryModel newGallery = photoGalleryRepository
+					.getGalleryName(photoGalleryRequestDto.getGalleryName());
+			if (newGallery == null) {
+				newGallery = new PhotoGalleryModel();
+				newGallery.setGalleryName(photoGalleryRequestDto.getGalleryName());
+				newGallery.setGalleryDescription(photoGalleryRequestDto.getGalleryDescription());
+				newGallery.setCreatedDate(generalUtils.getCurrentDate());
+				photoGalleryRepository.save(newGallery);
+				httpStatus = HttpStatus.OK;
+				message = "new gallery is created sucessfully";
+				LOG.info(message);
+				response = new Response(message, httpStatus.value(), null);
+			} else {
+				message = "Gallery Already Exits";
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Exception in banner creation";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	public Object uploadGallary(MultipartFile file, HttpServletRequest request) {
+
+		if (!file.isEmpty()) {
+			try {
+				String uploadsDir = "/photoGallery/";
+				String realPathtoUploads = request.getServletContext().getRealPath(uploadsDir);
+
+				if (!new File(realPathtoUploads).exists()) {
+					new File(realPathtoUploads).mkdir();
+				}
+				LOG.info("realPathtoUploads = {}", realPathtoUploads);
+
+				String orgName = file.getOriginalFilename();
+				String filePath = realPathtoUploads + orgName;
+				File dest = new File(filePath);
+				file.transferTo(dest);
+
+				httpStatus = HttpStatus.OK;
+				message = "file uploaded sucessfully";
+				LOG.info(message);
+				response = new Response(message, httpStatus.value(), null);
+			} catch (Exception e) {
+				message = "Exception in banner creation";
+				httpStatus = HttpStatus.EXPECTATION_FAILED;
+				LOG.error(message);
+				LOG.error(e.getLocalizedMessage());
+				response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+			}
+		} else {
+			message = "File is empty, no image select";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+
 		return new ResponseEntity<>(response, httpStatus);
 	}
 

@@ -1,5 +1,7 @@
 package com.traditional.yoga.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,21 +14,26 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.traditional.yoga.dto.request.AlertRequest;
 import com.traditional.yoga.dto.request.BannerViewRequest;
 import com.traditional.yoga.dto.request.NotificationRequest;
 import com.traditional.yoga.dto.request.PageRequest;
+import com.traditional.yoga.dto.request.PhotoGalleryRequest;
 import com.traditional.yoga.dto.request.RegionRequest;
 import com.traditional.yoga.dto.request.ScripcturesRequest;
 import com.traditional.yoga.service.WebSiteManagementService;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping(value = "/webSite", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/webSite", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 public class WebSiteManagementController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(WebSiteManagementController.class);
+
+	@Autowired
+	private HttpServletRequest request;
 
 	@Autowired
 	WebSiteManagementService webSiteManagementService;
@@ -52,34 +59,47 @@ public class WebSiteManagementController {
 //		authenticate(token);
 		return webSiteManagementService.bannerMange(operation, BannerViewdto);
 	}
-	
-	
+
 	@PostMapping("/scripctures")
 	public Object manageUser(@RequestHeader("token") String token, @RequestBody ScripcturesRequest scripcuturesdto,
 			@RequestParam("operation") String operation) {
 //		authenticate(token);
 		return webSiteManagementService.managescripcutures(operation, scripcuturesdto);
 	}
-	
+
 	@PostMapping("/notifcation")
 	public Object manageUser(@RequestHeader("token") String token, @RequestBody NotificationRequest notificationdto,
 			@RequestParam("operation") String operation) {
 //		authenticate(token);
 		return webSiteManagementService.managenotification(operation, notificationdto);
 	}
-	
+
 	@PostMapping("/page")
-	public Object manageUser(@RequestHeader("token") String token, @RequestBody  PageRequest pagedto,
+	public Object manageUser(@RequestHeader("token") String token, @RequestBody PageRequest pagedto,
 			@RequestParam("operation") String operation) {
 //		authenticate(token);
 		return webSiteManagementService.managepage(operation, pagedto);
 	}
 
-	
 	@PostMapping("/region")
-	public Object regionMange(@RequestHeader("token") String token,@RequestBody RegionRequest regiondto,
+	public Object regionMange(@RequestHeader("token") String token, @RequestBody RegionRequest regiondto,
 			@RequestParam("operation") String operation) {
 //		authenticate(token);
 		return webSiteManagementService.regionMange(operation, regiondto);
+	}
+
+//	Photo Gallery
+	@PostMapping("/photoUpload")
+	public Object gallaryPhoto(@RequestHeader("token") String token,
+			@RequestParam(required = true, value = "picture") MultipartFile file) {
+		LOG.info("Hello");
+		return webSiteManagementService.uploadGallary(file, request);
+	}
+
+	@PostMapping("/createGallary")
+	public Object createGallary(@RequestHeader("token") String token,
+			@RequestBody PhotoGalleryRequest photoGalleryRequestDto) {
+		LOG.info("Creating a new gallery");
+		return webSiteManagementService.createGallary(photoGalleryRequestDto);
 	}
 }

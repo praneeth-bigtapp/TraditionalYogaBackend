@@ -12,7 +12,7 @@ import com.traditional.yoga.model.EPurchaseInformation;
 @Repository
 public interface EpurchaseInformation extends JpaRepository<EPurchaseInformation, Integer> {
 
-	@Query(value = "SELECT * FROM `epurchaseinformation` WHERE `epurchase_id`=:epurchaseId;", nativeQuery = true)
+	@Query(value = "SELECT * FROM `epurchaseinformation` WHERE `epurchase_id`= :epurchaseId ", nativeQuery = true)
 	EPurchaseInformation getepurchaseInformationById(@Param("epurchaseId") int epurchaseId);
 	
 	@Query(value = "SELECT * FROM `epurchaseinformation` WHERE `student_id`= :studentId", nativeQuery = true)
