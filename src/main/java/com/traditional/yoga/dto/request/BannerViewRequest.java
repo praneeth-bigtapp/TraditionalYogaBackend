@@ -4,8 +4,13 @@ public class BannerViewRequest {
 
 	private int bannerId;
 	private String bannerName;
-	private String categoryId;
-	private String date;
+	private String courseTitle;
+	private String imagePath;
+	private String fromDate;
+	private String toDate;
+	private String description;
+	private int categoryId;
+	private String dateOfAdd;
 
 	public int getBannerId() {
 		return bannerId;
@@ -23,20 +28,60 @@ public class BannerViewRequest {
 		this.bannerName = bannerName;
 	}
 
-	public String getCategoryId() {
+	public String getCourseTitle() {
+		return courseTitle;
+	}
+
+	public void setCourseTitle(String courseTitle) {
+		this.courseTitle = courseTitle;
+	}
+
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
+	}
+
+	public String getFromDate() {
+		return fromDate;
+	}
+
+	public void setFromDate(String fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public String getToDate() {
+		return toDate;
+	}
+
+	public void setToDate(String toDate) {
+		this.toDate = toDate;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public int getCategoryId() {
 		return categoryId;
 	}
 
-	public void setCategoryId(String categoryId) {
+	public void setCategoryId(int categoryId) {
 		this.categoryId = categoryId;
 	}
 
-	public String getDate() {
-		return date;
+	public String getDateOfAdd() {
+		return dateOfAdd;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	public void setDateOfAdd(String dateOfAdd) {
+		this.dateOfAdd = dateOfAdd;
 	}
 
 }
