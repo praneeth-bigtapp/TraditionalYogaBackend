@@ -8,17 +8,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.traditional.yoga.dto.Response;
+import com.traditional.yoga.dto.request.AddCoursemateialRequest;
 import com.traditional.yoga.dto.request.CoursesListRequest;
+import com.traditional.yoga.dto.request.MaterialCategoryRequest;
 import com.traditional.yoga.dto.request.OnlineExamReqest;
 import com.traditional.yoga.dto.request.TaskRequest;
 import com.traditional.yoga.dto.request.TestimoalRequest;
+import com.traditional.yoga.model.AddCoursesMaterialModel;
 import com.traditional.yoga.model.CourseListModel;
+import com.traditional.yoga.model.MaterialCategoryModel;
 import com.traditional.yoga.model.TaskModel;
 import com.traditional.yoga.model.TestimonalsModel;
 import com.traditional.yoga.model.onlineexamsModel;
+import com.traditional.yoga.repository.AddMaterialRepository;
 import com.traditional.yoga.repository.CategoryRepository;
 import com.traditional.yoga.repository.CoursesListRepository;
 import com.traditional.yoga.repository.LevelofTestRepository;
+import com.traditional.yoga.repository.MaterialCategoryRepostiory;
+import com.traditional.yoga.repository.MediaRepository;
 import com.traditional.yoga.repository.OnlineExamRepository;
 import com.traditional.yoga.repository.TaskRepository;
 import com.traditional.yoga.repository.TestimonalRepository;
@@ -40,15 +47,24 @@ public class CoursesandOnlineexamService {
 
 	@Autowired
 	OnlineExamRepository onlineExamRepository;
-	
+
 	@Autowired
 	CategoryRepository categoryRepository;
-	
+
 	@Autowired
 	TaskRepository taskRepository;
-	
+
 	@Autowired
 	TestimonalRepository testimonalRepository;
+
+	@Autowired
+	MediaRepository mediaRepository;
+	
+	@Autowired
+	MaterialCategoryRepostiory materialCategoryRepostiory;
+	
+	@Autowired
+	AddMaterialRepository addMaterialRepository;
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -63,8 +79,7 @@ public class CoursesandOnlineexamService {
 			} else if (operationType.equals("categoryList")) {
 				httpStatus = HttpStatus.OK;
 				return categoryRepository.findAll();
-			}
-			else if (operationType.equals("typeoftest")) {
+			} else if (operationType.equals("typeoftest")) {
 				httpStatus = HttpStatus.OK;
 				return typeofTestRepository.findAll();
 			} else if (operationType.equals("leveloftest")) {
@@ -73,12 +88,21 @@ public class CoursesandOnlineexamService {
 			} else if (operationType.equals("onlineexam")) {
 				httpStatus = HttpStatus.OK;
 				return onlineExamRepository.findAll();
-			}else if (operationType.equals("task")) {
+			} else if (operationType.equals("task")) {
 				httpStatus = HttpStatus.OK;
 				return taskRepository.findAll();
 			} else if (operationType.equals("testimonal")) {
 				httpStatus = HttpStatus.OK;
 				return testimonalRepository.findAll();
+			} else if (operationType.equals("mediaType")) {
+				httpStatus = HttpStatus.OK;
+				return mediaRepository.findAll();
+			}else if (operationType.equals("materialCategory")) {
+				httpStatus = HttpStatus.OK;
+				return materialCategoryRepostiory.findAll();
+			}else if (operationType.equals("coursematerial")) {
+				httpStatus = HttpStatus.OK;
+				return addMaterialRepository.findAll();
 			} 
 			else {
 				message = "Unknown Operation";
@@ -200,12 +224,7 @@ public class CoursesandOnlineexamService {
 		}
 
 	}
-	
-	
-	
-	
-	
-	
+
 	public Object managetask(String operation, TaskRequest taskDto) {
 
 		this.httpStatus = HttpStatus.OK;
@@ -234,7 +253,7 @@ public class CoursesandOnlineexamService {
 		}
 		return new ResponseEntity<>(response, httpStatus);
 	}
-	
+
 	private void addTask(TaskRequest taskDto) {
 		TaskModel tasknew = taskRepository.getTaskById(taskDto.getTaskId());
 		if (tasknew == null) {
@@ -257,10 +276,11 @@ public class CoursesandOnlineexamService {
 		}
 
 	}
+
 	
-	
+//	TESTIMONAL////
 	public Object manageTestimonal(String operation, TestimoalRequest testimonalDto) {
-		
+
 		this.httpStatus = HttpStatus.OK;
 		try {
 
@@ -287,7 +307,7 @@ public class CoursesandOnlineexamService {
 		}
 		return new ResponseEntity<>(response, httpStatus);
 	}
-		
+
 	private void addTestimonal(TestimoalRequest testimonalDto) {
 		TestimonalsModel testimonalnew = testimonalRepository.getTestmonialsById(testimonalDto.getTestimonalId());
 		if (testimonalnew == null) {
@@ -304,6 +324,123 @@ public class CoursesandOnlineexamService {
 			response = new Response(message, httpStatus.value(), null);
 		} else {
 			message = "task already exists";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+
+	}
+	
+	
+	
+	/// Add Material Categorys/////
+	
+	public Object managematerialCategory(String operation, MaterialCategoryRequest materialcategoryDto) {
+
+		this.httpStatus = HttpStatus.OK;
+		try {
+
+			if (operation.equals("add")) {
+				addcategorymaterial(materialcategoryDto);
+			} else if (operation.equals("")) {
+
+			} else if (operation.equals("active")) {
+//				activeUsers(userDto);
+			} else if (operation.equals("delete")) {
+//				deleteUsers(userDto);
+			} else {
+				message = "Operation Doesn't exist";
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Exception in adding courses";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	private void addcategorymaterial(MaterialCategoryRequest materialcategoryDto) {
+		MaterialCategoryModel Materialnew = materialCategoryRepostiory.getotherById(materialcategoryDto.getMaterialCategoryId());
+		if (Materialnew != null) {
+			MaterialCategoryModel materiallist = new MaterialCategoryModel();
+			
+			materiallist.setCategoryName(materialcategoryDto.getCategoryName());
+			materiallist.setIsActive("Y");
+			materialCategoryRepostiory.save(materiallist);
+			message = "new category is added sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "task already exists";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	///ADD MATERIAL COURSES///////
+	public Object managemateials(String operation, AddCoursemateialRequest materialDto) {
+
+		this.httpStatus = HttpStatus.OK;
+		try {
+
+			if (operation.equals("add")) {
+				addmaterials(materialDto);
+			} else if (operation.equals("")) {
+
+			} else if (operation.equals("active")) {
+//				activeUsers(userDto);
+			} else if (operation.equals("delete")) {
+//				deleteUsers(userDto);
+			} else {
+				message = "Operation Doesn't exist";
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Exception in adding courses";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	private void addmaterials(  AddCoursemateialRequest materialDto) {
+		AddCoursesMaterialModel materialnew = addMaterialRepository.getmaterialById(materialDto.getCourseMaterialId());
+		if (materialnew == null) {
+			AddCoursesMaterialModel materialList = new AddCoursesMaterialModel();
+//			
+			materialList.setCoursesId(materialDto.getCoursesId());
+			materialList.setAddCategory(materialDto.getAddCategory());
+			materialList.setAddDescription(materialDto.getAddDescription());
+			materialList.setMaterialCategoryId(materialDto.getMaterialCategoryId());
+			materialList.setMediaId(materialDto.getMediaId());
+			materialList.setVideoLink(materialDto.getVideoLink());
+			materialList.setFileUpload(materialDto.getFileUpload());
+			materialList.setMessage(materialDto.getMessage());
+			materialList.setIsActive("Y");
+			addMaterialRepository.save(materialList);
+			message = "material to courses is added sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "material  already exists";
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);

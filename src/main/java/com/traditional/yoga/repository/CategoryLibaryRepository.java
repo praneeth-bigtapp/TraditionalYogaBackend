@@ -11,6 +11,6 @@ import com.traditional.yoga.model.LibaryCategoryModel;
 public interface CategoryLibaryRepository extends JpaRepository<LibaryCategoryModel, Integer>{
 
 	
-	@Query(value = "SELECT * FROM `library_category`where `category_id`= :categoryId",nativeQuery = true)
+	@Query(value = "SELECT * FROM `library_category `where `category_id`= :categoryId",nativeQuery = true)
 	LibaryCategoryModel getpraticecategoryById(@Param("categoryId") int categoryId);
 }
