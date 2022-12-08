@@ -54,10 +54,10 @@ public class WebSiteManagementController {
 	}
 
 	@PostMapping("/banner")
-	public Object manageUser(@RequestHeader("token") String token, @RequestBody BannerViewRequest BannerViewdto,
+	public Object manageUser(@RequestHeader("token") String token, @RequestBody BannerViewRequest bannerViewdto,
 			@RequestParam("operation") String operation) {
 //		authenticate(token);
-		return webSiteManagementService.bannerMange(operation, BannerViewdto);
+		return webSiteManagementService.bannerMange(operation, bannerViewdto);
 	}
 
 	@PostMapping("/scripctures")

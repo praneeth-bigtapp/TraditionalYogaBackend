@@ -21,7 +21,7 @@ import com.traditional.yoga.dto.request.PhotoGalleryRequest;
 import com.traditional.yoga.dto.request.RegionRequest;
 import com.traditional.yoga.dto.request.ScripcturesRequest;
 import com.traditional.yoga.model.AlertModel;
-import com.traditional.yoga.model.BannerViewModel;
+import com.traditional.yoga.model.BannerModel;
 import com.traditional.yoga.model.NotificationModel;
 import com.traditional.yoga.model.PageModel;
 import com.traditional.yoga.model.PhotoGalleryModel;
@@ -161,14 +161,17 @@ public class WebSiteManagementService {
 		httpStatus = HttpStatus.OK;
 		try {
 			if (operation.equals("add")) {
-				BannerViewModel bannernew = bannerRepository.getbannerbyId(bannerViewdto.getBannerId());
+				BannerModel bannernew = bannerRepository.getbannerbyId(bannerViewdto.getBannerId());
 				if (bannernew == null) {
-					BannerViewModel bannerList = new BannerViewModel();
-//					bannerList.setBannerId(bannerViewdto.getBannerId());
-					bannerList.setCategoryId(bannerViewdto.getCategoryId());
+					BannerModel bannerList = new BannerModel();
 					bannerList.setBannerName(bannerViewdto.getBannerName());
-					bannerList.setDate(bannerList.getDate());
-
+					bannerList.setCourseTitle(bannerViewdto.getCourseTitle());
+					bannerList.setImagePath(bannerViewdto.getImagePath());
+					bannerList.setFromDate(bannerViewdto.getFromDate());
+					bannerList.setToDate(bannerViewdto.getToDate());
+					bannerList.setDescription(bannerViewdto.getDescription());
+					bannerList.setCategoryId(bannerViewdto.getCategoryId());
+					bannerList.setDateOfAdd(generalUtils.getCurrentDate());
 					bannerRepository.save(bannerList);
 					message = "new banner is  added sucessfully";
 					LOG.info(message);
