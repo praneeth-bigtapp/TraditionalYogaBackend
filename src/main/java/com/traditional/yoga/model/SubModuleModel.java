@@ -1,10 +1,13 @@
 package com.traditional.yoga.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -16,8 +19,9 @@ public class SubModuleModel {
 	@Column(name = "sub_module_id")
 	private int subModuleId;
 
-	@Column(name = "module_id")
-	private int moduleId;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "module_id", referencedColumnName = "module_id")
+	private ModuleModel moduleId;
 
 	@Column(name = "sub_module_name")
 	private String subModuleName;
@@ -33,11 +37,11 @@ public class SubModuleModel {
 		this.subModuleId = subModuleId;
 	}
 
-	public int getModuleId() {
+	public ModuleModel getModuleId() {
 		return moduleId;
 	}
 
-	public void setModuleId(int moduleId) {
+	public void setModuleId(ModuleModel moduleId) {
 		this.moduleId = moduleId;
 	}
 
