@@ -20,6 +20,7 @@ import com.traditional.yoga.dto.request.AlertRequest;
 import com.traditional.yoga.dto.request.BannerViewRequest;
 import com.traditional.yoga.dto.request.NotificationRequest;
 import com.traditional.yoga.dto.request.PageRequest;
+import com.traditional.yoga.dto.request.PearlsOfWisdomRequest;
 import com.traditional.yoga.dto.request.PhotoGalleryRequest;
 import com.traditional.yoga.dto.request.RegionRequest;
 import com.traditional.yoga.dto.request.ScripcturesRequest;
@@ -101,5 +102,13 @@ public class WebSiteManagementController {
 			@RequestBody PhotoGalleryRequest photoGalleryRequestDto) {
 		LOG.info("Creating a new gallery");
 		return webSiteManagementService.createGallary(photoGalleryRequestDto);
+	}
+	
+	
+	@PostMapping("/wisdom")
+	public Object managewisdom(@RequestHeader("token") String token, @RequestBody PearlsOfWisdomRequest wisdomdto,
+			@RequestParam("operation") String operation) {
+//		authenticate(token);
+		return webSiteManagementService.managewisdom(operation, wisdomdto);
 	}
 }

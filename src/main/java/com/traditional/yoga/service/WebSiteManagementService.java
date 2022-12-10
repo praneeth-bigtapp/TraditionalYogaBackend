@@ -17,6 +17,7 @@ import com.traditional.yoga.dto.request.AlertRequest;
 import com.traditional.yoga.dto.request.BannerViewRequest;
 import com.traditional.yoga.dto.request.NotificationRequest;
 import com.traditional.yoga.dto.request.PageRequest;
+import com.traditional.yoga.dto.request.PearlsOfWisdomRequest;
 import com.traditional.yoga.dto.request.PhotoGalleryRequest;
 import com.traditional.yoga.dto.request.RegionRequest;
 import com.traditional.yoga.dto.request.ScripcturesRequest;
@@ -24,6 +25,7 @@ import com.traditional.yoga.model.AlertModel;
 import com.traditional.yoga.model.BannerModel;
 import com.traditional.yoga.model.NotificationModel;
 import com.traditional.yoga.model.PageModel;
+import com.traditional.yoga.model.PearlsOfWisdomModel;
 import com.traditional.yoga.model.PhotoGalleryModel;
 import com.traditional.yoga.model.RegionModel;
 import com.traditional.yoga.model.ScripcturesModel;
@@ -32,6 +34,7 @@ import com.traditional.yoga.repository.BannerViewRepository;
 import com.traditional.yoga.repository.ImageGalleryRepository;
 import com.traditional.yoga.repository.NoticationRepository;
 import com.traditional.yoga.repository.PageRepository;
+import com.traditional.yoga.repository.PearlsOfWisdomRepository;
 import com.traditional.yoga.repository.PhotoGalleryRepository;
 import com.traditional.yoga.repository.RegionRepository;
 import com.traditional.yoga.repository.ScripcturesRepository;
@@ -68,6 +71,9 @@ public class WebSiteManagementService {
 
 	@Autowired
 	ImageGalleryRepository imageGalleryRepository;
+
+	@Autowired
+	PearlsOfWisdomRepository pearlsOfWisdomRepository;
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -106,7 +112,12 @@ public class WebSiteManagementService {
 			} else if (operationType.equals("page")) {
 				httpStatus = HttpStatus.OK;
 				return pageRepository.findAll();
-			} else if (operationType.equals("region")) {
+			}
+			else if (operationType.equals("wisdom")) {
+				httpStatus = HttpStatus.OK;
+				return pearlsOfWisdomRepository.findAll();
+			}
+			else if (operationType.equals("region")) {
 				httpStatus = HttpStatus.OK;
 				return regionRepository.findAll();
 			} else {
@@ -316,6 +327,7 @@ public class WebSiteManagementService {
 				pageModelnew.setDescription(pagedto.getDescription());
 				pageModelnew.setSubject(pagedto.getSubject());
 				pageModelnew.setCaptcha(pagedto.getCaptcha());
+				pageRepository.save(pageModelnew);
 				message = "page saved sucessfully";
 				LOG.info(message);
 				response = new Response(message, httpStatus.value(), null);
@@ -484,4 +496,93 @@ public class WebSiteManagementService {
 		return new ResponseEntity<>(response, httpStatus);
 	}
 
+	////// Pears of wisdom /////////////
+
+	public Object managewisdom(String operation, PearlsOfWisdomRequest wisdomdto) {
+
+		try {
+			if (operation.equals("add")) {
+				addwisdom(wisdomdto);
+			} else if (operation.equals("update")) {
+				updatewisdom(wisdomdto);
+			} else if (operation.equals("delete")) {
+				deletewisdom(wisdomdto);
+			} else {
+				message = "Operation Doesn't exist";
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Exception in Role";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	private void deletewisdom(PearlsOfWisdomRequest wisdomdto) {
+		PearlsOfWisdomModel wisdommodelnew = pearlsOfWisdomRepository.getwisdomById(wisdomdto.getQuoteId());
+		if (wisdommodelnew != null) {
+			pearlsOfWisdomRepository.deleteById(wisdommodelnew.getQuoteId());
+			message = "quote deleted sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "quote Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void updatewisdom(PearlsOfWisdomRequest wisdomdto) {
+		PearlsOfWisdomModel wisdommodelnew = pearlsOfWisdomRepository.getwisdomById(wisdomdto.getQuoteId());
+		if (wisdommodelnew != null) {
+			PearlsOfWisdomModel wisdommodelcheck = pearlsOfWisdomRepository.getwisdomBytitle(wisdomdto.getQuoteTitle());
+			if (wisdommodelcheck == null) {
+				wisdommodelnew.setQuoteTitle(wisdomdto.getQuoteTitle());
+				wisdommodelnew.setQuote(wisdomdto.getQuote());
+				wisdommodelnew.setQuoteDate(wisdomdto.getQuoteDate());
+				wisdommodelnew.setQuoteType(wisdomdto.getQuoteType());
+				pearlsOfWisdomRepository.save(wisdommodelnew);
+				message = "quote saved sucessfully";
+				LOG.info(message);
+				response = new Response(message, httpStatus.value(), null);
+			} else {
+				message = "Updated quote is already exist";
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+
+		} else {
+			message = "quote Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+
+	}
+
+	private void addwisdom(PearlsOfWisdomRequest wisdomdto) {
+		PearlsOfWisdomModel wisdommodelnew = pearlsOfWisdomRepository.getwisdomById(wisdomdto.getQuoteId());
+		if (wisdommodelnew == null) {
+			PearlsOfWisdomModel wisdomlist = new PearlsOfWisdomModel();
+
+			
+			wisdomlist.setQuoteTitle(wisdomdto.getQuoteTitle());
+			wisdomlist.setQuote(wisdomdto.getQuote());
+			wisdomlist.setQuoteDate(wisdomdto.getQuoteDate());
+			wisdomlist.setQuoteType(wisdomdto.getQuoteType());
+			wisdomlist.setIsActive("Y");
+
+			pearlsOfWisdomRepository.save(wisdomlist);
+			message = "new quote is  added sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		}
+	}
 }
