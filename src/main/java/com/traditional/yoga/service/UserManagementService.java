@@ -493,10 +493,10 @@ public class UserManagementService {
 		SubModuleModel subMenuDb = subModelRepository.getSubModuleById(subMenuDto.getSubMenuId());
 		if (subMenuDb != null) {
 			SubModuleModel menuCheck = subModelRepository.getSubModuleByName(subMenuDto.getSubMenuName());
-			Boolean menuStatus = (subMenuDto.getMenuId() == subMenuDb.getModuleId());
+			Boolean menuStatus = (subMenuDto.getMenuId() == subMenuDb.getModuleId().getModuleId());
 			if (menuCheck == null) {
 				subMenuDb.setSubModuleId(subMenuDto.getSubMenuId());
-				subMenuDb.setModuleId(subMenuDto.getMenuId());
+				subMenuDb.setModuleId(modelRepository.getModuleById(subMenuDto.getMenuId()));
 				subMenuDb.setSubModuleName(subMenuDto.getSubMenuName());
 				subMenuDb.setStatus(subMenuDto.getStatus());
 				subModelRepository.save(subMenuDb);
@@ -507,7 +507,7 @@ public class UserManagementService {
 			} else if (Boolean.FALSE.equals(menuStatus)) {
 				LOG.info("Updating Menu change");
 				subMenuDb.setSubModuleId(subMenuDto.getSubMenuId());
-				subMenuDb.setModuleId(subMenuDto.getMenuId());
+				subMenuDb.setModuleId(modelRepository.getModuleById(subMenuDto.getMenuId()));
 				subMenuDb.setSubModuleName(subMenuDto.getSubMenuName());
 				subMenuDb.setStatus(subMenuDto.getStatus());
 				subModelRepository.save(subMenuDb);
@@ -535,7 +535,7 @@ public class UserManagementService {
 		SubModuleModel subMenuDb = subModelRepository.getSubModuleById(subMenuDto.getSubMenuId());
 		if (subMenuDb != null) {
 			subMenuDb.setSubModuleId(subMenuDto.getSubMenuId());
-			subMenuDb.setModuleId(subMenuDto.getMenuId());
+			subMenuDb.setModuleId(modelRepository.getModuleById(subMenuDto.getMenuId()));
 			subMenuDb.setSubModuleName(subMenuDto.getSubMenuName());
 			subMenuDb.setStatus(subMenuDto.getStatus());
 			subModelRepository.save(subMenuDb);
@@ -554,7 +554,7 @@ public class UserManagementService {
 		SubModuleModel subMenuNew = subModelRepository.getSubModuleByName(subMenuDto.getSubMenuName());
 		if (subMenuNew == null) {
 			SubModuleModel newMenu = new SubModuleModel();
-			newMenu.setModuleId(subMenuDto.getMenuId());
+			newMenu.setModuleId(modelRepository.getModuleById(subMenuDto.getMenuId()));
 			newMenu.setSubModuleName(subMenuDto.getSubMenuName());
 			newMenu.setStatus("Y");
 			subModelRepository.save(newMenu);
@@ -577,7 +577,7 @@ public class UserManagementService {
 			for (RoleModel eachRole : role) {
 				RolePermissionModel updateRolePermission = new RolePermissionModel();
 				updateRolePermission.setRoleId(eachRole.getRoleId());
-				updateRolePermission.setModuleId(subMenu.getModuleId());
+				updateRolePermission.setModuleId(subMenu.getModuleId().getModuleId());
 				updateRolePermission.setSubModuleId(subMenu.getSubModuleId());
 				updateRolePermission.setPermissionId(6);
 				rolePermissionRepository.save(updateRolePermission);
