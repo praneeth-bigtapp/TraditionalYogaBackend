@@ -140,7 +140,7 @@ public class LoginService {
 		List<RolePermissions> permissions = new ArrayList<>();
 		List<ModuleScreens> moduleScreensMapList = new ArrayList<>();
 		HashMap<String, List<SubModulesScreen>> moduleSubmoduleMap = new HashMap<>();
-		List<SubModulesScreen> subModuleMapList = new ArrayList<>();
+		List<SubModulesScreen> subModuleMapList;
 
 //		Module
 		for (RolePermissionModel eachPermission : rolePermissions) {
@@ -180,10 +180,6 @@ public class LoginService {
 					List<SubModulesScreen> moduleSubmoduleList = moduleSubmoduleMap
 							.get(eachModuleScreen.getModuleName());
 					moduleSubmoduleList.add(subModules);
-//					Boolean valid = stringExists(moduleSubmoduleList, subModules.getSubModuleName());
-//					if (Boolean.TRUE.equals(valid)) {
-//					moduleSubmoduleList.add(subModules);
-//					}
 				}
 			}
 		}
@@ -199,17 +195,5 @@ public class LoginService {
 		}
 		return permissions;
 	}
-
-//	public boolean stringExists(List<SubModulesScreen> moduleSubmoduleList, String subModuleName) {
-//		boolean isSubmoduleExists = false;
-//		for (SubModulesScreen eachSmp : moduleSubmoduleList) {
-//			if (eachSmp.getSubModuleName().equals(subModuleName)) {
-//				isSubmoduleExists = true;
-//				return isSubmoduleExists;
-//			}
-//		}
-//
-//		return isSubmoduleExists;
-//	}
 
 }

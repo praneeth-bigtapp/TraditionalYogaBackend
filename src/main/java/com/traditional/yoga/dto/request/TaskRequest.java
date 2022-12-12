@@ -10,7 +10,6 @@ public class TaskRequest {
 	private String description;
 	private String mediafile;
 	private String dueDate;
-
 	private String createdBy;
 	private String createDate;
 	private String updateBy;

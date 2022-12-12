@@ -40,7 +40,7 @@ public class StudentsController {
 	@GetMapping("/getAllByCourse")
 	public Object getAllStudentByCourse(@RequestHeader("token") String token, @RequestParam("type") String type,
 			@RequestParam("courseId") int courseId) {
-		LOG.info("Entering into getAll{} Method");
+		LOG.info("Entering into getAll Method");
 		return studentService.getAllByCourse(type, courseId);
 	}
 
@@ -76,14 +76,13 @@ public class StudentsController {
 
 	@PostMapping("/volunteer/add")
 	public Object addStudentVolunter(@RequestHeader("token") String token, @RequestBody VolunteerRequest volunteerDto) {
-		LOG.info("Entering into get volunter Method");
+		LOG.info("Entering into add volunter Method");
 		return studentService.addStudentVolunter(volunteerDto);
 	}
 
 	@PostMapping("/blockListUsers")
 	public Object manageBlockListUsers(@RequestHeader("token") String token, @RequestBody BlackListRequest blockListDto,
 			@RequestParam("operation") String operation) {
-//		authenticate(token);
 		return studentService.blockListUsersManage(operation, blockListDto);
 	}
 
@@ -98,12 +97,6 @@ public class StudentsController {
 		LOG.info("Entering into get volunter Method");
 		return studentService.mapStudentCourse(studentDto);
 	}
-
-//	@PostMapping("/mapMember")
-//	public Object mapMenber(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto) {
-//		LOG.info("Mapping members to students");
-//		return studentService.mapStudentCourse(studentDto); // TODO
-//	}
 
 	@PostMapping("/mapMentor")
 	public Object mapMentor(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto) {

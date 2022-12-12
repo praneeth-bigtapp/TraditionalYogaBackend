@@ -38,6 +38,7 @@ import com.traditional.yoga.repository.PearlsOfWisdomRepository;
 import com.traditional.yoga.repository.PhotoGalleryRepository;
 import com.traditional.yoga.repository.RegionRepository;
 import com.traditional.yoga.repository.ScripcturesRepository;
+import com.traditional.yoga.utils.Constants;
 import com.traditional.yoga.utils.GeneralUtils;
 
 @Service
@@ -84,16 +85,16 @@ public class WebSiteManagementService {
 		try {
 			if (operationType.equals("pages")) {
 				httpStatus = HttpStatus.OK;
-//				return studentRepository.findAll();
+				return null;
 			} else if (operationType.equals("photoGallery")) {
 				httpStatus = HttpStatus.OK;
 				return photoGalleryRepository.findAll();
 			} else if (operationType.equals("videoGallery")) {
 				httpStatus = HttpStatus.OK;
-//				return donationRepository.findAll();
+				return "Video Gallery";
 			} else if (operationType.equals("testimonials")) {
 				httpStatus = HttpStatus.OK;
-//				return epurchaseInformation.findAll();
+				return "Testimonoals";
 			} else if (operationType.equals("banner")) {
 				httpStatus = HttpStatus.OK;
 				return bannerRepository.findAll();
@@ -102,7 +103,7 @@ public class WebSiteManagementService {
 				return alertRepository.findAll();
 			} else if (operationType.equals("alertCategory")) {
 				httpStatus = HttpStatus.OK;
-//				return alertRepository.findAll();
+				return "alerts Category";
 			} else if (operationType.equals("scripctures")) {
 				httpStatus = HttpStatus.OK;
 				return scripcturesRepository.findAll();
@@ -134,7 +135,6 @@ public class WebSiteManagementService {
 			response = new Response(message, httpStatus.value(), httpStatus.getReasonPhrase());
 			return new ResponseEntity<>(response, httpStatus);
 		}
-		return new ResponseEntity<>(response, httpStatus);
 	}
 
 //	Alerts
@@ -152,7 +152,7 @@ public class WebSiteManagementService {
 				LOG.info(message);
 				response = new Response(message, httpStatus.value(), null);
 			} else {
-				message = "Operation Doesn't exist";
+				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
@@ -189,13 +189,13 @@ public class WebSiteManagementService {
 					response = new Response(message, httpStatus.value(), null);
 				}
 			} else {
-				message = "Operation Doesn't exist";
+				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
 			}
 		} catch (Exception e) {
-			message = "Exception in banner creation";
+			message = Constants.BANNER_EXCEPTION;
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());
@@ -212,7 +212,6 @@ public class WebSiteManagementService {
 						.checkscripcturesId(scripcuturesdto.getScripcturesId());
 				if (scripcturesModelnew == null) {
 					ScripcturesModel scripctureslist = new ScripcturesModel();
-//					scripctureslist.setScripcturesId(scripcuturesdto.getScripcturesId());
 					scripctureslist.setUploadFile(scripcuturesdto.getUploadFile());
 					scripctureslist.setCoverImage(scripcuturesdto.getCoverImage());
 					scripctureslist.setTitle(scripcuturesdto.getTitle());
@@ -224,7 +223,7 @@ public class WebSiteManagementService {
 					LOG.info(message);
 					response = new Response(message, httpStatus.value(), null);
 				} else {
-					message = "Operation Doesn't exist";
+					message = Constants.OPERATION_ERROR;
 					httpStatus = HttpStatus.CONFLICT;
 					LOG.error(message);
 					response = new Response(message, httpStatus.value(), message);
@@ -258,7 +257,7 @@ public class WebSiteManagementService {
 					LOG.info(message);
 					response = new Response(message, httpStatus.value(), null);
 				} else {
-					message = "Operation Doesn't exist";
+					message = Constants.OPERATION_ERROR;
 					httpStatus = HttpStatus.CONFLICT;
 					LOG.error(message);
 					response = new Response(message, httpStatus.value(), message);
@@ -285,7 +284,7 @@ public class WebSiteManagementService {
 			} else if (operation.equals("delete")) {
 				deleteRole(pagedto);
 			} else {
-				message = "Operation Doesn't exist";
+				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
@@ -366,35 +365,6 @@ public class WebSiteManagementService {
 		}
 	}
 
-//	public Object alertManage(String operation, RegionRequest regiondto) {
-//		httpStatus = HttpStatus.OK;
-//		try {
-//			if (operation.equals("add")) {
-//				RegionModel newAlert = new RegionModel();
-//				newAlert.setCategoryId(alertdto.getCategoryId());
-//				newAlert.setAlertDescription(alertdto.getAlertDescription());
-//				newAlert.setStartDate(alertdto.getStartDate());
-//				newAlert.setEndDate(alertdto.getEndDate());
-//				alertRepository.save(newAlert);
-//				message = "New Alert added Sucessfully";
-//				LOG.info(message);
-//				response = new Response(message, httpStatus.value(), null);
-//			} else {
-//				message = "Operation Doesn't exist";
-//				httpStatus = HttpStatus.CONFLICT;
-//				LOG.error(message);
-//				response = new Response(message, httpStatus.value(), message);
-//			}
-//		} catch (Exception e) {
-//			message = "Exception in alert";
-//			httpStatus = HttpStatus.EXPECTATION_FAILED;
-//			LOG.error(message);
-//			LOG.error(e.getLocalizedMessage());
-//			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
-//		}
-//		return new ResponseEntity<>(response, httpStatus);
-//	}
-
 	public Object regionMange(String operation, RegionRequest regiondto) {
 		httpStatus = HttpStatus.OK;
 		try {
@@ -412,13 +382,13 @@ public class WebSiteManagementService {
 					response = new Response(message, httpStatus.value(), null);
 				}
 			} else {
-				message = "Operation Doesn't exist";
+				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
 			}
 		} catch (Exception e) {
-			message = "Exception in banner creation";
+			message = Constants.BANNER_EXCEPTION;
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());

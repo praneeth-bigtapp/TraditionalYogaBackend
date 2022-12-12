@@ -39,6 +39,16 @@ public class WebSiteManagementController {
 	@Autowired
 	WebSiteManagementService webSiteManagementService;
 
+	/**
+	 * Authentication for Generated Token
+	 * 
+	 * @param token
+	 */
+	private void authenticate(String token) {
+		LOG.debug(token);
+		LOG.info("Validating the Token");
+	}
+	
 	@GetMapping("/getAll")
 	public Object getAllalertdetails(@RequestHeader("token") String token,
 			@RequestParam("operation") String operation) {
@@ -49,7 +59,7 @@ public class WebSiteManagementController {
 	@PostMapping("/alerts")
 	public Object manageUser(@RequestHeader("token") String token, @RequestBody AlertRequest alertDto,
 			@RequestParam("operation") String operation) {
-//		authenticate(token);
+		authenticate(token);
 		LOG.info("Entering into Alert {} Method in Web Site Management", operation);
 		return webSiteManagementService.alertManage(operation, alertDto);
 	}
@@ -57,35 +67,35 @@ public class WebSiteManagementController {
 	@PostMapping("/banner")
 	public Object manageUser(@RequestHeader("token") String token, @RequestBody BannerViewRequest bannerViewdto,
 			@RequestParam("operation") String operation) {
-//		authenticate(token);
+		authenticate(token);
 		return webSiteManagementService.bannerMange(operation, bannerViewdto);
 	}
 
 	@PostMapping("/scripctures")
 	public Object manageUser(@RequestHeader("token") String token, @RequestBody ScripcturesRequest scripcuturesdto,
 			@RequestParam("operation") String operation) {
-//		authenticate(token);
+		authenticate(token);
 		return webSiteManagementService.managescripcutures(operation, scripcuturesdto);
 	}
 
 	@PostMapping("/notifcation")
 	public Object manageUser(@RequestHeader("token") String token, @RequestBody NotificationRequest notificationdto,
 			@RequestParam("operation") String operation) {
-//		authenticate(token);
+		authenticate(token);
 		return webSiteManagementService.managenotification(operation, notificationdto);
 	}
 
 	@PostMapping("/page")
 	public Object manageUser(@RequestHeader("token") String token, @RequestBody PageRequest pagedto,
 			@RequestParam("operation") String operation) {
-//		authenticate(token);
+		authenticate(token);
 		return webSiteManagementService.managepage(operation, pagedto);
 	}
 
 	@PostMapping("/region")
 	public Object regionMange(@RequestHeader("token") String token, @RequestBody RegionRequest regiondto,
 			@RequestParam("operation") String operation) {
-//		authenticate(token);
+		authenticate(token);
 		return webSiteManagementService.regionMange(operation, regiondto);
 	}
 
@@ -108,7 +118,7 @@ public class WebSiteManagementController {
 	@PostMapping("/wisdom")
 	public Object managewisdom(@RequestHeader("token") String token, @RequestBody PearlsOfWisdomRequest wisdomdto,
 			@RequestParam("operation") String operation) {
-//		authenticate(token);
+		authenticate(token);
 		return webSiteManagementService.managewisdom(operation, wisdomdto);
 	}
 }

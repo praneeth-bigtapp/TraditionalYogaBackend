@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.AddCoursemateialRequest;
 import com.traditional.yoga.dto.request.CoursesListRequest;
@@ -34,7 +37,7 @@ import com.traditional.yoga.repository.TypeofTestRepository;
 @Service
 public class CoursesandOnlineexamService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(CourseManagementService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CoursesandOnlineexamService.class);
 
 	@Autowired
 	CoursesListRepository coursesListRepository;
@@ -59,10 +62,10 @@ public class CoursesandOnlineexamService {
 
 	@Autowired
 	MediaRepository mediaRepository;
-	
+
 	@Autowired
 	MaterialCategoryRepostiory materialCategoryRepostiory;
-	
+
 	@Autowired
 	AddMaterialRepository addMaterialRepository;
 
@@ -97,14 +100,13 @@ public class CoursesandOnlineexamService {
 			} else if (operationType.equals("mediaType")) {
 				httpStatus = HttpStatus.OK;
 				return mediaRepository.findAll();
-			}else if (operationType.equals("materialCategory")) {
+			} else if (operationType.equals("materialCategory")) {
 				httpStatus = HttpStatus.OK;
 				return materialCategoryRepostiory.findAll();
-			}else if (operationType.equals("coursematerial")) {
+			} else if (operationType.equals("coursematerial")) {
 				httpStatus = HttpStatus.OK;
 				return addMaterialRepository.findAll();
-			} 
-			else {
+			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
 				LOG.error(message);
@@ -120,7 +122,7 @@ public class CoursesandOnlineexamService {
 		}
 	}
 
-	public Object managecourses(String operation, CoursesListRequest courseListDto) {
+	public Object manageCourses(String operation, CoursesListRequest courseListDto) {
 
 		this.httpStatus = HttpStatus.OK;
 		try {
@@ -150,10 +152,9 @@ public class CoursesandOnlineexamService {
 	}
 
 	private void addcourses(CoursesListRequest courseListDto) {
-		CourseListModel ListNew = coursesListRepository.getcoursesListById(courseListDto.getCoursesId());
-		if (ListNew == null) {
+		CourseListModel listNew = coursesListRepository.getcoursesListById(courseListDto.getCoursesId());
+		if (listNew == null) {
 			CourseListModel newlist = new CourseListModel();
-
 			newlist.setCoursesName(courseListDto.getCoursesName());
 			newlist.setCategorieId(courseListDto.getCategorieId());
 			newlist.setDescription(courseListDto.getDescription());
@@ -172,25 +173,33 @@ public class CoursesandOnlineexamService {
 		}
 	}
 
-	public Object onlineexams(String operation, OnlineExamReqest onlineexamDto) {
+	public Object onlineExams(String onlineExamString) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		OnlineExamReqest onlineExamDto;
+		try {
+			onlineExamDto = objectMapper.readValue(onlineExamString, OnlineExamReqest.class);
+			return mangeExams(onlineExamDto);
+		} catch (JsonMappingException e) {
+			message = "Exception in JsonMappingException Online Exam";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+			return new ResponseEntity<>(response, httpStatus);
+		} catch (JsonProcessingException ep) {
+			message = "Exception in JsonProcessingException Online Exam";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(ep.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), ep.getLocalizedMessage());
+			return new ResponseEntity<>(response, httpStatus);
+		}
+	}
 
+	public Object mangeExams(OnlineExamReqest onlineExamDto) {
 		this.httpStatus = HttpStatus.OK;
 		try {
-
-			if (operation.equals("add")) {
-				onlineexams(onlineexamDto);
-			} else if (operation.equals("")) {
-
-			} else if (operation.equals("active")) {
-//				activeUsers(userDto);
-			} else if (operation.equals("delete")) {
-//				deleteUsers(userDto);
-			} else {
-				message = "Operation Doesn't exist";
-				httpStatus = HttpStatus.CONFLICT;
-				LOG.error(message);
-				response = new Response(message, httpStatus.value(), message);
-			}
+			addOnlineExams(onlineExamDto);
 		} catch (Exception e) {
 			message = "Exception in adding courses";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
@@ -201,7 +210,7 @@ public class CoursesandOnlineexamService {
 		return new ResponseEntity<>(response, httpStatus);
 	}
 
-	private void onlineexams(OnlineExamReqest onlineexamDto) {
+	private void addOnlineExams(OnlineExamReqest onlineexamDto) {
 		onlineexamsModel examNew = onlineExamRepository.getexamdetailsById(onlineexamDto.getExamsId());
 		if (examNew == null) {
 			onlineexamsModel examList = new onlineexamsModel();
@@ -213,7 +222,7 @@ public class CoursesandOnlineexamService {
 			examList.setFileUpload(onlineexamDto.getFileUpload());
 			examList.setDescription(onlineexamDto.getDescription());
 			onlineExamRepository.save(examList);
-			message = "new exam sheet is   added sucessfully";
+			message = "new exam sheet is added sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
@@ -277,7 +286,6 @@ public class CoursesandOnlineexamService {
 
 	}
 
-	
 //	TESTIMONAL////
 	public Object manageTestimonal(String operation, TestimoalRequest testimonalDto) {
 
@@ -330,11 +338,9 @@ public class CoursesandOnlineexamService {
 		}
 
 	}
-	
-	
-	
+
 	/// Add Material Categorys/////
-	
+
 	public Object managematerialCategory(String operation, MaterialCategoryRequest materialcategoryDto) {
 
 		this.httpStatus = HttpStatus.OK;
@@ -365,10 +371,11 @@ public class CoursesandOnlineexamService {
 	}
 
 	private void addcategorymaterial(MaterialCategoryRequest materialcategoryDto) {
-		MaterialCategoryModel Materialnew = materialCategoryRepostiory.getotherById(materialcategoryDto.getMaterialCategoryId());
+		MaterialCategoryModel Materialnew = materialCategoryRepostiory
+				.getotherById(materialcategoryDto.getMaterialCategoryId());
 		if (Materialnew != null) {
 			MaterialCategoryModel materiallist = new MaterialCategoryModel();
-			
+
 			materiallist.setCategoryName(materialcategoryDto.getCategoryName());
 			materiallist.setIsActive("Y");
 			materialCategoryRepostiory.save(materiallist);
@@ -383,15 +390,8 @@ public class CoursesandOnlineexamService {
 		}
 
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	///ADD MATERIAL COURSES///////
+
+	/// ADD MATERIAL COURSES///////
 	public Object managemateials(String operation, AddCoursemateialRequest materialDto) {
 
 		this.httpStatus = HttpStatus.OK;
@@ -421,7 +421,7 @@ public class CoursesandOnlineexamService {
 		return new ResponseEntity<>(response, httpStatus);
 	}
 
-	private void addmaterials(  AddCoursemateialRequest materialDto) {
+	private void addmaterials(AddCoursemateialRequest materialDto) {
 		AddCoursesMaterialModel materialnew = addMaterialRepository.getmaterialById(materialDto.getCourseMaterialId());
 		if (materialnew == null) {
 			AddCoursesMaterialModel materialList = new AddCoursesMaterialModel();

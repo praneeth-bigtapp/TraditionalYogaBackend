@@ -86,7 +86,6 @@ public class CourseManagementService {
 			response = new Response(message, httpStatus.value(), httpStatus.getReasonPhrase());
 			return new ResponseEntity<>(response, httpStatus);
 		}
-//		return new ResponseEntity<>(response, httpStatus);
 	}
 
 	public Object addCourse(CourseRequest courseDto) {
@@ -230,9 +229,6 @@ public class CourseManagementService {
 				response = new Response(message, httpStatus.value(), message);
 				return new ResponseEntity<>(response, httpStatus);
 			}
-
-//			PerformaceRatingModel updateRating = new PerformaceRatingModel();
-
 		} catch (Exception e) {
 			message = "Error in Parameters performance rating";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;

@@ -32,7 +32,7 @@ public class CourseManagementController {
 	@GetMapping("/getAll")
 	public Object getAllStudentDetails(@RequestHeader("token") String token,
 			@RequestParam("operation") String operation) {
-		LOG.info("Entering into getAll{} Method", operation);
+		LOG.info("Entering into getAll {} Method", operation);
 		return courseManagementService.getAll(operation);
 	}
 
@@ -60,14 +60,14 @@ public class CourseManagementController {
 //	Parameters performance rating
 	@GetMapping("/performance/data")
 	public Object getRating(@RequestHeader("token") String token, @RequestParam("courseId") int courseId) {
-		LOG.info("Entering into getAll{} Method");
+		LOG.info("Entering into getAll Method");
 		return courseManagementService.getRating(courseId);
 	}
 
 	@PostMapping("/performance/updateRating")
 	public Object manageRating(@RequestHeader("token") String token,
 			@RequestBody PerformaceRatingRequest performanceRatingDto) {
-		LOG.info("Entering into getAll{} Method");
+		LOG.info("Entering into getAll Method");
 		return courseManagementService.manageRating(performanceRatingDto);
 	}
 

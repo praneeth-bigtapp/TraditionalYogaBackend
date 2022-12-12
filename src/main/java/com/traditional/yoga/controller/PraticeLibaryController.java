@@ -25,18 +25,28 @@ public class PraticeLibaryController {
 
 	@Autowired
 	PraticeLibaryService praticeLibaryService;
+	
+	/**
+	 * Authentication for Generated Token
+	 * 
+	 * @param token
+	 */
+	private void authenticate(String token) {
+		LOG.debug(token);
+		LOG.info("Validating the Token");
+	}
 
 	@GetMapping("/getAllLibary")
 	public Object getLibaryDetails(@RequestHeader("token") String token, @RequestParam("operation") String operation) {
 		LOG.info("Entering into getAll{} Method", operation);
-//		authenticate(token);
+		authenticate(token);
 		return praticeLibaryService.getAll(operation);
 	}
 
 	@PostMapping("/praticeLibary")
 	public Object manageUser(@RequestHeader("token") String token, @RequestBody PraticeLibaryRequest praticelibaryDto,
 			@RequestParam("operation") String operation) {
-//		authenticate(token);
+		authenticate(token);
 		return praticeLibaryService.managelibary(operation, praticelibaryDto);
 	}
 }

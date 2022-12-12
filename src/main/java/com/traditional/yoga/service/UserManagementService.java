@@ -27,6 +27,7 @@ import com.traditional.yoga.repository.RolePermissionRepository;
 import com.traditional.yoga.repository.RoleRepository;
 import com.traditional.yoga.repository.SubModelRepository;
 import com.traditional.yoga.repository.UserRepository;
+import com.traditional.yoga.utils.Constants;
 import com.traditional.yoga.utils.UserManagementUtil;
 
 @Service
@@ -102,16 +103,16 @@ public class UserManagementService {
 		userReq.setPassword(userDto.getPassword());
 		try {
 
-			if (operation.equals("add")) {
+			if (operation.equals(Constants.ADD)) {
 				addUsers(userDto);
-			} else if (operation.equals("save")) {
+			} else if (operation.equals(Constants.SAVE)) {
 				updateUsers(userDto);
-			} else if (operation.equals("active")) {
+			} else if (operation.equals(Constants.ACTIVE)) {
 				activeUsers(userDto);
-			} else if (operation.equals("delete")) {
+			} else if (operation.equals(Constants.DELETE)) {
 				deleteUsers(userDto);
 			} else {
-				message = "Operation Doesn't exist";
+				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
@@ -134,7 +135,7 @@ public class UserManagementService {
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = "User Doesn't exist";
+			message = Constants.USER_ERROR;
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
@@ -237,16 +238,16 @@ public class UserManagementService {
 	public Object manageRole(String operation, RoleRequest roleDto) {
 
 		try {
-			if (operation.equals("add")) {
+			if (operation.equals(Constants.ADD)) {
 				addRole(roleDto);
-			} else if (operation.equals("save")) {
+			} else if (operation.equals(Constants.SAVE)) {
 				updateRole(roleDto);
-			} else if (operation.equals("active")) {
+			} else if (operation.equals(Constants.ACTIVE)) {
 				activeRole(roleDto);
-			} else if (operation.equals("delete")) {
+			} else if (operation.equals(Constants.DELETE)) {
 				deleteRole(roleDto);
 			} else {
-				message = "Operation Doesn't exist";
+				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
@@ -269,7 +270,7 @@ public class UserManagementService {
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = "Role Doesn't exist";
+			message = Constants.ROLE_ERROR;
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
@@ -376,7 +377,7 @@ public class UserManagementService {
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = "Menu Doesn't exist";
+			message = Constants.MENU_ERROR;
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);

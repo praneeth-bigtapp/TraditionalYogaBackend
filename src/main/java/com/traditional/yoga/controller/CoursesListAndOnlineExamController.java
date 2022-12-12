@@ -12,81 +12,88 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.traditional.yoga.dto.request.AddCoursemateialRequest;
 import com.traditional.yoga.dto.request.CoursesListRequest;
 import com.traditional.yoga.dto.request.MaterialCategoryRequest;
-import com.traditional.yoga.dto.request.OnlineExamReqest;
 import com.traditional.yoga.dto.request.TaskRequest;
 import com.traditional.yoga.dto.request.TestimoalRequest;
 import com.traditional.yoga.service.CoursesandOnlineexamService;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping(value = "/courseList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/courseList", consumes = MediaType.ALL_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 public class CoursesListAndOnlineExamController {
-	
-	private static final Logger LOG = LoggerFactory.getLogger(CourseManagementController.class);
-	
-	
+
+	private static final Logger LOG = LoggerFactory.getLogger(CoursesListAndOnlineExamController.class);
+
 	@Autowired
 	CoursesandOnlineexamService coursesListService;
-	
-	
+
+	/**
+	 * Authentication for Generated Token
+	 * 
+	 * @param token
+	 */
+	private void authenticate(String token) {
+		LOG.debug(token);
+		LOG.info("Validating the Token");
+	}
+
 	@GetMapping("/getAll")
 	public Object getAllStudentDetails(@RequestHeader("token") String token,
 			@RequestParam("operation") String operation) {
+		authenticate(token);
 		LOG.info("Entering into getAll{} Method", operation);
 		return coursesListService.getAll(operation);
 	}
-	
+
 	@PostMapping("/coursesList")
 	public Object manageUser(@RequestHeader("token") String token, @RequestBody CoursesListRequest courseListDto,
 			@RequestParam("operation") String operation) {
-//		authenticate(token);
+		authenticate(token);
 		LOG.info("Entering into coursesList{} Method", operation);
-		return coursesListService.managecourses(operation, courseListDto);
+		return coursesListService.manageCourses(operation, courseListDto);
 	}
-	
-	@PostMapping("/onlineexam")
-	public Object onlineexams(@RequestHeader("token") String token, @RequestBody OnlineExamReqest onlineexamDto,
-			@RequestParam("operation") String operation) {
-//		authenticate(token);
-		LOG.info("Entering into onlineexam{} Method", operation);
-		return coursesListService.onlineexams(operation, onlineexamDto);
+
+	@PostMapping("/onlineExam")
+	public Object onlineexams(@RequestHeader("token") String token,
+			@RequestParam(required = true, value = "textFile") MultipartFile file,
+			@RequestParam(required = true, value = "onlineExamDto") String onlineExamString) {
+		authenticate(token);
+		LOG.info("Entering into onlineexam Method");
+		return coursesListService.onlineExams(onlineExamString);
 	}
-	
-	
+
 	@PostMapping("/task")
 	public Object managetask(@RequestHeader("token") String token, @RequestBody TaskRequest taskDto,
 			@RequestParam("operation") String operation) {
-//		authenticate(token);
+		authenticate(token);
 		LOG.info("Entering into task{} Method", operation);
 		return coursesListService.managetask(operation, taskDto);
 	}
-	
+
 	@PostMapping("/testimonal")
 	public Object manageTestimonal(@RequestHeader("token") String token, @RequestBody TestimoalRequest testimonalDto,
 			@RequestParam("operation") String operation) {
-//		authenticate(token);
+		authenticate(token);
 		LOG.info("Entering into testimonal{} Method", operation);
 		return coursesListService.manageTestimonal(operation, testimonalDto);
 	}
-	
-	
+
 	@PostMapping("/addMaterial")
 	public Object managemateials(@RequestHeader("token") String token, @RequestBody AddCoursemateialRequest materialDto,
 			@RequestParam("operation") String operation) {
-//		authenticate(token);
+		authenticate(token);
 		LOG.info("Entering into addMaterial{} Method", operation);
 		return coursesListService.managemateials(operation, materialDto);
 	}
-	
-	
+
 	@PostMapping("/addcategoryMaterial")
-	public Object managematerialCategory(@RequestHeader("token") String token, @RequestBody MaterialCategoryRequest materialcategoryDto,
-			@RequestParam("operation") String operation) {
-//		authenticate(token);
+	public Object managematerialCategory(@RequestHeader("token") String token,
+			@RequestBody MaterialCategoryRequest materialcategoryDto, @RequestParam("operation") String operation) {
+		authenticate(token);
 		LOG.info("Entering into addMaterial{} Method", operation);
 		return coursesListService.managematerialCategory(operation, materialcategoryDto);
 	}

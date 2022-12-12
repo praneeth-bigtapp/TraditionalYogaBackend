@@ -116,7 +116,7 @@ public class PraticeLibaryService {
 			newlibary.setMetaKeyword(praticelibaryDto.getMetaKeyword());
 
 			praticeLibaryRepository.save(newlibary);
-			message = "Record-session video link is  added sucessfully";
+			message = "Short video link is  added sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {

@@ -191,7 +191,6 @@ public class StudentService {
 	}
 
 	public Object addStudentVolunter(VolunteerRequest volunteerDto) {
-//		VolunteerModel checkVolunteer = volunteerRepository.checkVolunteer(studentDto.getStudentId(), studentDto.getCourseName());
 		VolunteerModel newVolunteer = new VolunteerModel();
 		newVolunteer.setStudentId(volunteerDto.getStudentId());
 		newVolunteer.setCategoryName(volunteerDto.getCategoryName());
@@ -274,7 +273,6 @@ public class StudentService {
 		StudentModel mapCourse = studentRepository.getStudentById(studentDto.getStudentId());
 		if (mapCourse != null) {
 			CourseModel course = new CourseModel();
-//			mapCourse.setStudentId(studentDto.getStudentId());
 			mapCourse.setStudentCategory(studentDto.getStudentCategory());
 			course.setCourseId(studentDto.getCourseId());
 			mapCourse.setCourseId(course);
@@ -285,7 +283,7 @@ public class StudentService {
 			response = new Response(message, httpStatus.value(), null);
 			return new ResponseEntity<>(response, httpStatus);
 		} else {
-			message = "Student details Doesn't exist";
+			message = "Student details Doesn't exist, So Course is unable to map";
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
