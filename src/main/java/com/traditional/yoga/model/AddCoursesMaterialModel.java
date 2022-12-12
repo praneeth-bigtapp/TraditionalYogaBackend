@@ -46,7 +46,7 @@ public class AddCoursesMaterialModel {
 	private String message;
 
 	@Column(name = "created_by")
-	private String CreatedBy;
+	private String createdBy;
 
 	@Column(name = "created_date")
 	private String createdDate;
@@ -132,12 +132,14 @@ public class AddCoursesMaterialModel {
 		this.message = message;
 	}
 
+	
+
 	public String getCreatedBy() {
-		return CreatedBy;
+		return createdBy;
 	}
 
 	public void setCreatedBy(String createdBy) {
-		CreatedBy = createdBy;
+		this.createdBy = createdBy;
 	}
 
 	public String getCreatedDate() {

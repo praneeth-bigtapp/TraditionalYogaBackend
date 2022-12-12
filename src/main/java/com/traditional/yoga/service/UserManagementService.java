@@ -516,7 +516,6 @@ public class UserManagementService {
 				message = "Menu change Sub-Menu saved sucessfully";
 				LOG.info(message);
 				response = new Response(message, httpStatus.value(), null);
-//				updateRolePermission(subMenuDb);
 			} else {
 				message = "Updated Sub-Menu is already exist";
 				httpStatus = HttpStatus.CONFLICT;
@@ -591,8 +590,6 @@ public class UserManagementService {
 		for (RoleModel eachRole : role) {
 			RolePermissionModel updateRolePermission = new RolePermissionModel();
 			updateRolePermission.setRoleId(eachRole.getRoleId());
-//			updateRolePermission.setModuleId(subMenu.getModuleId());
-//			updateRolePermission.setSubModuleId(subMenu.getSubModuleId());
 			updateRolePermission.setPermissionId(6);
 			rolePermissionRepository.save(updateRolePermission);
 		}
@@ -644,18 +641,6 @@ public class UserManagementService {
 		return new ResponseEntity<>(response, httpStatus);
 	}
 
-//	public boolean addDefaultPermissions(int roleId, int maxRpId) {
-//		boolean idDefautltPermissionsSaved = false;
-//		List<RolePermissionModel> roleDefatultRolePermissions = constructDefaultpermissios(roleId);
-////		int counter = maxRpId + 1;
-//		for (RolePermissionModel eachRolePermissions : roleDefatultRolePermissions) {
-////			eachRolePermissions.setId(counter);
-//			rolePermissionRepository.save(eachRolePermissions);
-////			counter++;
-//		}
-//		idDefautltPermissionsSaved = true;
-//		return idDefautltPermissionsSaved;
-//	}
 
 	public Object addDefaultPermissions(int roleId) {
 		List<RolePermissionModel> roleDefatultRolePermissions = constructDefaultpermissios(roleId);

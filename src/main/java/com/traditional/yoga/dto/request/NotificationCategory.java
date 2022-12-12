@@ -3,7 +3,7 @@ package com.traditional.yoga.dto.request;
 public class NotificationCategory {
 
 	private int categoryId;
-	private String CategoryName;
+	private String categoryName;
 
 	public int getCategoryId() {
 		return categoryId;
@@ -14,11 +14,11 @@ public class NotificationCategory {
 	}
 
 	public String getCategoryName() {
-		return CategoryName;
+		return categoryName;
 	}
 
 	public void setCategoryName(String categoryName) {
-		CategoryName = categoryName;
+		this.categoryName = categoryName;
 	}
 
 }

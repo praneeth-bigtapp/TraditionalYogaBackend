@@ -1,7 +1,5 @@
 package com.traditional.yoga.dto.request;
 
-import com.traditional.yoga.model.NotificationCategory;
-
 public class NotificationRequest {
 
 	private int noticationId;

@@ -45,13 +45,4 @@ public class RoleModel {
 	public void setActive(String active) {
 		this.active = active;
 	}
-
-//	public int getDeleteFlag() {
-//		return deleteFlag;
-//	}
-//
-//	public void setDeleteFlag(int deleteFlag) {
-//		this.deleteFlag = deleteFlag;
-//	}
-
 }

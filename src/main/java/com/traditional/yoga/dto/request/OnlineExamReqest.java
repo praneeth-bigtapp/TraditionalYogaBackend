@@ -2,7 +2,7 @@ package com.traditional.yoga.dto.request;
 
 import com.traditional.yoga.model.CourseListModel;
 import com.traditional.yoga.model.TestTypeModel;
-import com.traditional.yoga.model.levelofTestModel;
+import com.traditional.yoga.model.LevelOfTestModel;
 
 public class OnlineExamReqest {
 
@@ -10,7 +10,7 @@ public class OnlineExamReqest {
 	private CourseListModel courseId;
 	private TestTypeModel testId;
 	private String nameofTest;
-	private levelofTestModel levelId;
+	private LevelOfTestModel levelId;
 	private String fileUpload;
 	private String description;
 
@@ -46,11 +46,11 @@ public class OnlineExamReqest {
 		this.nameofTest = nameofTest;
 	}
 
-	public levelofTestModel getLevelId() {
+	public LevelOfTestModel getLevelId() {
 		return levelId;
 	}
 
-	public void setLevelId(levelofTestModel levelId) {
+	public void setLevelId(LevelOfTestModel levelId) {
 		this.levelId = levelId;
 	}
 

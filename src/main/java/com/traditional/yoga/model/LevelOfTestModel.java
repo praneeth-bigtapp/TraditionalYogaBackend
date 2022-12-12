@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "level_of_test")
-public class levelofTestModel {
+public class LevelOfTestModel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

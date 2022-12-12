@@ -1,6 +1,5 @@
 package com.traditional.yoga.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "online_exams")
-public class onlineexamsModel {
+public class OnlineExamsModel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +31,7 @@ public class onlineexamsModel {
 
 	@OneToOne
 	@JoinColumn(name = "level_Id", referencedColumnName = "level_Id")
-	private levelofTestModel levelId;
+	private LevelOfTestModel levelId;
 
 	@Column(name = "upload_file")
 	private String fileUpload;
@@ -56,11 +55,11 @@ public class onlineexamsModel {
 		this.courseId = courseId;
 	}
 
-	public levelofTestModel getLevelId() {
+	public LevelOfTestModel getLevelId() {
 		return levelId;
 	}
 
-	public void setLevelId(levelofTestModel levelId) {
+	public void setLevelId(LevelOfTestModel levelId) {
 		this.levelId = levelId;
 	}
 

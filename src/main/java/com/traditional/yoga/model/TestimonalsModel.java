@@ -20,10 +20,10 @@ public class TestimonalsModel {
 	private String content;
 
 	@Column(name = "Given_by_name")
-	private String GivenByName;
+	private String givenByName;
 
 	@Column(name = "Video_link")
-	private String Video_link;
+	private String videoLink;
 
 	@Column(name = "description")
 	private String description;
@@ -60,19 +60,19 @@ public class TestimonalsModel {
 	}
 
 	public String getGivenByName() {
-		return GivenByName;
+		return givenByName;
 	}
 
 	public void setGivenByName(String givenByName) {
-		GivenByName = givenByName;
+		this.givenByName = givenByName;
 	}
 
-	public String getVideo_link() {
-		return Video_link;
+	public String getVideoLink() {
+		return videoLink;
 	}
 
-	public void setVideo_link(String video_link) {
-		Video_link = video_link;
+	public void setVideoLink(String videoLink) {
+		this.videoLink = videoLink;
 	}
 
 	public String getDescription() {

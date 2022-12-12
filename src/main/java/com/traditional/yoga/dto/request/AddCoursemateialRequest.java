@@ -15,7 +15,7 @@ public class AddCoursemateialRequest {
 	private String videoLink;
 	private String fileUpload;
 	private String message;
-	private String CreatedBy;
+	private String createdBy;
 	private String createdDate;
 	private String updatedBy;
 	private String updatedDate;
@@ -94,11 +94,11 @@ public class AddCoursemateialRequest {
 	}
 
 	public String getCreatedBy() {
-		return CreatedBy;
+		return createdBy;
 	}
 
 	public void setCreatedBy(String createdBy) {
-		CreatedBy = createdBy;
+		this.createdBy = createdBy;
 	}
 
 	public String getCreatedDate() {

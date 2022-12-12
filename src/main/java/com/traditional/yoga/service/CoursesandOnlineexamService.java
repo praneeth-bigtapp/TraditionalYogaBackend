@@ -22,7 +22,7 @@ import com.traditional.yoga.model.CourseListModel;
 import com.traditional.yoga.model.MaterialCategoryModel;
 import com.traditional.yoga.model.TaskModel;
 import com.traditional.yoga.model.TestimonalsModel;
-import com.traditional.yoga.model.onlineexamsModel;
+import com.traditional.yoga.model.OnlineExamsModel;
 import com.traditional.yoga.repository.AddMaterialRepository;
 import com.traditional.yoga.repository.CategoryRepository;
 import com.traditional.yoga.repository.CoursesListRepository;
@@ -38,6 +38,10 @@ import com.traditional.yoga.repository.TypeofTestRepository;
 public class CoursesandOnlineexamService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CoursesandOnlineexamService.class);
+
+	private static final String NOEXISTMESSAGE = "Operation Doesn't exist";
+
+	private static final String ALERADYEXISTSMESSAGE = "task already exists";
 
 	@Autowired
 	CoursesListRepository coursesListRepository;
@@ -129,14 +133,8 @@ public class CoursesandOnlineexamService {
 
 			if (operation.equals("add")) {
 				addcourses(courseListDto);
-			} else if (operation.equals("")) {
-//				onlineexams(onlineexamDto);
-			} else if (operation.equals("active")) {
-//				activeUsers(userDto);
-			} else if (operation.equals("delete")) {
-//				deleteUsers(userDto);
 			} else {
-				message = "Operation Doesn't exist";
+				message = NOEXISTMESSAGE;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
@@ -201,7 +199,7 @@ public class CoursesandOnlineexamService {
 		try {
 			addOnlineExams(onlineExamDto);
 		} catch (Exception e) {
-			message = "Exception in adding courses";
+			message = "Exception in adding exams";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());
@@ -211,9 +209,9 @@ public class CoursesandOnlineexamService {
 	}
 
 	private void addOnlineExams(OnlineExamReqest onlineexamDto) {
-		onlineexamsModel examNew = onlineExamRepository.getexamdetailsById(onlineexamDto.getExamsId());
+		OnlineExamsModel examNew = onlineExamRepository.getexamdetailsById(onlineexamDto.getExamsId());
 		if (examNew == null) {
-			onlineexamsModel examList = new onlineexamsModel();
+			OnlineExamsModel examList = new OnlineExamsModel();
 
 			examList.setCourseId(onlineexamDto.getCourseId());
 			examList.setTestId(onlineexamDto.getTestId());
@@ -241,20 +239,14 @@ public class CoursesandOnlineexamService {
 
 			if (operation.equals("add")) {
 				addTask(taskDto);
-			} else if (operation.equals("")) {
-
-			} else if (operation.equals("active")) {
-//				activeUsers(userDto);
-			} else if (operation.equals("delete")) {
-//				deleteUsers(userDto);
 			} else {
-				message = "Operation Doesn't exist";
+				message = NOEXISTMESSAGE;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
 			}
 		} catch (Exception e) {
-			message = "Exception in adding courses";
+			message = "Exception in adding tasks";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());
@@ -278,7 +270,7 @@ public class CoursesandOnlineexamService {
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = "task already exists";
+			message = ALERADYEXISTSMESSAGE;
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
@@ -294,20 +286,14 @@ public class CoursesandOnlineexamService {
 
 			if (operation.equals("add")) {
 				addTestimonal(testimonalDto);
-			} else if (operation.equals("")) {
-
-			} else if (operation.equals("active")) {
-//				activeUsers(userDto);
-			} else if (operation.equals("delete")) {
-//				deleteUsers(userDto);
 			} else {
-				message = "Operation Doesn't exist";
+				message = NOEXISTMESSAGE;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
 			}
 		} catch (Exception e) {
-			message = "Exception in adding courses";
+			message = "Exception in adding testimonals";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());
@@ -323,7 +309,7 @@ public class CoursesandOnlineexamService {
 //			
 			testimonallist.setContent(testimonalDto.getContent());
 			testimonallist.setGivenByName(testimonalDto.getGivenByName());
-			testimonallist.setVideo_link(testimonalDto.getVideo_link());
+			testimonallist.setVideoLink(testimonalDto.getVideoLink());
 			testimonallist.setDescription(testimonalDto.getDescription());
 			testimonallist.setIsActive("Y");
 			testimonalRepository.save(testimonallist);
@@ -331,7 +317,7 @@ public class CoursesandOnlineexamService {
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = "task already exists";
+			message = ALERADYEXISTSMESSAGE;
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
@@ -348,20 +334,14 @@ public class CoursesandOnlineexamService {
 
 			if (operation.equals("add")) {
 				addcategorymaterial(materialcategoryDto);
-			} else if (operation.equals("")) {
-
-			} else if (operation.equals("active")) {
-//				activeUsers(userDto);
-			} else if (operation.equals("delete")) {
-//				deleteUsers(userDto);
 			} else {
-				message = "Operation Doesn't exist";
+				message = NOEXISTMESSAGE;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
 			}
 		} catch (Exception e) {
-			message = "Exception in adding courses";
+			message = "Exception in adding material to category";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());
@@ -371,11 +351,10 @@ public class CoursesandOnlineexamService {
 	}
 
 	private void addcategorymaterial(MaterialCategoryRequest materialcategoryDto) {
-		MaterialCategoryModel Materialnew = materialCategoryRepostiory
+		MaterialCategoryModel materialnew = materialCategoryRepostiory
 				.getotherById(materialcategoryDto.getMaterialCategoryId());
-		if (Materialnew != null) {
+		if (materialnew != null) {
 			MaterialCategoryModel materiallist = new MaterialCategoryModel();
-
 			materiallist.setCategoryName(materialcategoryDto.getCategoryName());
 			materiallist.setIsActive("Y");
 			materialCategoryRepostiory.save(materiallist);
@@ -383,7 +362,7 @@ public class CoursesandOnlineexamService {
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = "task already exists";
+			message = ALERADYEXISTSMESSAGE;
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
@@ -399,20 +378,14 @@ public class CoursesandOnlineexamService {
 
 			if (operation.equals("add")) {
 				addmaterials(materialDto);
-			} else if (operation.equals("")) {
-
-			} else if (operation.equals("active")) {
-//				activeUsers(userDto);
-			} else if (operation.equals("delete")) {
-//				deleteUsers(userDto);
 			} else {
-				message = "Operation Doesn't exist";
+				message = NOEXISTMESSAGE;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
 			}
 		} catch (Exception e) {
-			message = "Exception in adding courses";
+			message = "Exception in adding materials";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());

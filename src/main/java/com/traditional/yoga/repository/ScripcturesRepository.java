@@ -13,6 +13,5 @@ public interface ScripcturesRepository extends JpaRepository<ScripcturesModel, I
 	@Query(value = "SELECT * FROM `scripctures` WHERE `scripctures_id`= :scripcturesId", nativeQuery = true)
 	ScripcturesModel checkscripcturesId(@Param("scripcturesId") int scripcturesId);
 
-//	@Query(value = "SELECT * FROM `scripctures` WHERE `scripctures_id`= :scripcturesId", nativeQuery = true)
-//	String getscripcturesId(@Param("scripcturesId") int scripcturesId);
+
 }

@@ -4,8 +4,8 @@ public class TestimoalRequest {
 
 	private int testimonalId;
 	private String content;
-	private String GivenByName;
-	private String Video_link;
+	private String givenByName;
+	private String videoLink;
 	private String description;
 	private String createdBy;
 	private String createDate;
@@ -30,19 +30,19 @@ public class TestimoalRequest {
 	}
 
 	public String getGivenByName() {
-		return GivenByName;
+		return givenByName;
 	}
 
 	public void setGivenByName(String givenByName) {
-		GivenByName = givenByName;
+		this.givenByName = givenByName;
 	}
 
-	public String getVideo_link() {
-		return Video_link;
+	public String getVideoLink() {
+		return videoLink;
 	}
 
-	public void setVideo_link(String video_link) {
-		Video_link = video_link;
+	public void setVideoLink(String videoLink) {
+		this.videoLink = videoLink;
 	}
 
 	public String getDescription() {
