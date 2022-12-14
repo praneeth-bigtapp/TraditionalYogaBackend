@@ -17,11 +17,11 @@ public class CourseListModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "courses_id")
 	private int coursesId;
-	
+
 	@OneToOne
 	@JoinColumn(name = "category_id", referencedColumnName = "categories_id")
 	private MasterCategoryModel categorieId;
-	
+
 	@Column(name = "courses_name")
 	private String coursesName;
 
@@ -33,7 +33,7 @@ public class CourseListModel {
 
 	@Column(name = "end_date")
 	private String endDate;
-	
+
 	@Column(name = "application_closer_date")
 	private String applicationClouserDate;
 
@@ -92,8 +92,5 @@ public class CourseListModel {
 	public void setApplicationClouserDate(String applicationClouserDate) {
 		this.applicationClouserDate = applicationClouserDate;
 	}
-	
-	
-	
 
 }

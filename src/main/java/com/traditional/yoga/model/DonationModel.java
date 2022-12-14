@@ -20,8 +20,8 @@ public class DonationModel {
 	private int donationId;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "student_id", referencedColumnName = "student_id")
-	private StudentModel student;
+	@JoinColumn(name = "donar_id", referencedColumnName = "donar_id")
+	private DonarModel donarId;
 
 	@Column(name = "date")
 	private String date;
@@ -47,12 +47,12 @@ public class DonationModel {
 		return date;
 	}
 
-	public StudentModel getStudent() {
-		return student;
+	public DonarModel getDonarId() {
+		return donarId;
 	}
 
-	public void setStudent(StudentModel student) {
-		this.student = student;
+	public void setDonarId(DonarModel donarId) {
+		this.donarId = donarId;
 	}
 
 	public void setDate(String date) {

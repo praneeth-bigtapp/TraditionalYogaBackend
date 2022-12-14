@@ -23,6 +23,7 @@ import com.traditional.yoga.repository.CourseCategoryRepository;
 import com.traditional.yoga.repository.CourseMediaCategoryRepository;
 import com.traditional.yoga.repository.CourseMediaPracticeRepository;
 import com.traditional.yoga.repository.CourseMediaRepository;
+import com.traditional.yoga.repository.CourseMediaTypeRepository;
 import com.traditional.yoga.repository.CourseRepository;
 import com.traditional.yoga.repository.PerformaceRatingRepository;
 
@@ -42,6 +43,9 @@ public class CourseManagementService {
 
 	@Autowired
 	CourseMediaRepository courseMediaRepository;
+	
+	@Autowired
+	CourseMediaTypeRepository courseMediaTypeRepository;
 
 	@Autowired
 	CourseMediaCategoryRepository courseMediaCategoryRepository;
@@ -72,6 +76,9 @@ public class CourseManagementService {
 			} else if (operationType.equals("courseMediaPractice")) {
 				httpStatus = HttpStatus.OK;
 				return new ResponseEntity<>(courseMediaPracticeRepository.findAll(), httpStatus);
+			} else if (operationType.equals("courseMediaType")) {
+				httpStatus = HttpStatus.OK;
+				return new ResponseEntity<>(courseMediaTypeRepository.findAll(), httpStatus);
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -209,7 +216,7 @@ public class CourseManagementService {
 		try {
 			PerformaceRatingModel updateRating = performaceRatingRepository
 					.getRatingById(performanceRatingDto.getPerformaceRatingId());
-			
+
 			if (updateRating != null) {
 				updateRating.setRatingGood(performanceRatingDto.getRatingGood());
 				updateRating.setRatingAvearage(performanceRatingDto.getRatingAvearage());

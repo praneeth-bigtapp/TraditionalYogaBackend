@@ -133,6 +133,10 @@ public class CoursesandOnlineexamService {
 
 			if (operation.equals("add")) {
 				addcourses(courseListDto);
+			} else if (operation.equals("update")) {
+				addcourses(courseListDto);
+			} else if (operation.equals("delete")) {
+				addcourses(courseListDto);
 			} else {
 				message = NOEXISTMESSAGE;
 				httpStatus = HttpStatus.CONFLICT;
