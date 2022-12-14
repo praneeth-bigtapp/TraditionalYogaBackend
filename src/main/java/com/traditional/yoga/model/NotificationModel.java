@@ -1,10 +1,13 @@
 package com.traditional.yoga.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -15,9 +18,12 @@ public class NotificationModel {
 	@Column(name = "notification_id")
 	private int notificationId;
 
-//	@OneToOne(cascade = CascadeType.ALL)
-//	@JoinColumn(name = "category_id", referencedColumnName = "category_id")
-	private int categoryId;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "category_id", referencedColumnName = "category_id")
+	private NotificationCategoryModel categoryId;
+
+	@Column(name = "title")
+	private String title;
 
 	@Column(name = "upload_file")
 	private String uploadFile;
@@ -33,12 +39,20 @@ public class NotificationModel {
 		this.notificationId = notificationId;
 	}
 
-	public int getCategoryId() {
+	public NotificationCategoryModel getCategoryId() {
 		return categoryId;
 	}
 
-	public void setCategoryId(int categoryId) {
+	public void setCategoryId(NotificationCategoryModel categoryId) {
 		this.categoryId = categoryId;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getUploadFile() {

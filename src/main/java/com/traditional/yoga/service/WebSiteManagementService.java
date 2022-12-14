@@ -32,6 +32,7 @@ import com.traditional.yoga.model.ScripcturesModel;
 import com.traditional.yoga.repository.AlertRepository;
 import com.traditional.yoga.repository.BannerViewRepository;
 import com.traditional.yoga.repository.ImageGalleryRepository;
+import com.traditional.yoga.repository.NoticationCategoryRepository;
 import com.traditional.yoga.repository.NoticationRepository;
 import com.traditional.yoga.repository.PageRepository;
 import com.traditional.yoga.repository.PearlsOfWisdomRepository;
@@ -60,6 +61,9 @@ public class WebSiteManagementService {
 
 	@Autowired
 	NoticationRepository noticationRepository;
+	
+	@Autowired
+	NoticationCategoryRepository noticationCategoryRepository;
 
 	@Autowired
 	PageRepository pageRepository;
@@ -110,6 +114,9 @@ public class WebSiteManagementService {
 			} else if (operationType.equals("notication")) {
 				httpStatus = HttpStatus.OK;
 				return noticationRepository.findAll();
+			} else if (operationType.equals("noticationCategory")) {
+				httpStatus = HttpStatus.OK;
+				return noticationCategoryRepository.findAll();
 			} else if (operationType.equals("page")) {
 				httpStatus = HttpStatus.OK;
 				return pageRepository.findAll();
@@ -258,7 +265,8 @@ public class WebSiteManagementService {
 				if (notificationModelnew == null) {
 					NotificationModel noticationlist = new NotificationModel();
 
-					noticationlist.setCategoryId(notificationdto.getCategoryId());
+					noticationlist.setCategoryId(noticationCategoryRepository.getnotificationById(notificationdto.getCategoryId()));
+					noticationlist.setTitle(notificationdto.getTitle());
 					noticationlist.setUploadFile(notificationdto.getUploadFile());
 					noticationlist.setMessage(notificationdto.getMessage());
 					noticationRepository.save(noticationlist);

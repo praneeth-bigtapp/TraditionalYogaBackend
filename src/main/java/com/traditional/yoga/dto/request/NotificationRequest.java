@@ -4,6 +4,7 @@ public class NotificationRequest {
 
 	private int noticationId;
 	private int categoryId;
+	private String title;
 	private String uploadFile;
 	private String message;
 
@@ -21,6 +22,14 @@ public class NotificationRequest {
 
 	public void setCategoryId(int categoryId) {
 		this.categoryId = categoryId;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getUploadFile() {
