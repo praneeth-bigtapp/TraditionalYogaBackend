@@ -64,12 +64,21 @@ public class WebSiteManagementController {
 		return webSiteManagementService.alertManage(operation, alertDto);
 	}
 
+//	@PostMapping("/banner")
+//	public Object manageUser(@RequestHeader("token") String token, @RequestBody BannerViewRequest bannerViewdto,
+//			@RequestParam("operation") String operation) {
+//		authenticate(token);
+//		return webSiteManagementService.bannerMange(operation, bannerViewdto);
+//	}
 	@PostMapping("/banner")
-	public Object manageUser(@RequestHeader("token") String token, @RequestBody BannerViewRequest bannerViewdto,
-			@RequestParam("operation") String operation) {
+	public Object banner(@RequestHeader("token") String token,
+			@RequestParam(required = true, value = "File") MultipartFile file,
+			@RequestParam(required = true, value = "bannerViewdto") String bannerString) {
 		authenticate(token);
-		return webSiteManagementService.bannerMange(operation, bannerViewdto);
+		LOG.info("Entering into banner Method");
+		return webSiteManagementService.banner(bannerString);
 	}
+	
 
 	@PostMapping("/scripctures")
 	public Object manageUser(@RequestHeader("token") String token, @RequestBody ScripcturesRequest scripcuturesdto,

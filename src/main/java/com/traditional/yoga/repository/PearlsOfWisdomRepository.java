@@ -19,5 +19,11 @@ public interface PearlsOfWisdomRepository extends JpaRepository<PearlsOfWisdomMo
 	
 	@Query(value = "SELECT * FROM `pearls_of_wisdom` WHERE `quote_title`= :quoteTitle", nativeQuery = true)
 	PearlsOfWisdomModel getwisdomBytitle(@Param("quoteTitle") String string);
+	
+	@Query(value = "SELECT * FROM `pearls_of_wisdom` WHERE `quote`= :quote", nativeQuery = true)
+	PearlsOfWisdomModel getwisdomByquote(@Param("quote") String string);
+	
+	@Query(value = "SELECT * FROM `pearls_of_wisdom` WHERE `quote_date`= :quoteDate", nativeQuery = true)
+	PearlsOfWisdomModel getwisdomBydate(@Param("quoteDate") String string);
 
 }
