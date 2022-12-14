@@ -286,6 +286,8 @@ public class CoursesandOnlineexamService {
 
 			if (operation.equals("add")) {
 				addTestimonal(testimonalDto);
+			} else if (operation.equals("update")) {
+				updateTestimonal(testimonalDto);
 			} else {
 				message = NOEXISTMESSAGE;
 				httpStatus = HttpStatus.CONFLICT;
@@ -321,6 +323,35 @@ public class CoursesandOnlineexamService {
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
+		}
+
+	}
+
+	private void updateTestimonal(TestimoalRequest testimonalDto) {
+		TestimonalsModel testimonalnew = testimonalRepository.getTestmonialsById(testimonalDto.getTestimonalId());
+
+		if (testimonalnew != null) {
+			TestimonalsModel testimonalcheck = testimonalRepository.getTestmonialsBycontent(testimonalDto.getContent());
+
+			if (testimonalcheck == null) {
+				TestimonalsModel testimonallist = new TestimonalsModel();
+//				
+				testimonallist.setContent(testimonalDto.getContent());
+				testimonallist.setGivenByName(testimonalDto.getGivenByName());
+				testimonallist.setVideoLink(testimonalDto.getVideoLink());
+				testimonallist.setDescription(testimonalDto.getDescription());
+				testimonallist.setIsActive("Y");
+				testimonalRepository.save(testimonallist);
+				message = " testimonial is Updated sucessfully";
+				LOG.info(message);
+				response = new Response(message, httpStatus.value(), null);
+			} else {
+				message = ALERADYEXISTSMESSAGE;
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+
 		}
 
 	}

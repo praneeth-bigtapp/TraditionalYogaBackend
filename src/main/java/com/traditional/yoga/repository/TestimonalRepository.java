@@ -12,4 +12,20 @@ public interface TestimonalRepository extends JpaRepository<TestimonalsModel, In
 	@Query(value = "SELECT * FROM `testimonal` WHERE `testimonal_id`=:testimonalId", nativeQuery = true)
 	TestimonalsModel getTestmonialsById(@Param("testimonalId") int testimonalId);
 
+	
+	@Query(value = "SELECT * FROM `testimonal` WHERE `content`=:content", nativeQuery = true)
+	TestimonalsModel getTestmonialsBycontent(@Param("content") String testimonalId);
+	
+	//Video Link///
+	@Query(value = "SELECT * FROM `testimonal` WHERE `Video_link`=:videoLink", nativeQuery = true)
+	TestimonalsModel getTestmonialsBylink(@Param("videoLink") String videoLink);
+	
+	//by name//
+	@Query(value = "SELECT * FROM `testimonal` WHERE `Given_by_name`=:givenByName", nativeQuery = true)
+	TestimonalsModel getTestmonialsByname(@Param("givenByName") String givenByName);
+	
+	
+	// Description/////
+	@Query(value = "SELECT * FROM `testimonal` WHERE `description`=:description", nativeQuery = true)
+	TestimonalsModel getTestmonialsBydescription(@Param("description") String description);
 }

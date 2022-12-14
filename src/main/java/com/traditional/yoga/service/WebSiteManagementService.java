@@ -331,7 +331,9 @@ public class WebSiteManagementService {
 		PageModel pageModelnew = pageRepository.getpageById(pagedto.getPageId());
 		if (pageModelnew != null) {
 			PageModel pageCheck = pageRepository.getpageByname(pagedto.getPageTitle());
-			if (pageCheck == null) {
+			PageModel descriptionCheck = pageRepository.getpageBydescription(pagedto.getDescription());
+			PageModel titlecheck = pageRepository.getpageBytext(pagedto.getPageText());
+			if (pageCheck == null || descriptionCheck==null || titlecheck==null ) {
 				pageModelnew.setPageTitle(pagedto.getPageTitle());
 				pageModelnew.setPageText(pagedto.getPageText());
 				pageModelnew.setHoverTitle(pagedto.getHoverTitle());
