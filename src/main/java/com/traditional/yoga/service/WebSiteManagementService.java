@@ -137,7 +137,11 @@ public class WebSiteManagementService {
 		}
 	}
 
-//	Alerts
+
+
+	///////ALERT  ONLY ADD OPERATION /////////
+	
+	
 	public Object alertManage(String operation, AlertRequest alertdto) {
 		httpStatus = HttpStatus.OK;
 		try {
@@ -167,7 +171,12 @@ public class WebSiteManagementService {
 		return new ResponseEntity<>(response, httpStatus);
 	}
 
-//	Banner
+
+	
+	
+	/////BANNER  ONLY ADD OPERATION //////////
+	
+	
 	public Object bannerMange(String operation, BannerViewRequest bannerViewdto) {
 		httpStatus = HttpStatus.OK;
 		try {
@@ -273,6 +282,11 @@ public class WebSiteManagementService {
 		return new ResponseEntity<>(response, httpStatus);
 
 	}
+	
+	
+	
+      ///////////////////////PAGE////////////////////////////////////////
+	  //// ALL CURD OPERATION FOR THE PAGE /////////////////////////////
 
 	public Object managepage(String operation, PageRequest pagedto) {
 
@@ -282,7 +296,7 @@ public class WebSiteManagementService {
 			} else if (operation.equals("update")) {
 				updatepage(pagedto);
 			} else if (operation.equals("delete")) {
-				deleteRole(pagedto);
+				deletepage(pagedto);
 			} else {
 				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
@@ -290,7 +304,7 @@ public class WebSiteManagementService {
 				response = new Response(message, httpStatus.value(), message);
 			}
 		} catch (Exception e) {
-			message = "Exception in Role";
+			message = "Exception in page";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());
@@ -299,7 +313,7 @@ public class WebSiteManagementService {
 		return new ResponseEntity<>(response, httpStatus);
 	}
 
-	private void deleteRole(PageRequest pagedto) {
+	private void deletepage(PageRequest pagedto) {
 		PageModel pageModelnew = pageRepository.getpageById(pagedto.getPageId());
 		if (pageModelnew != null) {
 			pageRepository.deleteById(pageModelnew.getPageId());
