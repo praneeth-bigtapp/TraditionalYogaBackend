@@ -12,14 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.AlertRequest;
 import com.traditional.yoga.dto.request.BannerViewRequest;
 import com.traditional.yoga.dto.request.NotificationRequest;
-import com.traditional.yoga.dto.request.OnlineExamReqest;
 import com.traditional.yoga.dto.request.PageRequest;
 import com.traditional.yoga.dto.request.PearlsOfWisdomRequest;
 import com.traditional.yoga.dto.request.PhotoGalleryRequest;
@@ -28,7 +24,6 @@ import com.traditional.yoga.dto.request.ScripcturesRequest;
 import com.traditional.yoga.model.AlertModel;
 import com.traditional.yoga.model.BannerModel;
 import com.traditional.yoga.model.NotificationModel;
-import com.traditional.yoga.model.OnlineExamsModel;
 import com.traditional.yoga.model.PageModel;
 import com.traditional.yoga.model.PearlsOfWisdomModel;
 import com.traditional.yoga.model.PhotoGalleryModel;
@@ -37,6 +32,7 @@ import com.traditional.yoga.model.ScripcturesModel;
 import com.traditional.yoga.repository.AlertRepository;
 import com.traditional.yoga.repository.BannerViewRepository;
 import com.traditional.yoga.repository.ImageGalleryRepository;
+import com.traditional.yoga.repository.NoticationCategoryRepository;
 import com.traditional.yoga.repository.NoticationRepository;
 import com.traditional.yoga.repository.PageRepository;
 import com.traditional.yoga.repository.PearlsOfWisdomRepository;
@@ -65,6 +61,9 @@ public class WebSiteManagementService {
 
 	@Autowired
 	NoticationRepository noticationRepository;
+
+	@Autowired
+	NoticationCategoryRepository noticationCategoryRepository;
 
 	@Autowired
 	PageRepository pageRepository;
@@ -115,6 +114,9 @@ public class WebSiteManagementService {
 			} else if (operationType.equals("notication")) {
 				httpStatus = HttpStatus.OK;
 				return noticationRepository.findAll();
+			} else if (operationType.equals("noticationCategory")) {
+				httpStatus = HttpStatus.OK;
+				return noticationCategoryRepository.findAll();
 			} else if (operationType.equals("page")) {
 				httpStatus = HttpStatus.OK;
 				return pageRepository.findAll();
@@ -173,35 +175,34 @@ public class WebSiteManagementService {
 
 	///// BANNER ONLY ADD OPERATION //////////
 
-	public Object banner(String bannerString) {
-		ObjectMapper objectMapper = new ObjectMapper();
-		BannerViewRequest bannerViewdto;
+	public Object bannerMange(String operation, BannerViewRequest bannerViewdto) {
+		httpStatus = HttpStatus.OK;
 		try {
-			bannerViewdto = objectMapper.readValue(bannerString, BannerViewRequest.class);
-			return mangeBanner(bannerViewdto);
-		} catch (JsonMappingException e) {
-			message = "Exception in JsonMappingException ADD Banner";
-			httpStatus = HttpStatus.EXPECTATION_FAILED;
-			LOG.error(message);
-			LOG.error(e.getLocalizedMessage());
-			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
-			return new ResponseEntity<>(response, httpStatus);
-		} catch (JsonProcessingException ep) {
-			message = "Exception in JsonProcessingException Banner";
-			httpStatus = HttpStatus.EXPECTATION_FAILED;
-			LOG.error(message);
-			LOG.error(ep.getLocalizedMessage());
-			response = new Response(message, httpStatus.value(), ep.getLocalizedMessage());
-			return new ResponseEntity<>(response, httpStatus);
-		}
-	}
-
-	public Object mangeBanner(BannerViewRequest bannerViewdto) {
-		this.httpStatus = HttpStatus.OK;
-		try {
-			addbanner(bannerViewdto);
+			if (operation.equals("add")) {
+				BannerModel bannernew = bannerRepository.getbannerbyId(bannerViewdto.getBannerId());
+				if (bannernew == null) {
+					BannerModel bannerList = new BannerModel();
+					bannerList.setBannerName(bannerViewdto.getBannerName());
+					bannerList.setCourseTitle(bannerViewdto.getCourseTitle());
+					bannerList.setImagePath(bannerViewdto.getImagePath());
+					bannerList.setFromDate(bannerViewdto.getFromDate());
+					bannerList.setToDate(bannerViewdto.getToDate());
+					bannerList.setDescription(bannerViewdto.getDescription());
+					bannerList.setCategoryId(bannerViewdto.getCategoryId());
+					bannerList.setDateOfAdd(generalUtils.getCurrentDate());
+					bannerRepository.save(bannerList);
+					message = "new banner is  added sucessfully";
+					LOG.info(message);
+					response = new Response(message, httpStatus.value(), null);
+				}
+			} else {
+				message = Constants.OPERATION_ERROR;
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
 		} catch (Exception e) {
-			message = "Exception in adding banner";
+			message = Constants.BANNER_EXCEPTION;
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());
@@ -209,32 +210,6 @@ public class WebSiteManagementService {
 		}
 		return new ResponseEntity<>(response, httpStatus);
 	}
-
-	private void addbanner(BannerViewRequest bannerViewdto) {
-		BannerModel bannernew = bannerRepository.getbannerbyId(bannerViewdto.getBannerId());
-		if (bannernew == null) {
-			BannerModel bannerList = new BannerModel();
-			bannerList.setBannerName(bannerViewdto.getBannerName());
-			bannerList.setCourseTitle(bannerViewdto.getCourseTitle());
-			bannerList.setImagePath(bannerViewdto.getImagePath());
-			bannerList.setFromDate(bannerViewdto.getFromDate());
-			bannerList.setToDate(bannerViewdto.getToDate());
-			bannerList.setDescription(bannerViewdto.getDescription());
-			bannerList.setCategoryId(bannerViewdto.getCategoryId());
-			bannerList.setDateOfAdd(generalUtils.getCurrentDate());
-			bannerRepository.save(bannerList);
-			message = "new banner is  added sucessfully";
-			LOG.info(message);
-			response = new Response(message, httpStatus.value(), null);
-		} else {
-			message = Constants.OPERATION_ERROR;
-			httpStatus = HttpStatus.CONFLICT;
-			LOG.error(message);
-			response = new Response(message, httpStatus.value(), message);
-		}
-	}
-
-	/////// scripcutures////////
 
 	public Object managescripcutures(String operation, ScripcturesRequest scripcuturesdto) {
 		httpStatus = HttpStatus.OK;
@@ -281,7 +256,10 @@ public class WebSiteManagementService {
 				if (notificationModelnew == null) {
 					NotificationModel noticationlist = new NotificationModel();
 
-					noticationlist.setCategoryId(notificationdto.getCategoryId());
+					noticationlist.setCategoryId(
+							noticationCategoryRepository.getnotificationById(notificationdto.getCategoryId()));
+//					noticationlist.setCategoryId(notificationdto.getCategoryId());
+					noticationlist.setTitle(notificationdto.getTitle());
 					noticationlist.setUploadFile(notificationdto.getUploadFile());
 					noticationlist.setMessage(notificationdto.getMessage());
 					noticationRepository.save(noticationlist);
@@ -547,10 +525,7 @@ public class WebSiteManagementService {
 		PearlsOfWisdomModel wisdommodelnew = pearlsOfWisdomRepository.getwisdomById(wisdomdto.getQuoteId());
 		if (wisdommodelnew != null) {
 			PearlsOfWisdomModel wisdommodelcheck = pearlsOfWisdomRepository.getwisdomBytitle(wisdomdto.getQuoteTitle());
-			PearlsOfWisdomModel wisdommodelcheck1 = pearlsOfWisdomRepository.getwisdomByquote(wisdomdto.getQuote());
-			PearlsOfWisdomModel wisdommodelcheck2 = pearlsOfWisdomRepository.getwisdomBydate(wisdomdto.getQuoteDate());
-
-			if (wisdommodelcheck == null || wisdommodelcheck1 == null || wisdommodelcheck2 == null) {
+			if (wisdommodelcheck == null) {
 				wisdommodelnew.setQuoteTitle(wisdomdto.getQuoteTitle());
 				wisdommodelnew.setQuote(wisdomdto.getQuote());
 				wisdommodelnew.setQuoteDate(wisdomdto.getQuoteDate());

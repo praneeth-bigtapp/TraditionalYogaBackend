@@ -1,7 +1,5 @@
 package com.traditional.yoga.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.traditional.yoga.dto.request.AlertRequest;
-import com.traditional.yoga.dto.request.BannerViewRequest;
 import com.traditional.yoga.dto.request.NotificationRequest;
 import com.traditional.yoga.dto.request.PageRequest;
 import com.traditional.yoga.dto.request.PearlsOfWisdomRequest;
@@ -34,9 +31,6 @@ public class WebSiteManagementController {
 	private static final Logger LOG = LoggerFactory.getLogger(WebSiteManagementController.class);
 
 	@Autowired
-	private HttpServletRequest request;
-
-	@Autowired
 	WebSiteManagementService webSiteManagementService;
 
 	/**
@@ -48,7 +42,7 @@ public class WebSiteManagementController {
 		LOG.debug(token);
 		LOG.info("Validating the Token");
 	}
-	
+
 	@GetMapping("/getAll")
 	public Object getAllalertdetails(@RequestHeader("token") String token,
 			@RequestParam("operation") String operation) {
@@ -76,9 +70,9 @@ public class WebSiteManagementController {
 			@RequestParam(required = true, value = "bannerViewdto") String bannerString) {
 		authenticate(token);
 		LOG.info("Entering into banner Method");
-		return webSiteManagementService.banner(bannerString);
+//		return webSiteManagementService.banner(bannerString);
+		return null;
 	}
-	
 
 	@PostMapping("/scripctures")
 	public Object manageUser(@RequestHeader("token") String token, @RequestBody ScripcturesRequest scripcuturesdto,
@@ -108,22 +102,13 @@ public class WebSiteManagementController {
 		return webSiteManagementService.regionMange(operation, regiondto);
 	}
 
-//	Photo Gallery
-	@PostMapping("/photoUpload")
-	public Object gallaryPhoto(@RequestHeader("token") String token,
-			@RequestParam(required = true, value = "picture") MultipartFile file) {
-		LOG.info("Hello");
-		return webSiteManagementService.uploadGallary(file, request);
-	}
-
 	@PostMapping("/createGallary")
 	public Object createGallary(@RequestHeader("token") String token,
 			@RequestBody PhotoGalleryRequest photoGalleryRequestDto) {
 		LOG.info("Creating a new gallery");
 		return webSiteManagementService.createGallary(photoGalleryRequestDto);
 	}
-	
-	
+
 	@PostMapping("/wisdom")
 	public Object managewisdom(@RequestHeader("token") String token, @RequestBody PearlsOfWisdomRequest wisdomdto,
 			@RequestParam("operation") String operation) {
