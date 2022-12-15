@@ -50,13 +50,13 @@ public class WebSiteManagementController {
 		return webSiteManagementService.getAll(operation);
 	}
 
-	@PostMapping("/alerts")
-	public Object manageUser(@RequestHeader("token") String token, @RequestBody AlertRequest alertDto,
-			@RequestParam("operation") String operation) {
-		authenticate(token);
-		LOG.info("Entering into Alert {} Method in Web Site Management", operation);
-		return webSiteManagementService.alertManage(operation, alertDto);
-	}
+//	@PostMapping("/alerts")
+//	public Object manageUser(@RequestHeader("token") String token, @RequestBody AlertRequest alertDto,
+//			@RequestParam("operation") String operation) {
+//		authenticate(token);
+//		LOG.info("Entering into Alert {} Method in Web Site Management", operation);
+//		return webSiteManagementService.alertManage(operation, alertDto);
+//	}
 
 //	@PostMapping("/banner")
 //	public Object manageUser(@RequestHeader("token") String token, @RequestBody BannerViewRequest bannerViewdto,
@@ -114,5 +114,12 @@ public class WebSiteManagementController {
 			@RequestParam("operation") String operation) {
 		authenticate(token);
 		return webSiteManagementService.managewisdom(operation, wisdomdto);
+	}
+	
+	@PostMapping("/alerts")
+	public Object managealert(@RequestHeader("token") String token, @RequestBody AlertRequest alertdto,
+			@RequestParam("operation") String operation) {
+		authenticate(token);
+		return webSiteManagementService.managealert(operation, alertdto);
 	}
 }

@@ -143,28 +143,26 @@ public class WebSiteManagementService {
 	}
 
 	/////// ALERT ONLY ADD OPERATION /////////
+	
+	
+	
+	public Object managealert(String operation,  AlertRequest alertdto) {
 
-	public Object alertManage(String operation, AlertRequest alertdto) {
-		httpStatus = HttpStatus.OK;
 		try {
 			if (operation.equals("add")) {
-				AlertModel newAlert = new AlertModel();
-				newAlert.setCategoryId(alertdto.getCategoryId());
-				newAlert.setAlertDescription(alertdto.getAlertDescription());
-				newAlert.setStartDate(alertdto.getStartDate());
-				newAlert.setEndDate(alertdto.getEndDate());
-				alertRepository.save(newAlert);
-				message = "New Alert added Sucessfully";
-				LOG.info(message);
-				response = new Response(message, httpStatus.value(), null);
+				addalert(alertdto);
+			} else if (operation.equals("update")) {
+				updatealert(alertdto);
+			} else if (operation.equals("delete")) {
+				deletequote(alertdto);
 			} else {
-				message = Constants.OPERATION_ERROR;
+				message = "Operation Doesn't exist";
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
 			}
 		} catch (Exception e) {
-			message = "Exception in alert";
+			message = "Exception in Role";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());
@@ -173,6 +171,83 @@ public class WebSiteManagementService {
 		return new ResponseEntity<>(response, httpStatus);
 	}
 
+	
+	private void addalert( AlertRequest alertdto) {
+		AlertModel newAlert = alertRepository.getalertById(alertdto.getAlertId());
+		if (newAlert == null) {
+			AlertModel newlist = new AlertModel();
+
+			newlist.setCategoryId(alertdto.getCategoryId());
+			newlist.setAlertDescription(alertdto.getAlertDescription());
+			newlist.setStartDate(alertdto.getStartDate());
+			newlist.setEndDate(alertdto.getEndDate());
+			
+			alertRepository.save(newlist);
+			message = "new quote is  added sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		}
+		else {
+			message = Constants.OPERATION_ERROR;
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void updatealert(AlertRequest alertdto) {
+		AlertModel newAlert = alertRepository.getalertById(alertdto.getAlertId());
+		if (newAlert != null) {
+			AlertModel newAlertCheck = alertRepository.getalertBydescription(alertdto.getAlertDescription());
+			AlertModel newAlertCheck1 = alertRepository.getalertBystartdate(alertdto.getStartDate());
+			AlertModel newAlertCheck2 = alertRepository.getalertByenddate(alertdto.getStartDate());
+			
+			if (newAlertCheck == null || newAlertCheck1==null || newAlertCheck2==null) {
+				newAlert.setCategoryId(alertdto.getCategoryId());
+				newAlert.setAlertDescription(alertdto.getAlertDescription());
+				newAlert.setStartDate(alertdto.getStartDate());
+				newAlert.setEndDate(alertdto.getEndDate());
+				
+				alertRepository.save(newAlert);
+				message = "quote saved sucessfully";
+				LOG.info(message);
+				response = new Response(message, httpStatus.value(), null);
+			} else {
+				message = "Updated quote is already exist";
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+
+		} else {
+			message = Constants.ALERT_EXCEPTION;
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+
+	}
+	
+	private void deletequote(AlertRequest alertdto) {
+		AlertModel newAlert = alertRepository.getalertById(alertdto.getAlertId());
+		if (newAlert != null) {
+			alertRepository.deleteById(newAlert.getAlertId());
+			message = "quote deleted sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message =Constants.DOES_NOT_EXISTS;
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+	
+
+	
+	
+	
+	
 	///// BANNER ONLY ADD OPERATION //////////
 
 	public Object bannerMange(String operation, BannerViewRequest bannerViewdto) {
