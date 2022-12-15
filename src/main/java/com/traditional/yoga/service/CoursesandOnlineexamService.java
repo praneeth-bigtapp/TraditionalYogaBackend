@@ -15,6 +15,8 @@ import com.traditional.yoga.dto.request.AddCoursemateialRequest;
 import com.traditional.yoga.dto.request.CoursesListRequest;
 import com.traditional.yoga.dto.request.MaterialCategoryRequest;
 import com.traditional.yoga.dto.request.OnlineExamReqest;
+import com.traditional.yoga.dto.request.PageRequest;
+import com.traditional.yoga.dto.request.PearlsOfWisdomRequest;
 import com.traditional.yoga.dto.request.TaskRequest;
 import com.traditional.yoga.dto.request.TestimoalRequest;
 import com.traditional.yoga.model.AddCoursesMaterialModel;
@@ -23,6 +25,8 @@ import com.traditional.yoga.model.MaterialCategoryModel;
 import com.traditional.yoga.model.TaskModel;
 import com.traditional.yoga.model.TestimonalsModel;
 import com.traditional.yoga.model.OnlineExamsModel;
+import com.traditional.yoga.model.PageModel;
+import com.traditional.yoga.model.PearlsOfWisdomModel;
 import com.traditional.yoga.repository.AddMaterialRepository;
 import com.traditional.yoga.repository.CategoryRepository;
 import com.traditional.yoga.repository.CoursesListRepository;
@@ -72,9 +76,6 @@ public class CoursesandOnlineexamService {
 
 	@Autowired
 	AddMaterialRepository addMaterialRepository;
-	
-	
-	
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -246,6 +247,8 @@ public class CoursesandOnlineexamService {
 
 			if (operation.equals("add")) {
 				addTask(taskDto);
+			} else if (operation.equals("delete")) {
+				deleteTask(taskDto);
 			} else {
 				message = NOEXISTMESSAGE;
 				httpStatus = HttpStatus.CONFLICT;
@@ -285,6 +288,21 @@ public class CoursesandOnlineexamService {
 
 	}
 
+	private void deleteTask(TaskRequest taskDto) {
+		TaskModel deleteTask = taskRepository.getTaskById(taskDto.getTaskId());
+		if (deleteTask != null) {
+			taskRepository.deleteById(deleteTask.getTaskId());
+			message = "task is  deleted sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "Testimonal Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
 //	TESTIMONAL////
 	public Object manageTestimonal(String operation, TestimoalRequest testimonalDto) {
 
@@ -295,6 +313,8 @@ public class CoursesandOnlineexamService {
 				addTestimonal(testimonalDto);
 			} else if (operation.equals("update")) {
 				updateTestimonal(testimonalDto);
+			} else if (operation.equals("delete")) {
+				deleteTestimonal(testimonalDto);
 			} else {
 				message = NOEXISTMESSAGE;
 				httpStatus = HttpStatus.CONFLICT;
@@ -310,6 +330,8 @@ public class CoursesandOnlineexamService {
 		}
 		return new ResponseEntity<>(response, httpStatus);
 	}
+
+	// ADD testimonal///
 
 	private void addTestimonal(TestimoalRequest testimonalDto) {
 		TestimonalsModel testimonalnew = testimonalRepository.getTestmonialsById(testimonalDto.getTestimonalId());
@@ -334,15 +356,25 @@ public class CoursesandOnlineexamService {
 
 	}
 
+	/// update////
+
 	private void updateTestimonal(TestimoalRequest testimonalDto) {
 		TestimonalsModel testimonalnew = testimonalRepository.getTestmonialsById(testimonalDto.getTestimonalId());
 
 		if (testimonalnew != null) {
 			TestimonalsModel testimonalcheck = testimonalRepository.getTestmonialsBycontent(testimonalDto.getContent());
 
-			if (testimonalcheck == null) {
+			TestimonalsModel testimonalcheck1 = testimonalRepository.getTestmonialsBylink(testimonalDto.getVideoLink());
+
+			TestimonalsModel testimonalcheck2 = testimonalRepository
+					.getTestmonialsByname(testimonalDto.getGivenByName());
+
+			TestimonalsModel testimonalcheck3 = testimonalRepository
+					.getTestmonialsBydescription(testimonalDto.getDescription());
+
+			if (testimonalcheck == null || testimonalcheck1 == null || testimonalcheck2 == null
+					|| testimonalcheck3 == null) {
 				TestimonalsModel testimonallist = new TestimonalsModel();
-//				
 				testimonallist.setContent(testimonalDto.getContent());
 				testimonallist.setGivenByName(testimonalDto.getGivenByName());
 				testimonallist.setVideoLink(testimonalDto.getVideoLink());
@@ -361,6 +393,23 @@ public class CoursesandOnlineexamService {
 
 		}
 
+	}
+
+	// Delete//
+
+	private void deleteTestimonal(TestimoalRequest testimonalDto) {
+		TestimonalsModel testimonalnew = testimonalRepository.getTestmonialsById(testimonalDto.getTestimonalId());
+		if (testimonalnew != null) {
+			testimonalRepository.deleteById(testimonalnew.getTestimonalId());
+			message = "Testimonal deleted sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "Testimonal Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
 	}
 
 	/// Add Material Categorys/////
