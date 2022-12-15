@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.traditional.yoga.dto.request.AudioManagementRequest;
 import com.traditional.yoga.dto.request.CourseMediaPracticeRequest;
 import com.traditional.yoga.dto.request.CourseMediaRequest;
 import com.traditional.yoga.dto.request.CourseRequest;
@@ -69,6 +70,14 @@ public class CourseManagementController {
 			@RequestBody PerformaceRatingRequest performanceRatingDto) {
 		LOG.info("Entering into getAll Method");
 		return courseManagementService.manageRating(performanceRatingDto);
+	}
+
+//	Audio Management
+	@PostMapping("/audio")
+	public Object manageAudio(@RequestHeader("token") String token,
+			@RequestBody AudioManagementRequest audioManagementDto, @RequestParam("operation") String operation) {
+		LOG.info("Entering into audio Method operation is {}", operation);
+		return courseManagementService.manageAudio(operation, audioManagementDto);
 	}
 
 }

@@ -10,14 +10,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.traditional.yoga.dto.Response;
+import com.traditional.yoga.dto.request.AudioManagementRequest;
 import com.traditional.yoga.dto.request.CourseMediaPracticeRequest;
 import com.traditional.yoga.dto.request.CourseMediaRequest;
 import com.traditional.yoga.dto.request.CourseRequest;
 import com.traditional.yoga.dto.request.PerformaceRatingRequest;
+import com.traditional.yoga.model.AudioManagementModel;
 import com.traditional.yoga.model.CourseMediaModel;
 import com.traditional.yoga.model.CourseMediaPracticeModel;
 import com.traditional.yoga.model.CourseModel;
 import com.traditional.yoga.model.PerformaceRatingModel;
+import com.traditional.yoga.repository.AudioManagementRepository;
 import com.traditional.yoga.repository.ClassMediaRepository;
 import com.traditional.yoga.repository.CourseCategoryRepository;
 import com.traditional.yoga.repository.CourseMediaCategoryRepository;
@@ -26,6 +29,7 @@ import com.traditional.yoga.repository.CourseMediaRepository;
 import com.traditional.yoga.repository.CourseMediaTypeRepository;
 import com.traditional.yoga.repository.CourseRepository;
 import com.traditional.yoga.repository.PerformaceRatingRepository;
+import com.traditional.yoga.utils.Constants;
 
 @Service
 public class CourseManagementService {
@@ -43,7 +47,7 @@ public class CourseManagementService {
 
 	@Autowired
 	CourseMediaRepository courseMediaRepository;
-	
+
 	@Autowired
 	CourseMediaTypeRepository courseMediaTypeRepository;
 
@@ -55,6 +59,9 @@ public class CourseManagementService {
 
 	@Autowired
 	PerformaceRatingRepository performaceRatingRepository;
+
+	@Autowired
+	AudioManagementRepository audioManagementRepository;
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -79,6 +86,9 @@ public class CourseManagementService {
 			} else if (operationType.equals("courseMediaType")) {
 				httpStatus = HttpStatus.OK;
 				return new ResponseEntity<>(courseMediaTypeRepository.findAll(), httpStatus);
+			} else if (operationType.equals("audio")) {
+				httpStatus = HttpStatus.OK;
+				return new ResponseEntity<>(audioManagementRepository.findAll(), httpStatus);
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -241,6 +251,86 @@ public class CourseManagementService {
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			response = new Response(message, httpStatus.value(), httpStatus.getReasonPhrase());
 			return new ResponseEntity<>(response, httpStatus);
+		}
+	}
+
+//	Audio
+	public Object manageAudio(String operation, AudioManagementRequest audioManagementDto) {
+		try {
+			if (operation.equals(Constants.ADD)) {
+				addAudio(audioManagementDto);
+			} else if (operation.equals(Constants.SAVE)) {
+				updateAudio(audioManagementDto);
+			} else if (operation.equals(Constants.DELETE)) {
+				deleteAudio(audioManagementDto);
+			} else {
+				message = Constants.OPERATION_ERROR;
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Error in Audio";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			response = new Response(message, httpStatus.value(), httpStatus.getReasonPhrase());
+			return new ResponseEntity<>(response, httpStatus);
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	private void addAudio(AudioManagementRequest audioManagementDto) {
+		AudioManagementModel newAudio = new AudioManagementModel();
+		newAudio.setCourseId(audioManagementDto.getCourseId());
+		newAudio.setAudioCategoryId(audioManagementDto.getAudioCategoryId());
+		newAudio.setUploadCategory(audioManagementDto.getUploadCategory());
+		newAudio.setAudioFile(audioManagementDto.getAudioFile());
+		newAudio.setAudioTitle(audioManagementDto.getAudioTitle());
+		newAudio.setAudioDesc(audioManagementDto.getAudioDesc());
+		newAudio.setAudioDuration(audioManagementDto.getAudioDuration());
+		newAudio.setMetakey(audioManagementDto.getMetakey());
+		newAudio.setActive(audioManagementDto.getActive());
+		audioManagementRepository.save(newAudio);
+		message = "Audio details added sucessfully";
+		LOG.info(message);
+		response = new Response(message, httpStatus.value(), null);
+	}
+
+	private void updateAudio(AudioManagementRequest audioManagementDto) {
+		AudioManagementModel userDb = audioManagementRepository.getAudioById(audioManagementDto.getId());
+		if (userDb != null) {
+			userDb.setCourseId(audioManagementDto.getCourseId());
+			userDb.setAudioCategoryId(audioManagementDto.getAudioCategoryId());
+			userDb.setUploadCategory(audioManagementDto.getUploadCategory());
+			userDb.setAudioFile(audioManagementDto.getAudioFile());
+			userDb.setAudioTitle(audioManagementDto.getAudioTitle());
+			userDb.setAudioDesc(audioManagementDto.getAudioDesc());
+			userDb.setAudioDuration(audioManagementDto.getAudioDuration());
+			userDb.setMetakey(audioManagementDto.getMetakey());
+			userDb.setActive(audioManagementDto.getActive());
+			audioManagementRepository.save(userDb);
+			message = "Audio details added sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "Audio details are not found";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void deleteAudio(AudioManagementRequest audioManagementDto) {
+		AudioManagementModel userDb = audioManagementRepository.getAudioById(audioManagementDto.getId());
+		if (userDb != null) {
+			audioManagementRepository.deleteById(audioManagementDto.getId());
+			message = "Audio details deleted sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "Audio details are not found";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
 		}
 	}
 
