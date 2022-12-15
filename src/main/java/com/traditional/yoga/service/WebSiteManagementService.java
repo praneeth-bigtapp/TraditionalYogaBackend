@@ -471,7 +471,47 @@ public class WebSiteManagementService {
 					LOG.info(message);
 					response = new Response(message, httpStatus.value(), null);
 				}
-			} else {
+			} else if(operation.equals("update")) {
+				RegionModel newRegion = regionRepository.getRegionById(regiondto.getRegionId());
+				if (newRegion != null) {
+					RegionModel regioncheck = regionRepository.getRegionByname(regiondto.getRegionName());
+					if (regioncheck == null) {
+						newRegion.setRegionName(regiondto.getRegionName());
+						newRegion.setCountryName(regiondto.getCountryName());
+						newRegion.setPartId(regiondto.getPartId());
+						newRegion.setStates(regiondto.getStates());
+						regionRepository.save(newRegion);
+						message = "new region is  updated sucessfully";
+						LOG.info(message);
+						response = new Response(message, httpStatus.value(), null);
+					}else {
+						message = "Updated region is already exist";
+						httpStatus = HttpStatus.CONFLICT;
+						LOG.error(message);
+						response = new Response(message, httpStatus.value(), message);
+					}
+				}
+				
+				
+			} else if(operation.equals("delete")) {
+				RegionModel newRegion = regionRepository.getRegionById(regiondto.getRegionId());
+				if (newRegion != null) {
+					regionRepository.deleteById(newRegion.getRegionId());
+					message = "region deleted sucessfully";
+					LOG.info(message);
+					response = new Response(message, httpStatus.value(), null);
+				} else {
+					message = "region Doesn't exist";
+					httpStatus = HttpStatus.CONFLICT;
+					LOG.error(message);
+					response = new Response(message, httpStatus.value(), message);
+				}
+			}
+			
+			
+			
+			
+			else {
 				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);

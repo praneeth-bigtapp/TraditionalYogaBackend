@@ -10,5 +10,11 @@ public interface RegionRepository extends JpaRepository<RegionModel, Integer> {
 	
 	@Query(value = "SELECT * FROM `region` WHERE `region_id`=:regionId", nativeQuery = true)
 	RegionModel getRegionById(@Param("regionId") int regionId);
+	
+	
+	@Query(value = "SELECT * FROM `region` WHERE `region_name`=:regionName", nativeQuery = true)
+	RegionModel getRegionByname(@Param("regionName") String regionName);
+	
+	
 
 }
