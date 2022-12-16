@@ -67,9 +67,10 @@ public class CourseManagementController {
 
 	@PostMapping("/performance/updateRating")
 	public Object manageRating(@RequestHeader("token") String token,
-			@RequestBody PerformaceRatingRequest performanceRatingDto) {
+			@RequestBody PerformaceRatingRequest performanceRatingDto,
+			@RequestParam("section") int section) {
 		LOG.info("Entering into getAll Method");
-		return courseManagementService.manageRating(performanceRatingDto);
+		return courseManagementService.manageRating(performanceRatingDto, section);
 	}
 
 //	Audio Management
