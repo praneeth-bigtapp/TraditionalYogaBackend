@@ -23,8 +23,9 @@ public class PerformaceRatingModel {
 	@JoinColumn(name = "course_id", referencedColumnName = "course_id")
 	private CourseModel courseId;
 
-	@Column(name = "performace_name")
-	private String performaceName;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "parameters_id", referencedColumnName = "parameters_id")
+	private ParametersModel parametersId;
 
 	@Column(name = "rating_good")
 	private String ratingGood;
@@ -57,16 +58,16 @@ public class PerformaceRatingModel {
 		this.courseId = courseId;
 	}
 
-	public String getPerformaceName() {
-		return performaceName;
-	}
-
-	public void setPerformaceName(String performaceName) {
-		this.performaceName = performaceName;
-	}
-
 	public String getRatingGood() {
 		return ratingGood;
+	}
+
+	public ParametersModel getParametersId() {
+		return parametersId;
+	}
+
+	public void setParametersId(ParametersModel parametersId) {
+		this.parametersId = parametersId;
 	}
 
 	public void setRatingGood(String ratingGood) {

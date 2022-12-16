@@ -1,5 +1,6 @@
 package com.traditional.yoga.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -9,12 +10,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.traditional.yoga.dto.ParameterSectionA;
+import com.traditional.yoga.dto.ParameterSectionB;
 import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.AudioManagementRequest;
 import com.traditional.yoga.dto.request.CourseMediaPracticeRequest;
 import com.traditional.yoga.dto.request.CourseMediaRequest;
 import com.traditional.yoga.dto.request.CourseRequest;
 import com.traditional.yoga.dto.request.PerformaceRatingRequest;
+import com.traditional.yoga.dto.response.ParameterResponse;
 import com.traditional.yoga.model.AudioManagementModel;
 import com.traditional.yoga.model.CourseMediaModel;
 import com.traditional.yoga.model.CourseMediaPracticeModel;
@@ -211,9 +215,44 @@ public class CourseManagementService {
 	public Object getRating(int courseId) {
 		try {
 			List<PerformaceRatingModel> ratingData = performaceRatingRepository.getRatingByCourseId(courseId);
+			ParameterResponse parameterResponse = new ParameterResponse();
+			List<ParameterSectionA> record1 = new ArrayList<>();
+			List<ParameterSectionB> record2 = new ArrayList<>();
+			for (PerformaceRatingModel rating : ratingData) {
+				int id = rating.getParametersId().getSection();
+				if (id == 2) {
+					ParameterSectionA parameterSectionA = new ParameterSectionA();
+					parameterSectionA.setPerformanceId(rating.getId());
+					parameterSectionA.setCourseId(rating.getCourseId().getCourseId());
+					parameterSectionA.setCourseName(rating.getCourseId().getCourseName());
+					parameterSectionA.setParametersId(rating.getParametersId().getParametersId());
+					parameterSectionA.setParametersName(rating.getParametersId().getParametersName());
+					parameterSectionA.setRatingGood(rating.getRatingGood());
+					parameterSectionA.setRatingAvearage(rating.getRatingAvearage());
+					parameterSectionA.setRatingPoor(rating.getRatingPoor());
+					parameterSectionA.setRatingRedAlert(rating.getRatingRedAlert());
+					parameterSectionA.setActive(rating.getActive());
+					record1.add(parameterSectionA);
+				} else if (id == 1) {
+					ParameterSectionB parameterSectionB = new ParameterSectionB();
+					parameterSectionB.setPerformanceId(rating.getId());
+					parameterSectionB.setCourseId(rating.getCourseId().getCourseId());
+					parameterSectionB.setCourseName(rating.getCourseId().getCourseName());
+					parameterSectionB.setParametersId(rating.getParametersId().getParametersId());
+					parameterSectionB.setParametersName(rating.getParametersId().getParametersName());
+					parameterSectionB.setRating(rating.getRatingGood());
+					parameterSectionB.setActive(rating.getActive());
+					record2.add(parameterSectionB);
+				} else {
+					LOG.error("Section for paramerter is missmatched");
+				}
+			}
+			parameterResponse.setSectionA(record1);
+			parameterResponse.setSectionB(record2);
+
 			httpStatus = HttpStatus.OK;
 			LOG.info("Performace Rating Fetched sucessfully");
-			return new ResponseEntity<>(ratingData, httpStatus);
+			return new ResponseEntity<>(parameterResponse, httpStatus);
 		} catch (Exception e) {
 			message = "Error in Parameters performance rating";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
@@ -222,25 +261,16 @@ public class CourseManagementService {
 		}
 	}
 
-	public Object manageRating(PerformaceRatingRequest performanceRatingDto) {
+	public Object manageRating(PerformaceRatingRequest performanceRatingDto, int section) {
 		try {
 			PerformaceRatingModel updateRating = performaceRatingRepository
 					.getRatingById(performanceRatingDto.getPerformaceRatingId());
 
 			if (updateRating != null) {
-				updateRating.setRatingGood(performanceRatingDto.getRatingGood());
-				updateRating.setRatingAvearage(performanceRatingDto.getRatingAvearage());
-				updateRating.setRatingPoor(performanceRatingDto.getRatingPoor());
-				updateRating.setRatingRedAlert(performanceRatingDto.getRatingRedAlert());
-				updateRating.setActive(performanceRatingDto.getActive());
-				performaceRatingRepository.save(updateRating);
-				httpStatus = HttpStatus.OK;
-				message = "Student Mapped sucessfully";
-				LOG.info(message);
-				response = new Response(message, httpStatus.value(), null);
+				updateRating(performanceRatingDto, updateRating, section);
 				return new ResponseEntity<>(response, httpStatus);
 			} else {
-				message = "Student details Doesn't exist";
+				message = "Performance Parameter details Doesn't exist";
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
@@ -252,6 +282,45 @@ public class CourseManagementService {
 			response = new Response(message, httpStatus.value(), httpStatus.getReasonPhrase());
 			return new ResponseEntity<>(response, httpStatus);
 		}
+	}
+
+	private void updateRating(PerformaceRatingRequest performanceRatingDto, PerformaceRatingModel updateRating,
+			int section) {
+		if (section == 1) {
+			updateRating.setRatingGood(performanceRatingDto.getRatingGood());
+			updateRating.setRatingAvearage(performanceRatingDto.getRatingAvearage());
+			updateRating.setRatingPoor(performanceRatingDto.getRatingPoor());
+			updateRating.setRatingRedAlert(performanceRatingDto.getRatingRedAlert());
+			updateRating.setActive(performanceRatingDto.getActive());
+			performaceRatingRepository.save(updateRating);
+			httpStatus = HttpStatus.OK;
+			message = "Performance Rating updated sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else if (section == 2) {
+			updateRating.setRatingGood(performanceRatingDto.getRatingGood());
+			updateRating.setActive(performanceRatingDto.getActive());
+			performaceRatingRepository.save(updateRating);
+			httpStatus = HttpStatus.OK;
+			message = "Performance Rating updated sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			httpStatus = HttpStatus.CONFLICT;
+			message = "No such Section is present";
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+		updateRating.setRatingGood(performanceRatingDto.getRatingGood());
+		updateRating.setRatingAvearage(performanceRatingDto.getRatingAvearage());
+		updateRating.setRatingPoor(performanceRatingDto.getRatingPoor());
+		updateRating.setRatingRedAlert(performanceRatingDto.getRatingRedAlert());
+		updateRating.setActive(performanceRatingDto.getActive());
+		performaceRatingRepository.save(updateRating);
+		httpStatus = HttpStatus.OK;
+		message = "Student Mapped sucessfully";
+		LOG.info(message);
+		response = new Response(message, httpStatus.value(), null);
 	}
 
 //	Audio
