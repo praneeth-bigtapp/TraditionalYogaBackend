@@ -31,7 +31,9 @@ import com.traditional.yoga.model.RegionModel;
 import com.traditional.yoga.model.ScripcturesModel;
 import com.traditional.yoga.repository.AlertRepository;
 import com.traditional.yoga.repository.BannerViewRepository;
+import com.traditional.yoga.repository.CountryRepository;
 import com.traditional.yoga.repository.ImageGalleryRepository;
+import com.traditional.yoga.repository.MasterCountryRepository;
 import com.traditional.yoga.repository.NoticationCategoryRepository;
 import com.traditional.yoga.repository.NoticationRepository;
 import com.traditional.yoga.repository.PageRepository;
@@ -39,7 +41,6 @@ import com.traditional.yoga.repository.PearlsOfWisdomRepository;
 import com.traditional.yoga.repository.PhotoGalleryRepository;
 import com.traditional.yoga.repository.RegionRepository;
 import com.traditional.yoga.repository.ScripcturesRepository;
-import com.traditional.yoga.repository.MasterCountryRepository;
 import com.traditional.yoga.utils.Constants;
 import com.traditional.yoga.utils.GeneralUtils;
 
@@ -83,6 +84,9 @@ public class WebSiteManagementService {
 
 	@Autowired
 	MasterCountryRepository masterCountryRepository;
+
+	@Autowired
+	CountryRepository countryRepository;
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -133,6 +137,9 @@ public class WebSiteManagementService {
 			} else if (operationType.equals("regionsList")) {
 				httpStatus = HttpStatus.OK;
 				return masterCountryRepository.findAll();
+			} else if (operationType.equals("country")) {
+				httpStatus = HttpStatus.OK;
+				return countryRepository.findAll();
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
