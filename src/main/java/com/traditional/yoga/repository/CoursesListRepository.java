@@ -16,4 +16,25 @@ public interface CoursesListRepository extends JpaRepository<CourseListModel, In
 	CourseListModel getcoursesListById(@Param("coursesId") int coursesId);
 	
 	
+	//course name //
+	@Query(value = "SELECT * FROM `my_course_material` WHERE `courses_name`=:coursesName", nativeQuery = true)
+	CourseListModel getcoursesListBycoursesName(@Param("coursesName") String coursesName);
+	
+	//description//
+	@Query(value = "SELECT * FROM `my_course_material` WHERE `description`=:description", nativeQuery = true)
+	CourseListModel getcoursesListBydescription(@Param("description") String description);
+	
+	//startDate//
+	@Query(value = "SELECT * FROM `my_course_material` WHERE `start_date`=:startDate", nativeQuery = true)
+	CourseListModel getcoursesListBystartdate(@Param("startDate") String startDate);
+	
+	
+	//endDate//
+	@Query(value = "SELECT * FROM `my_course_material` WHERE `end_date`=:endDate", nativeQuery = true)
+	CourseListModel getcoursesListByenddate(@Param("endDate") String endDate);
+	
+	
+	@Query(value = "SELECT * FROM `my_course_material` WHERE `application_closer_date`=:applicationClouserDate", nativeQuery = true)
+	CourseListModel getcoursesListByclouserdate(@Param("applicationClouserDate") String applicationClouserDate);
+	
 }

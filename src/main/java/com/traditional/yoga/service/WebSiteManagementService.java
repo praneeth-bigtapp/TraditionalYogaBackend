@@ -39,6 +39,7 @@ import com.traditional.yoga.repository.PearlsOfWisdomRepository;
 import com.traditional.yoga.repository.PhotoGalleryRepository;
 import com.traditional.yoga.repository.RegionRepository;
 import com.traditional.yoga.repository.ScripcturesRepository;
+import com.traditional.yoga.repository.MasterCountryRepository;
 import com.traditional.yoga.utils.Constants;
 import com.traditional.yoga.utils.GeneralUtils;
 
@@ -79,6 +80,9 @@ public class WebSiteManagementService {
 
 	@Autowired
 	PearlsOfWisdomRepository pearlsOfWisdomRepository;
+
+	@Autowired
+	MasterCountryRepository masterCountryRepository;
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -126,6 +130,9 @@ public class WebSiteManagementService {
 			} else if (operationType.equals("region")) {
 				httpStatus = HttpStatus.OK;
 				return regionRepository.findAll();
+			} else if (operationType.equals("regionsList")) {
+				httpStatus = HttpStatus.OK;
+				return masterCountryRepository.findAll();
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -143,10 +150,8 @@ public class WebSiteManagementService {
 	}
 
 	/////// ALERT ONLY ADD OPERATION /////////
-	
-	
-	
-	public Object managealert(String operation,  AlertRequest alertdto) {
+
+	public Object managealert(String operation, AlertRequest alertdto) {
 
 		try {
 			if (operation.equals("add")) {
@@ -171,8 +176,7 @@ public class WebSiteManagementService {
 		return new ResponseEntity<>(response, httpStatus);
 	}
 
-	
-	private void addalert( AlertRequest alertdto) {
+	private void addalert(AlertRequest alertdto) {
 		AlertModel newAlert = alertRepository.getalertById(alertdto.getAlertId());
 		if (newAlert == null) {
 			AlertModel newlist = new AlertModel();
@@ -181,13 +185,12 @@ public class WebSiteManagementService {
 			newlist.setAlertDescription(alertdto.getAlertDescription());
 			newlist.setStartDate(alertdto.getStartDate());
 			newlist.setEndDate(alertdto.getEndDate());
-			
+
 			alertRepository.save(newlist);
 			message = "new quote is  added sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
-		}
-		else {
+		} else {
 			message = Constants.OPERATION_ERROR;
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
@@ -201,13 +204,13 @@ public class WebSiteManagementService {
 			AlertModel newAlertCheck = alertRepository.getalertBydescription(alertdto.getAlertDescription());
 			AlertModel newAlertCheck1 = alertRepository.getalertBystartdate(alertdto.getStartDate());
 			AlertModel newAlertCheck2 = alertRepository.getalertByenddate(alertdto.getStartDate());
-			
-			if (newAlertCheck == null || newAlertCheck1==null || newAlertCheck2==null) {
+
+			if (newAlertCheck == null || newAlertCheck1 == null || newAlertCheck2 == null) {
 				newAlert.setCategoryId(alertdto.getCategoryId());
 				newAlert.setAlertDescription(alertdto.getAlertDescription());
 				newAlert.setStartDate(alertdto.getStartDate());
 				newAlert.setEndDate(alertdto.getEndDate());
-				
+
 				alertRepository.save(newAlert);
 				message = "quote saved sucessfully";
 				LOG.info(message);
@@ -227,7 +230,7 @@ public class WebSiteManagementService {
 		}
 
 	}
-	
+
 	private void deletequote(AlertRequest alertdto) {
 		AlertModel newAlert = alertRepository.getalertById(alertdto.getAlertId());
 		if (newAlert != null) {
@@ -236,18 +239,13 @@ public class WebSiteManagementService {
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message =Constants.DOES_NOT_EXISTS;
+			message = Constants.DOES_NOT_EXISTS;
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
 		}
 	}
-	
 
-	
-	
-	
-	
 	///// BANNER ONLY ADD OPERATION //////////
 
 	public Object bannerMange(String operation, BannerViewRequest bannerViewdto) {
@@ -408,7 +406,7 @@ public class WebSiteManagementService {
 			PageModel pageCheck = pageRepository.getpageByname(pagedto.getPageTitle());
 			PageModel descriptionCheck = pageRepository.getpageBydescription(pagedto.getDescription());
 			PageModel titlecheck = pageRepository.getpageBytext(pagedto.getPageText());
-			if (pageCheck == null || descriptionCheck==null || titlecheck==null ) {
+			if (pageCheck == null || descriptionCheck == null || titlecheck == null) {
 				pageModelnew.setPageTitle(pagedto.getPageTitle());
 				pageModelnew.setPageText(pagedto.getPageText());
 				pageModelnew.setHoverTitle(pagedto.getHoverTitle());
@@ -471,7 +469,7 @@ public class WebSiteManagementService {
 					LOG.info(message);
 					response = new Response(message, httpStatus.value(), null);
 				}
-			} else if(operation.equals("update")) {
+			} else if (operation.equals("update")) {
 				RegionModel newRegion = regionRepository.getRegionById(regiondto.getRegionId());
 				if (newRegion != null) {
 					RegionModel regioncheck = regionRepository.getRegionByname(regiondto.getRegionName());
@@ -484,16 +482,15 @@ public class WebSiteManagementService {
 						message = "new region is  updated sucessfully";
 						LOG.info(message);
 						response = new Response(message, httpStatus.value(), null);
-					}else {
+					} else {
 						message = "Updated region is already exist";
 						httpStatus = HttpStatus.CONFLICT;
 						LOG.error(message);
 						response = new Response(message, httpStatus.value(), message);
 					}
 				}
-				
-				
-			} else if(operation.equals("delete")) {
+
+			} else if (operation.equals("delete")) {
 				RegionModel newRegion = regionRepository.getRegionById(regiondto.getRegionId());
 				if (newRegion != null) {
 					regionRepository.deleteById(newRegion.getRegionId());
@@ -507,10 +504,7 @@ public class WebSiteManagementService {
 					response = new Response(message, httpStatus.value(), message);
 				}
 			}
-			
-			
-			
-			
+
 			else {
 				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
@@ -642,7 +636,10 @@ public class WebSiteManagementService {
 		PearlsOfWisdomModel wisdommodelnew = pearlsOfWisdomRepository.getwisdomById(wisdomdto.getQuoteId());
 		if (wisdommodelnew != null) {
 			PearlsOfWisdomModel wisdommodelcheck = pearlsOfWisdomRepository.getwisdomBytitle(wisdomdto.getQuoteTitle());
-			if (wisdommodelcheck == null) {
+			PearlsOfWisdomModel wisdommodelcheck1 = pearlsOfWisdomRepository.getwisdomBydate(wisdomdto.getQuoteDate());
+			PearlsOfWisdomModel wisdommodelcheck2 = pearlsOfWisdomRepository.getwisdomByquote(wisdomdto.getQuote());
+
+			if (wisdommodelcheck == null || wisdommodelcheck1 == null || wisdommodelcheck2 == null) {
 				wisdommodelnew.setQuoteTitle(wisdomdto.getQuoteTitle());
 				wisdommodelnew.setQuote(wisdomdto.getQuote());
 				wisdommodelnew.setQuoteDate(wisdomdto.getQuoteDate());

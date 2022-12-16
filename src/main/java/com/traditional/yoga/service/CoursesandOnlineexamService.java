@@ -15,18 +15,14 @@ import com.traditional.yoga.dto.request.AddCoursemateialRequest;
 import com.traditional.yoga.dto.request.CoursesListRequest;
 import com.traditional.yoga.dto.request.MaterialCategoryRequest;
 import com.traditional.yoga.dto.request.OnlineExamReqest;
-import com.traditional.yoga.dto.request.PageRequest;
-import com.traditional.yoga.dto.request.PearlsOfWisdomRequest;
 import com.traditional.yoga.dto.request.TaskRequest;
 import com.traditional.yoga.dto.request.TestimoalRequest;
 import com.traditional.yoga.model.AddCoursesMaterialModel;
 import com.traditional.yoga.model.CourseListModel;
 import com.traditional.yoga.model.MaterialCategoryModel;
+import com.traditional.yoga.model.OnlineExamsModel;
 import com.traditional.yoga.model.TaskModel;
 import com.traditional.yoga.model.TestimonalsModel;
-import com.traditional.yoga.model.OnlineExamsModel;
-import com.traditional.yoga.model.PageModel;
-import com.traditional.yoga.model.PearlsOfWisdomModel;
 import com.traditional.yoga.repository.AddMaterialRepository;
 import com.traditional.yoga.repository.CategoryRepository;
 import com.traditional.yoga.repository.CoursesListRepository;
@@ -46,6 +42,8 @@ public class CoursesandOnlineexamService {
 	private static final String NOEXISTMESSAGE = "Operation Doesn't exist";
 
 	private static final String ALERADYEXISTSMESSAGE = "task already exists";
+
+	private static final String DELETE = "delete";
 
 	@Autowired
 	CoursesListRepository coursesListRepository;
@@ -138,9 +136,9 @@ public class CoursesandOnlineexamService {
 			if (operation.equals("add")) {
 				addcourses(courseListDto);
 			} else if (operation.equals("update")) {
-				addcourses(courseListDto);
-			} else if (operation.equals("delete")) {
-				addcourses(courseListDto);
+				updatecourses(courseListDto);
+			} else if (operation.equals(DELETE)) {
+				deletecourses(courseListDto);
 			} else {
 				message = NOEXISTMESSAGE;
 				httpStatus = HttpStatus.CONFLICT;
@@ -172,12 +170,69 @@ public class CoursesandOnlineexamService {
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = "course  is already exist";
+			message = "course is already exist";
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
 		}
 	}
+
+	// delete courses
+
+	private void deletecourses(CoursesListRequest courseListDto) {
+		CourseListModel listNew = coursesListRepository.getcoursesListById(courseListDto.getCoursesId());
+		if (listNew != null) {
+			coursesListRepository.deleteById(listNew.getCoursesId());
+			message = "courses  is  deleted sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "courses Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	// update courses /////
+	private void updatecourses(CoursesListRequest courseListDto) {
+		CourseListModel listNew = coursesListRepository.getcoursesListById(courseListDto.getCoursesId());
+		if (listNew != null) {
+			CourseListModel check = coursesListRepository.getcoursesListBycoursesName(courseListDto.getCoursesName());
+			CourseListModel check1 = coursesListRepository.getcoursesListBydescription(courseListDto.getDescription());
+			CourseListModel check2 = coursesListRepository.getcoursesListBystartdate(courseListDto.getStartDate());
+			CourseListModel check3 = coursesListRepository.getcoursesListByenddate(courseListDto.getEndDate());
+			CourseListModel check4 = coursesListRepository
+					.getcoursesListByclouserdate(courseListDto.getApplicationClouserDate());
+
+			if ( check==null || check1 == null || check2 == null || check3 == null || check4 == null) {
+				listNew.setCoursesName(courseListDto.getCoursesName());
+				listNew.setCategorieId(courseListDto.getCategorieId());
+				listNew.setDescription(courseListDto.getDescription());
+				listNew.setStartDate(courseListDto.getStartDate());
+				listNew.setEndDate(courseListDto.getEndDate());
+				listNew.setApplicationClouserDate(courseListDto.getApplicationClouserDate());
+				coursesListRepository.save(listNew);
+				message = "courses updated  sucessfully";
+				LOG.info(message);
+				response = new Response(message, httpStatus.value(), null);
+			} else {
+				message = "Updated quote is already exist";
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+
+		} else {
+			message = "quote Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+
+	}
+
+	///// online exam ///
 
 	public Object onlineExams(String onlineExamString) {
 		ObjectMapper objectMapper = new ObjectMapper();
