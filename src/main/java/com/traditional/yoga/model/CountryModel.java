@@ -23,6 +23,10 @@ public class CountryModel {
 
 	@Column(name = "country_name")
 	private String countryName;
+	
+	
+	@Column(name = "state_name")
+	private String stateName;
 
 	@Column(name = "country_code")
 	private String countryCode;
@@ -62,5 +66,15 @@ public class CountryModel {
 	public void setCountryCode(String countryCode) {
 		this.countryCode = countryCode;
 	}
+
+	public String getStateName() {
+		return stateName;
+	}
+
+	public void setStateName(String stateName) {
+		this.stateName = stateName;
+	}
+	
+	
 
 }

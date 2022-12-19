@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -21,6 +23,15 @@ public class DonarModel {
 
 	@Column(name = "email")
 	private String email;
+	
+	
+	@Column(name = "donar_name")
+	private String donarName;
+
+	@Column(name = "pan_number")
+	private String panNumber;
+	
+	
 
 	@Column(name = "contact_number")
 	private String contactNumber;
@@ -28,8 +39,10 @@ public class DonarModel {
 	@Column(name = "indian_citizen")
 	private String indianCitizen;
 
-	@Column(name = "country")
-	private String country;
+	
+	@OneToOne
+	@JoinColumn(name = "country_id", referencedColumnName = "country_id")
+	private CountryModel countryId;
 
 	@Column(name = "tax_benefits")
 	private String taxBenefits;
@@ -92,13 +105,7 @@ public class DonarModel {
 		this.indianCitizen = indianCitizen;
 	}
 
-	public String getCountry() {
-		return country;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
-	}
+	
 
 	public String getTaxBenefits() {
 		return taxBenefits;
@@ -156,4 +163,30 @@ public class DonarModel {
 		this.message = message;
 	}
 
+	public String getDonarName() {
+		return donarName;
+	}
+
+	public void setDonarName(String donarName) {
+		this.donarName = donarName;
+	}
+
+	public String getPanNumber() {
+		return panNumber;
+	}
+
+	public void setPanNumber(String panNumber) {
+		this.panNumber = panNumber;
+	}
+
+	public CountryModel getCountryId() {
+		return countryId;
+	}
+
+	public void setCountryId(CountryModel countryId) {
+		this.countryId = countryId;
+	}
+
+	
+	
 }

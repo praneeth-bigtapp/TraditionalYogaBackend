@@ -1,9 +1,16 @@
 package com.traditional.yoga.dto.request;
 
+import com.traditional.yoga.model.CountryModel;
+
 public class DonationRequest {
 
 	private int donationId;
 	private int studentId;
+
+	private CountryModel countryId;
+	private String donarName;
+	private String panNumber;
+
 	private String date;
 	private String amountDonated;
 	private String description;
@@ -15,6 +22,30 @@ public class DonationRequest {
 
 	public void setDonationId(int donationId) {
 		this.donationId = donationId;
+	}
+
+	public CountryModel getCountryId() {
+		return countryId;
+	}
+
+	public void setCountryId(CountryModel countryId) {
+		this.countryId = countryId;
+	}
+
+	public String getDonarName() {
+		return donarName;
+	}
+
+	public void setDonarName(String donarName) {
+		this.donarName = donarName;
+	}
+
+	public String getPanNumber() {
+		return panNumber;
+	}
+
+	public void setPanNumber(String panNumber) {
+		this.panNumber = panNumber;
 	}
 
 	public int getStudentId() {
