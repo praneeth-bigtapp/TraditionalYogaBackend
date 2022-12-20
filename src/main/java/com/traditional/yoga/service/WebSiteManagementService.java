@@ -428,6 +428,8 @@ public class WebSiteManagementService {
 		return new ResponseEntity<>(response, httpStatus);
 	}
 
+	// delete page
+
 	private void deletepage(PageRequest pagedto) {
 		PageModel pageModelnew = pageRepository.getpageById(pagedto.getPageId());
 		if (pageModelnew != null) {
@@ -443,39 +445,31 @@ public class WebSiteManagementService {
 		}
 	}
 
+	// update page
+
 	private void updatepage(PageRequest pagedto) {
 		PageModel pageModelnew = pageRepository.getpageById(pagedto.getPageId());
 		if (pageModelnew != null) {
-			PageModel pageCheck = pageRepository.getpageByname(pagedto.getPageTitle());
-			PageModel descriptionCheck = pageRepository.getpageBydescription(pagedto.getDescription());
-			PageModel titlecheck = pageRepository.getpageBytext(pagedto.getPageText());
-			if (pageCheck == null || descriptionCheck == null || titlecheck == null) {
-				pageModelnew.setPageTitle(pagedto.getPageTitle());
-				pageModelnew.setPageText(pagedto.getPageText());
-				pageModelnew.setHoverTitle(pagedto.getHoverTitle());
-				pageModelnew.setRelatedTags(pagedto.getRelatedTags());
-				pageModelnew.setDescription(pagedto.getDescription());
-				pageModelnew.setSubject(pagedto.getSubject());
-				pageModelnew.setCaptcha(pagedto.getCaptcha());
-				pageRepository.save(pageModelnew);
-				message = "page saved sucessfully";
-				LOG.info(message);
-				response = new Response(message, httpStatus.value(), null);
-			} else {
-				message = "Updated Role is already exist";
-				httpStatus = HttpStatus.CONFLICT;
-				LOG.error(message);
-				response = new Response(message, httpStatus.value(), message);
-			}
-
+			pageModelnew.setPageTitle(pagedto.getPageTitle());
+			pageModelnew.setPageText(pagedto.getPageText());
+			pageModelnew.setHoverTitle(pagedto.getHoverTitle());
+			pageModelnew.setRelatedTags(pagedto.getRelatedTags());
+			pageModelnew.setDescription(pagedto.getDescription());
+			pageModelnew.setSubject(pagedto.getSubject());
+			pageModelnew.setCaptcha(pagedto.getCaptcha());
+			pageRepository.save(pageModelnew);
+			message = "page saved sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
 		} else {
 			message = "page Doesn't exist";
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
 		}
-
 	}
+
+	// add page
 
 	private void addpage(PageRequest pagedto) {
 
@@ -553,6 +547,8 @@ public class WebSiteManagementService {
 		return new ResponseEntity<>(response, httpStatus);
 	}
 
+	// add region //
+
 	private void addRegion(RegionRequest regiondto) {
 		RegionModel regionDb = regionRepository.getRegionById(regiondto.getRegionId());
 		if (regionDb == null) {
@@ -574,6 +570,7 @@ public class WebSiteManagementService {
 	}
 
 //	Photo Gallery
+
 	public Object createGallary(PhotoGalleryRequest photoGalleryRequestDto) {
 		try {
 			PhotoGalleryModel newGallery = photoGalleryRepository
@@ -641,8 +638,6 @@ public class WebSiteManagementService {
 
 		return new ResponseEntity<>(response, httpStatus);
 	}
-
-	////// Pears of wisdom /////////////
 
 //////Pears of wisdom /////////////
 

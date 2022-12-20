@@ -224,6 +224,8 @@ public class CoursesandOnlineexamService {
 
 	}
 
+	// Manage Exam ////
+	
 	public Object mangeExams(String operation, OnlineExamReqest onlineExamDto) {
 		this.httpStatus = HttpStatus.OK;
 		try {
@@ -450,8 +452,6 @@ public class CoursesandOnlineexamService {
 		}
 
 	}
-
-//		}
 
 	// Delete//
 
