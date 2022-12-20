@@ -25,7 +25,7 @@ public class PraticeLibaryController {
 
 	@Autowired
 	PraticeLibaryService praticeLibaryService;
-	
+
 	/**
 	 * Authentication for Generated Token
 	 * 
@@ -45,8 +45,8 @@ public class PraticeLibaryController {
 
 	@PostMapping("/praticeLibary")
 	public Object manageUser(@RequestHeader("token") String token, @RequestBody PraticeLibaryRequest praticelibaryDto,
-			@RequestParam("operation") String operation) {
+			@RequestParam("operation") String operation, @RequestParam("type") String type) {
 		authenticate(token);
-		return praticeLibaryService.managelibary(operation, praticelibaryDto);
+		return praticeLibaryService.managelibary(operation, type, praticelibaryDto);
 	}
 }

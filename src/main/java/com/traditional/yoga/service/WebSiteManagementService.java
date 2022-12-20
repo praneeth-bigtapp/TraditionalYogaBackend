@@ -101,12 +101,6 @@ public class WebSiteManagementService {
 			} else if (operationType.equals("photoGallery")) {
 				httpStatus = HttpStatus.OK;
 				return photoGalleryRepository.findAll();
-			} else if (operationType.equals("videoGallery")) {
-				httpStatus = HttpStatus.OK;
-				return "Video Gallery";
-			} else if (operationType.equals("testimonials")) {
-				httpStatus = HttpStatus.OK;
-				return "Testimonoals";
 			} else if (operationType.equals("banner")) {
 				httpStatus = HttpStatus.OK;
 				return bannerRepository.findAll();
@@ -141,7 +135,7 @@ public class WebSiteManagementService {
 				httpStatus = HttpStatus.OK;
 				return countryRepository.findAll();
 			} else {
-				message = "Unknown Operation";
+				message = Constants.UNKNOWN_OPERATION;
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), httpStatus.getReasonPhrase());
@@ -149,7 +143,7 @@ public class WebSiteManagementService {
 			}
 
 		} catch (Exception e) {
-			message = "Unknown Error";
+			message = Constants.EXCEPTION + " in Web site Manaement";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			response = new Response(message, httpStatus.value(), httpStatus.getReasonPhrase());
 			return new ResponseEntity<>(response, httpStatus);
@@ -158,23 +152,23 @@ public class WebSiteManagementService {
 
 	/////// ALERT ONLY ADD OPERATION /////////
 
-	public Object managealert(String operation, AlertRequest alertdto) {
+	public Object manageAlert(String operation, AlertRequest alertdto) {
 
 		try {
-			if (operation.equals("add")) {
+			if (operation.equals(Constants.ADD)) {
 				addalert(alertdto);
-			} else if (operation.equals("update")) {
+			} else if (operation.equals(Constants.UPDATE)) {
 				updatealert(alertdto);
-			} else if (operation.equals("delete")) {
+			} else if (operation.equals(Constants.DELETE)) {
 				deletequote(alertdto);
 			} else {
-				message = "Operation Doesn't exist";
+				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
 			}
 		} catch (Exception e) {
-			message = "Exception in Role";
+			message = Constants.EXCEPTION + " in Alerts";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());
@@ -194,11 +188,11 @@ public class WebSiteManagementService {
 			newlist.setEndDate(alertdto.getEndDate());
 
 			alertRepository.save(newlist);
-			message = "new quote is  added sucessfully";
+			message = "new alert is  added sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = Constants.OPERATION_ERROR;
+			message = Constants.ALREADY_EXIST;
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
@@ -219,11 +213,11 @@ public class WebSiteManagementService {
 				newAlert.setEndDate(alertdto.getEndDate());
 
 				alertRepository.save(newAlert);
-				message = "quote saved sucessfully";
+				message = "alert saved sucessfully";
 				LOG.info(message);
 				response = new Response(message, httpStatus.value(), null);
 			} else {
-				message = "Updated quote is already exist";
+				message = Constants.DOES_NOT_EXIST;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
@@ -246,7 +240,7 @@ public class WebSiteManagementService {
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = Constants.DOES_NOT_EXISTS;
+			message = Constants.DOES_NOT_EXIST;
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
@@ -271,12 +265,12 @@ public class WebSiteManagementService {
 					bannerList.setCategoryId(bannerViewdto.getCategoryId());
 					bannerList.setDateOfAdd(generalUtils.getCurrentDate());
 					bannerRepository.save(bannerList);
-					message = "new banner is  added sucessfully";
+					message = "new banner is added sucessfully";
 					LOG.info(message);
 					response = new Response(message, httpStatus.value(), null);
 				}
 			} else {
-				message = Constants.OPERATION_ERROR;
+				message = Constants.ALREADY_EXIST;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
@@ -291,33 +285,18 @@ public class WebSiteManagementService {
 		return new ResponseEntity<>(response, httpStatus);
 	}
 
-	public Object managescripcutures(String operation, ScripcturesRequest scripcuturesdto) {
+	public Object manageScripcutures(String operation, ScripcturesRequest scripcuturesdto) {
 		httpStatus = HttpStatus.OK;
 		try {
-			if (operation.equals("add")) {
-				ScripcturesModel scripcturesModelnew = scripcturesRepository
-						.checkscripcturesId(scripcuturesdto.getScripcturesId());
-				if (scripcturesModelnew == null) {
-					ScripcturesModel scripctureslist = new ScripcturesModel();
-					scripctureslist.setUploadFile(scripcuturesdto.getUploadFile());
-					scripctureslist.setCoverImage(scripcuturesdto.getCoverImage());
-					scripctureslist.setTitle(scripcuturesdto.getTitle());
-					scripctureslist.setDescription(scripcuturesdto.getDescription());
-					scripctureslist.setMetaKeyWords(scripcuturesdto.getMetaKeyWords());
-
-					scripcturesRepository.save(scripctureslist);
-					message = "new scripctures is  added sucessfully";
-					LOG.info(message);
-					response = new Response(message, httpStatus.value(), null);
-				} else {
-					message = Constants.OPERATION_ERROR;
-					httpStatus = HttpStatus.CONFLICT;
-					LOG.error(message);
-					response = new Response(message, httpStatus.value(), message);
-				}
+			if (operation.equals(Constants.ADD)) {
+				addScripcutures(scripcuturesdto);
+			} else if (operation.equals(Constants.SAVE)) {
+				updateScripcutures(scripcuturesdto);
+			} else if (operation.equals(Constants.DELETE)) {
+				deleteScripcutures(scripcuturesdto);
 			}
 		} catch (Exception e) {
-			message = "Exception in scriptures creation";
+			message = Constants.EXCEPTION + " in scriptures creation";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());
@@ -327,7 +306,65 @@ public class WebSiteManagementService {
 
 	}
 
-	public Object managenotification(String operation, NotificationRequest notificationdto) {
+	private void addScripcutures(ScripcturesRequest scripcuturesdto) {
+		ScripcturesModel scripctureDb = scripcturesRepository.checkscripcturesId(scripcuturesdto.getScripcturesId());
+		if (scripctureDb == null) {
+			ScripcturesModel newScripctures = new ScripcturesModel();
+			newScripctures.setUploadFile(scripcuturesdto.getUploadFile());
+			newScripctures.setCoverImage(scripcuturesdto.getCoverImage());
+			newScripctures.setTitle(scripcuturesdto.getTitle());
+			newScripctures.setDescription(scripcuturesdto.getDescription());
+			newScripctures.setMetaKeyWords(scripcuturesdto.getMetaKeyWords());
+
+			scripcturesRepository.save(newScripctures);
+			message = "new scripcture is added sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = Constants.ALREADY_EXIST;
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void updateScripcutures(ScripcturesRequest scripcuturesdto) {
+		ScripcturesModel scripcturesDb = scripcturesRepository.checkscripcturesId(scripcuturesdto.getScripcturesId());
+		if (scripcturesDb != null) {
+			scripcturesDb.setUploadFile(scripcuturesdto.getUploadFile());
+			scripcturesDb.setCoverImage(scripcuturesdto.getCoverImage());
+			scripcturesDb.setTitle(scripcuturesdto.getTitle());
+			scripcturesDb.setDescription(scripcuturesdto.getDescription());
+			scripcturesDb.setMetaKeyWords(scripcuturesdto.getMetaKeyWords());
+
+			scripcturesRepository.save(scripcturesDb);
+			message = "scripctures is updated sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = Constants.DOES_NOT_EXIST;
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void deleteScripcutures(ScripcturesRequest scripcuturesdto) {
+		ScripcturesModel scripctureDb = scripcturesRepository.checkscripcturesId(scripcuturesdto.getScripcturesId());
+		if (scripctureDb != null) {
+			scripcturesRepository.deleteById(scripcuturesdto.getScripcturesId());
+			message = "Scripcture is deleted sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = Constants.OPERATION_ERROR;
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	public Object manageNotification(String operation, NotificationRequest notificationdto) {
 		httpStatus = HttpStatus.OK;
 		try {
 			if (operation.equals("add")) {
@@ -338,7 +375,6 @@ public class WebSiteManagementService {
 
 					noticationlist.setCategoryId(
 							noticationCategoryRepository.getnotificationById(notificationdto.getCategoryId()));
-//					noticationlist.setCategoryId(notificationdto.getCategoryId());
 					noticationlist.setTitle(notificationdto.getTitle());
 					noticationlist.setUploadFile(notificationdto.getUploadFile());
 					noticationlist.setMessage(notificationdto.getMessage());
@@ -370,11 +406,11 @@ public class WebSiteManagementService {
 	public Object managepage(String operation, PageRequest pagedto) {
 
 		try {
-			if (operation.equals("add")) {
+			if (operation.equals(Constants.ADD)) {
 				addpage(pagedto);
-			} else if (operation.equals("update")) {
+			} else if (operation.equals(Constants.UPDATE)) {
 				updatepage(pagedto);
-			} else if (operation.equals("delete")) {
+			} else if (operation.equals(Constants.DELETE)) {
 				deletepage(pagedto);
 			} else {
 				message = Constants.OPERATION_ERROR;
@@ -463,20 +499,9 @@ public class WebSiteManagementService {
 	public Object regionMange(String operation, RegionRequest regiondto) {
 		httpStatus = HttpStatus.OK;
 		try {
-			if (operation.equals("add")) {
-				RegionModel newregion = regionRepository.getRegionById(regiondto.getRegionId());
-				if (newregion == null) {
-					RegionModel regionList = new RegionModel();
-					regionList.setRegionName(regiondto.getRegionName());
-					regionList.setCountryName(regiondto.getCountryName());
-					regionList.setPartId(regiondto.getPartId());
-					regionList.setStates(regiondto.getStates());
-					regionRepository.save(regionList);
-					message = "new region is  added sucessfully";
-					LOG.info(message);
-					response = new Response(message, httpStatus.value(), null);
-				}
-			} else if (operation.equals("update")) {
+			if (operation.equals(Constants.ADD)) {
+				addRegion(regiondto);
+			} else if (operation.equals(Constants.UPDATE)) {
 				RegionModel newRegion = regionRepository.getRegionById(regiondto.getRegionId());
 				if (newRegion != null) {
 					RegionModel regioncheck = regionRepository.getRegionByname(regiondto.getRegionName());
@@ -497,7 +522,7 @@ public class WebSiteManagementService {
 					}
 				}
 
-			} else if (operation.equals("delete")) {
+			} else if (operation.equals(Constants.DELETE)) {
 				RegionModel newRegion = regionRepository.getRegionById(regiondto.getRegionId());
 				if (newRegion != null) {
 					regionRepository.deleteById(newRegion.getRegionId());
@@ -526,6 +551,26 @@ public class WebSiteManagementService {
 			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
 		}
 		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	private void addRegion(RegionRequest regiondto) {
+		RegionModel regionDb = regionRepository.getRegionById(regiondto.getRegionId());
+		if (regionDb == null) {
+			RegionModel newRegion = new RegionModel();
+			newRegion.setRegionName(regiondto.getRegionName());
+			newRegion.setCountryName(regiondto.getCountryName());
+			newRegion.setPartId(regiondto.getPartId());
+			newRegion.setStates(regiondto.getStates());
+			regionRepository.save(newRegion);
+			message = "new region is added sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = Constants.ALREADY_EXIST;
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
 	}
 
 //	Photo Gallery

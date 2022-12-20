@@ -7,9 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.AddCoursemateialRequest;
 import com.traditional.yoga.dto.request.CoursesListRequest;
@@ -33,17 +30,12 @@ import com.traditional.yoga.repository.OnlineExamRepository;
 import com.traditional.yoga.repository.TaskRepository;
 import com.traditional.yoga.repository.TestimonalRepository;
 import com.traditional.yoga.repository.TypeofTestRepository;
+import com.traditional.yoga.utils.Constants;
 
 @Service
 public class CoursesandOnlineexamService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CoursesandOnlineexamService.class);
-
-	private static final String NOEXISTMESSAGE = "Operation Doesn't exist";
-
-	private static final String ALERADYEXISTSMESSAGE = "task already exists";
-
-	private static final String DELETE = "delete";
 
 	@Autowired
 	CoursesListRepository coursesListRepository;
@@ -133,14 +125,14 @@ public class CoursesandOnlineexamService {
 		this.httpStatus = HttpStatus.OK;
 		try {
 
-			if (operation.equals("add")) {
+			if (operation.equals(Constants.ADD)) {
 				addcourses(courseListDto);
-			} else if (operation.equals("update")) {
+			} else if (operation.equals(Constants.UPDATE)) {
 				updatecourses(courseListDto);
-			} else if (operation.equals(DELETE)) {
+			} else if (operation.equals(Constants.DELETE)) {
 				deletecourses(courseListDto);
 			} else {
-				message = NOEXISTMESSAGE;
+				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
@@ -232,35 +224,21 @@ public class CoursesandOnlineexamService {
 
 	}
 
-	///// online exam ///
-
-	public Object onlineExams(String onlineExamString) {
-		ObjectMapper objectMapper = new ObjectMapper();
-		OnlineExamReqest onlineExamDto;
-		try {
-			onlineExamDto = objectMapper.readValue(onlineExamString, OnlineExamReqest.class);
-			return mangeExams(onlineExamDto);
-		} catch (JsonMappingException e) {
-			message = "Exception in JsonMappingException Online Exam";
-			httpStatus = HttpStatus.EXPECTATION_FAILED;
-			LOG.error(message);
-			LOG.error(e.getLocalizedMessage());
-			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
-			return new ResponseEntity<>(response, httpStatus);
-		} catch (JsonProcessingException ep) {
-			message = "Exception in JsonProcessingException Online Exam";
-			httpStatus = HttpStatus.EXPECTATION_FAILED;
-			LOG.error(message);
-			LOG.error(ep.getLocalizedMessage());
-			response = new Response(message, httpStatus.value(), ep.getLocalizedMessage());
-			return new ResponseEntity<>(response, httpStatus);
-		}
-	}
-
-	public Object mangeExams(OnlineExamReqest onlineExamDto) {
+	public Object mangeExams(String operation, OnlineExamReqest onlineExamDto) {
 		this.httpStatus = HttpStatus.OK;
 		try {
-			addOnlineExams(onlineExamDto);
+			if (operation.equals(Constants.ADD)) {
+				addOnlineExams(onlineExamDto);
+			} else if (operation.equals(Constants.SAVE)) {
+				updateOnlineExams(onlineExamDto);
+			} else if (operation.equals(Constants.DELETE)) {
+				deleteOnlineExams(onlineExamDto);
+			} else {
+				message = Constants.OPERATION_ERROR;
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
 		} catch (Exception e) {
 			message = "Exception in adding exams";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
@@ -287,12 +265,47 @@ public class CoursesandOnlineexamService {
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = "course  is already exist";
+			message = "exam sheet is already exist";
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
 		}
-
+	}
+	
+	private void updateOnlineExams(OnlineExamReqest onlineexamDto) {
+		OnlineExamsModel examSheetDb = onlineExamRepository.getexamdetailsById(onlineexamDto.getExamsId());
+		if (examSheetDb != null) {
+			examSheetDb.setCourseId(onlineexamDto.getCourseId());
+			examSheetDb.setTestId(onlineexamDto.getTestId());
+			examSheetDb.setNameofTest(onlineexamDto.getNameofTest());
+			examSheetDb.setLevelId(onlineexamDto.getLevelId());
+			examSheetDb.setFileUpload(onlineexamDto.getFileUpload());
+			examSheetDb.setDescription(onlineexamDto.getDescription());
+			onlineExamRepository.save(examSheetDb);
+			message = "exam sheet is updated sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "exam sheet is " + Constants.DOES_NOT_EXIST;
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+	
+	private void deleteOnlineExams(OnlineExamReqest onlineexamDto) {
+		OnlineExamsModel examNew = onlineExamRepository.getexamdetailsById(onlineexamDto.getExamsId());
+		if (examNew != null) {
+			onlineExamRepository.deleteById(onlineexamDto.getExamsId());
+			message = "exam sheet is deleted sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "exam sheet is " + Constants.DOES_NOT_EXIST;
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
 	}
 
 	public Object managetask(String operation, TaskRequest taskDto) {
@@ -300,12 +313,12 @@ public class CoursesandOnlineexamService {
 		this.httpStatus = HttpStatus.OK;
 		try {
 
-			if (operation.equals("add")) {
+			if (operation.equals(Constants.ADD)) {
 				addTask(taskDto);
-			} else if (operation.equals("delete")) {
+			} else if (operation.equals(Constants.DELETE)) {
 				deleteTask(taskDto);
 			} else {
-				message = NOEXISTMESSAGE;
+				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
@@ -324,19 +337,18 @@ public class CoursesandOnlineexamService {
 		TaskModel tasknew = taskRepository.getTaskById(taskDto.getTaskId());
 		if (tasknew == null) {
 			TaskModel tasklist = new TaskModel();
-			tasklist.setTaskName(taskDto.getTaskName());
 			tasklist.setCoursesId(taskDto.getCoursesId());
+			tasklist.setTaskName(taskDto.getTaskName());
 			tasklist.setDescription(taskDto.getDescription());
 			tasklist.setMediafile(taskDto.getMediafile());
 			tasklist.setDueDate(taskDto.getDueDate());
-			tasklist.setIsActive("Y");
-
+			tasklist.setIsActive(Constants.YES);
 			taskRepository.save(tasklist);
 			message = "new task added sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = ALERADYEXISTSMESSAGE;
+			message = "Task " + Constants.ALREADY_EXIST;
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
@@ -365,14 +377,14 @@ public class CoursesandOnlineexamService {
 		this.httpStatus = HttpStatus.OK;
 		try {
 
-			if (operation.equals("add")) {
+			if (operation.equals(Constants.ADD)) {
 				addTestimonal(testimonalDto);
-			} else if (operation.equals("update")) {
+			} else if (operation.equals(Constants.UPDATE)) {
 				updateTestimonal(testimonalDto);
-			} else if (operation.equals("delete")) {
+			} else if (operation.equals(Constants.DELETE)) {
 				deleteTestimonal(testimonalDto);
 			} else {
-				message = NOEXISTMESSAGE;
+				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
@@ -390,9 +402,8 @@ public class CoursesandOnlineexamService {
 	// ADD testimonal///
 
 	private void addTestimonal(TestimoalRequest testimonalDto) {
-		TestimonalsModel testimonaladd = testimonalRepository.getTestmonialsById(testimonalDto.getTestimonalId());
-
-		if (testimonaladd == null) {
+		TestimonalsModel testimonalnew = testimonalRepository.getTestmonialsById(testimonalDto.getTestimonalId());
+		if (testimonalnew == null) {
 			TestimonalsModel testlist = new TestimonalsModel();
 
 			testlist.setContent(testimonalDto.getContent());
@@ -404,15 +415,16 @@ public class CoursesandOnlineexamService {
 			message = "new testimonial is added sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = ALERADYEXISTSMESSAGE;
+			message = "Testimoal " + Constants.ALREADY_EXIST;
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
 		}
+
 	}
-
-
 
 	/// update////
 
@@ -442,7 +454,7 @@ public class CoursesandOnlineexamService {
 				LOG.info(message);
 				response = new Response(message, httpStatus.value(), null);
 			} else {
-				message = ALERADYEXISTSMESSAGE;
+				message = "Testimoal " + Constants.DOES_NOT_EXIST;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
@@ -476,10 +488,10 @@ public class CoursesandOnlineexamService {
 		this.httpStatus = HttpStatus.OK;
 		try {
 
-			if (operation.equals("add")) {
+			if (operation.equals(Constants.ADD)) {
 				addcategorymaterial(materialcategoryDto);
 			} else {
-				message = NOEXISTMESSAGE;
+				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
@@ -506,7 +518,7 @@ public class CoursesandOnlineexamService {
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = ALERADYEXISTSMESSAGE;
+			message = "Category Material " + Constants.ALREADY_EXIST;
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
@@ -520,10 +532,10 @@ public class CoursesandOnlineexamService {
 		this.httpStatus = HttpStatus.OK;
 		try {
 
-			if (operation.equals("add")) {
+			if (operation.equals(Constants.ADD)) {
 				addmaterials(materialDto);
 			} else {
-				message = NOEXISTMESSAGE;
+				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);

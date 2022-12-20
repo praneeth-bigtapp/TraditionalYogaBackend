@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.traditional.yoga.dto.request.AddCoursemateialRequest;
 import com.traditional.yoga.dto.request.CoursesListRequest;
 import com.traditional.yoga.dto.request.MaterialCategoryRequest;
+import com.traditional.yoga.dto.request.OnlineExamReqest;
 import com.traditional.yoga.dto.request.TaskRequest;
 import com.traditional.yoga.dto.request.TestimoalRequest;
 import com.traditional.yoga.service.CoursesandOnlineexamService;
@@ -58,12 +58,11 @@ public class CoursesListAndOnlineExamController {
 	}
 
 	@PostMapping("/onlineExam")
-	public Object onlineexams(@RequestHeader("token") String token,
-			@RequestParam(required = true, value = "textFile") MultipartFile file,
-			@RequestParam(required = true, value = "onlineExamDto") String onlineExamString) {
+	public Object onlineexams(@RequestHeader("token") String token, @RequestParam("operation") String operation,
+			@RequestBody OnlineExamReqest onlineExamDto) {
 		authenticate(token);
 		LOG.info("Entering into onlineexam Method");
-		return coursesListService.onlineExams(onlineExamString);
+		return coursesListService.mangeExams(operation, onlineExamDto);
 	}
 
 	@PostMapping("/task")

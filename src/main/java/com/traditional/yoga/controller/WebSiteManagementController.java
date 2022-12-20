@@ -75,17 +75,17 @@ public class WebSiteManagementController {
 	}
 
 	@PostMapping("/scripctures")
-	public Object manageUser(@RequestHeader("token") String token, @RequestBody ScripcturesRequest scripcuturesdto,
+	public Object manageUser(@RequestHeader("token") String token, @RequestBody ScripcturesRequest scripcuturesDto,
 			@RequestParam("operation") String operation) {
 		authenticate(token);
-		return webSiteManagementService.managescripcutures(operation, scripcuturesdto);
+		return webSiteManagementService.manageScripcutures(operation, scripcuturesDto);
 	}
 
 	@PostMapping("/notifcation")
-	public Object manageUser(@RequestHeader("token") String token, @RequestBody NotificationRequest notificationdto,
+	public Object manageUser(@RequestHeader("token") String token, @RequestBody NotificationRequest notificationDto,
 			@RequestParam("operation") String operation) {
 		authenticate(token);
-		return webSiteManagementService.managenotification(operation, notificationdto);
+		return webSiteManagementService.manageNotification(operation, notificationDto);
 	}
 
 	@PostMapping("/page")
@@ -120,6 +120,6 @@ public class WebSiteManagementController {
 	public Object managealert(@RequestHeader("token") String token, @RequestBody AlertRequest alertdto,
 			@RequestParam("operation") String operation) {
 		authenticate(token);
-		return webSiteManagementService.managealert(operation, alertdto);
+		return webSiteManagementService.manageAlert(operation, alertdto);
 	}
 }
