@@ -271,7 +271,7 @@ public class CoursesandOnlineexamService {
 			response = new Response(message, httpStatus.value(), message);
 		}
 	}
-	
+
 	private void updateOnlineExams(OnlineExamReqest onlineexamDto) {
 		OnlineExamsModel examSheetDb = onlineExamRepository.getexamdetailsById(onlineexamDto.getExamsId());
 		if (examSheetDb != null) {
@@ -292,7 +292,7 @@ public class CoursesandOnlineexamService {
 			response = new Response(message, httpStatus.value(), message);
 		}
 	}
-	
+
 	private void deleteOnlineExams(OnlineExamReqest onlineexamDto) {
 		OnlineExamsModel examNew = onlineExamRepository.getexamdetailsById(onlineexamDto.getExamsId());
 		if (examNew != null) {
@@ -430,39 +430,28 @@ public class CoursesandOnlineexamService {
 
 	private void updateTestimonal(TestimoalRequest testimonalDto) {
 		TestimonalsModel testimonalnew = testimonalRepository.getTestmonialsById(testimonalDto.getTestimonalId());
-
 		if (testimonalnew != null) {
-			TestimonalsModel testimonalcheck = testimonalRepository.getTestmonialsBycontent(testimonalDto.getContent());
+			testimonalnew.setContent(testimonalDto.getContent());
+			testimonalnew.setGivenByName(testimonalDto.getGivenByName());
+			testimonalnew.setVideoLink(testimonalDto.getVideoLink());
+			testimonalnew.setDescription(testimonalDto.getDescription());
+			testimonalRepository.save(testimonalnew);
 
-			TestimonalsModel testimonalcheck1 = testimonalRepository.getTestmonialsBylink(testimonalDto.getVideoLink());
+			message = "Testimonial is updated successfully";
+			LOG.info(message);
+			response = new Response(message, HttpStatus.OK.value(), null);
+		}
 
-			TestimonalsModel testimonalcheck2 = testimonalRepository
-					.getTestmonialsByname(testimonalDto.getGivenByName());
-
-			TestimonalsModel testimonalcheck3 = testimonalRepository
-					.getTestmonialsBydescription(testimonalDto.getDescription());
-
-			if (testimonalcheck == null || testimonalcheck1 == null || testimonalcheck2 == null
-					|| testimonalcheck3 == null) {
-				TestimonalsModel testimonallist = new TestimonalsModel();
-				testimonallist.setContent(testimonalDto.getContent());
-				testimonallist.setGivenByName(testimonalDto.getGivenByName());
-				testimonallist.setVideoLink(testimonalDto.getVideoLink());
-				testimonallist.setDescription(testimonalDto.getDescription());
-				testimonalRepository.save(testimonallist);
-				message = " testimonial is Updated sucessfully";
-				LOG.info(message);
-				response = new Response(message, httpStatus.value(), null);
-			} else {
-				message = "Testimoal " + Constants.DOES_NOT_EXIST;
-				httpStatus = HttpStatus.CONFLICT;
-				LOG.error(message);
-				response = new Response(message, httpStatus.value(), message);
-			}
-
+		else {
+			message = "testimonial is already exists";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
 		}
 
 	}
+
+//		}
 
 	// Delete//
 

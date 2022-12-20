@@ -644,6 +644,8 @@ public class WebSiteManagementService {
 
 	////// Pears of wisdom /////////////
 
+//////Pears of wisdom /////////////
+
 	public Object managewisdom(String operation, PearlsOfWisdomRequest wisdomdto) {
 
 		try {
@@ -652,7 +654,11 @@ public class WebSiteManagementService {
 			} else if (operation.equals("update")) {
 				updatewisdom(wisdomdto);
 			} else if (operation.equals("delete")) {
-				deletewisdom(wisdomdto);
+				deleteWisdom(wisdomdto);
+			} else if (operation.equals("active")) {
+				activateWisdom(wisdomdto);
+			} else if (operation.equals("deactive")) {
+				deactivateWisdom(wisdomdto);
 			} else {
 				message = "Operation Doesn't exist";
 				httpStatus = HttpStatus.CONFLICT;
@@ -669,51 +675,41 @@ public class WebSiteManagementService {
 		return new ResponseEntity<>(response, httpStatus);
 	}
 
-	private void deletewisdom(PearlsOfWisdomRequest wisdomdto) {
-		PearlsOfWisdomModel wisdommodelnew = pearlsOfWisdomRepository.getwisdomById(wisdomdto.getQuoteId());
-		if (wisdommodelnew != null) {
-			pearlsOfWisdomRepository.deleteById(wisdommodelnew.getQuoteId());
-			message = "quote deleted sucessfully";
+	private void deleteWisdom(PearlsOfWisdomRequest wisdomDto) {
+		PearlsOfWisdomModel wisdomModel = pearlsOfWisdomRepository.findById(wisdomDto.getQuoteId()).orElse(null);
+		if (wisdomModel != null) {
+			pearlsOfWisdomRepository.delete(wisdomModel);
+			String message = "Quote deleted successfully";
 			LOG.info(message);
-			response = new Response(message, httpStatus.value(), null);
+			response = new Response(message, HttpStatus.OK.value(), null);
 		} else {
-			message = "quote Doesn't exist";
-			httpStatus = HttpStatus.CONFLICT;
+			String message = "Quote does not exist";
 			LOG.error(message);
-			response = new Response(message, httpStatus.value(), message);
+			response = new Response(message, HttpStatus.CONFLICT.value(), message);
 		}
 	}
 
 	private void updatewisdom(PearlsOfWisdomRequest wisdomdto) {
 		PearlsOfWisdomModel wisdommodelnew = pearlsOfWisdomRepository.getwisdomById(wisdomdto.getQuoteId());
 		if (wisdommodelnew != null) {
-			PearlsOfWisdomModel wisdommodelcheck = pearlsOfWisdomRepository.getwisdomBytitle(wisdomdto.getQuoteTitle());
-			PearlsOfWisdomModel wisdommodelcheck1 = pearlsOfWisdomRepository.getwisdomBydate(wisdomdto.getQuoteDate());
-			PearlsOfWisdomModel wisdommodelcheck2 = pearlsOfWisdomRepository.getwisdomByquote(wisdomdto.getQuote());
+			// Update the fields of the wisdommodelnew quote
+			wisdommodelnew.setQuoteTitle(wisdomdto.getQuoteTitle());
+			wisdommodelnew.setQuote(wisdomdto.getQuote());
+			wisdommodelnew.setQuoteDate(wisdomdto.getQuoteDate());
+			wisdommodelnew.setQuoteType(wisdomdto.getQuoteType());
 
-			if (wisdommodelcheck == null || wisdommodelcheck1 == null || wisdommodelcheck2 == null) {
-				wisdommodelnew.setQuoteTitle(wisdomdto.getQuoteTitle());
-				wisdommodelnew.setQuote(wisdomdto.getQuote());
-				wisdommodelnew.setQuoteDate(wisdomdto.getQuoteDate());
-				wisdommodelnew.setQuoteType(wisdomdto.getQuoteType());
-				pearlsOfWisdomRepository.save(wisdommodelnew);
-				message = "quote saved sucessfully";
-				LOG.info(message);
-				response = new Response(message, httpStatus.value(), null);
-			} else {
-				message = "Updated quote is already exist";
-				httpStatus = HttpStatus.CONFLICT;
-				LOG.error(message);
-				response = new Response(message, httpStatus.value(), message);
-			}
+			// Save the updated quote to the repository
+			pearlsOfWisdomRepository.save(wisdommodelnew);
 
+			message = "Quote updated successfully";
+			LOG.info(message);
+			response = new Response(message, HttpStatus.OK.value(), null);
 		} else {
-			message = "quote Doesn't exist";
+			message = "Quote does not exist";
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
 		}
-
 	}
 
 	private void addwisdom(PearlsOfWisdomRequest wisdomdto) {
@@ -731,6 +727,32 @@ public class WebSiteManagementService {
 			message = "new quote is  added sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
+		}
+	}
+
+	private void activateWisdom(PearlsOfWisdomRequest wisdomdto) {
+		PearlsOfWisdomModel wisdomModel = pearlsOfWisdomRepository.findById(wisdomdto.getQuoteId()).orElse(null);
+		if (wisdomModel != null) {
+			wisdomModel.setIsActive("Y");
+			pearlsOfWisdomRepository.save(wisdomModel);
+			String message = "Quote activated successfully";
+			LOG.info(message);
+			response = new Response(message, HttpStatus.OK.value(), null);
+		} else {
+			String message = "Quote does not exist";
+			LOG.error(message);
+			response = new Response(message, HttpStatus.CONFLICT.value(), message);
+		}
+	}
+
+	private void deactivateWisdom(PearlsOfWisdomRequest wisdomdto) {
+		PearlsOfWisdomModel wisdomModel = pearlsOfWisdomRepository.findById(wisdomdto.getQuoteId()).orElse(null);
+		if (wisdomModel != null) {
+			wisdomModel.setIsActive("N");
+			pearlsOfWisdomRepository.save(wisdomModel);
+			String message = "Quote deactivated successfully";
+			LOG.info(message);
+			response = new Response(message, HttpStatus.OK.value(), null);
 		}
 	}
 }
