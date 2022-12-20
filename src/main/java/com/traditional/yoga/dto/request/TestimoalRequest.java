@@ -7,11 +7,6 @@ public class TestimoalRequest {
 	private String givenByName;
 	private String videoLink;
 	private String description;
-	private String createdBy;
-	private String createDate;
-	private String updateBy;
-	private String updateDate;
-	private String isActive;
 
 	public int getTestimonalId() {
 		return testimonalId;
@@ -51,46 +46,6 @@ public class TestimoalRequest {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public String getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(String createDate) {
-		this.createDate = createDate;
-	}
-
-	public String getUpdateBy() {
-		return updateBy;
-	}
-
-	public void setUpdateBy(String updateBy) {
-		this.updateBy = updateBy;
-	}
-
-	public String getUpdateDate() {
-		return updateDate;
-	}
-
-	public void setUpdateDate(String updateDate) {
-		this.updateDate = updateDate;
-	}
-
-	public String getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(String isActive) {
-		this.isActive = isActive;
 	}
 
 }

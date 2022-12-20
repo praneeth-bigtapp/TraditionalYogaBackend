@@ -11,6 +11,8 @@ public interface TestimonalRepository extends JpaRepository<TestimonalsModel, In
 	
 	@Query(value = "SELECT * FROM `testimonal` WHERE `testimonal_id`=:testimonalId", nativeQuery = true)
 	TestimonalsModel getTestmonialsById(@Param("testimonalId") int testimonalId);
+	
+
 
 	
 	@Query(value = "SELECT * FROM `testimonal` WHERE `content`=:content", nativeQuery = true)

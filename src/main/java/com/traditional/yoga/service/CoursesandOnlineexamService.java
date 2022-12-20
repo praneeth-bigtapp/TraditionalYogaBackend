@@ -205,7 +205,7 @@ public class CoursesandOnlineexamService {
 			CourseListModel check4 = coursesListRepository
 					.getcoursesListByclouserdate(courseListDto.getApplicationClouserDate());
 
-			if ( check==null || check1 == null || check2 == null || check3 == null || check4 == null) {
+			if (check == null || check1 == null || check2 == null || check3 == null || check4 == null) {
 				listNew.setCoursesName(courseListDto.getCoursesName());
 				listNew.setCategorieId(courseListDto.getCategorieId());
 				listNew.setDescription(courseListDto.getDescription());
@@ -324,12 +324,13 @@ public class CoursesandOnlineexamService {
 		TaskModel tasknew = taskRepository.getTaskById(taskDto.getTaskId());
 		if (tasknew == null) {
 			TaskModel tasklist = new TaskModel();
-			tasklist.setCoursesId(taskDto.getCoursesId());
 			tasklist.setTaskName(taskDto.getTaskName());
+			tasklist.setCoursesId(taskDto.getCoursesId());
 			tasklist.setDescription(taskDto.getDescription());
 			tasklist.setMediafile(taskDto.getMediafile());
 			tasklist.setDueDate(taskDto.getDueDate());
 			tasklist.setIsActive("Y");
+
 			taskRepository.save(tasklist);
 			message = "new task added sucessfully";
 			LOG.info(message);
@@ -389,16 +390,17 @@ public class CoursesandOnlineexamService {
 	// ADD testimonal///
 
 	private void addTestimonal(TestimoalRequest testimonalDto) {
-		TestimonalsModel testimonalnew = testimonalRepository.getTestmonialsById(testimonalDto.getTestimonalId());
-		if (testimonalnew == null) {
-			TestimonalsModel testimonallist = new TestimonalsModel();
-//			
-			testimonallist.setContent(testimonalDto.getContent());
-			testimonallist.setGivenByName(testimonalDto.getGivenByName());
-			testimonallist.setVideoLink(testimonalDto.getVideoLink());
-			testimonallist.setDescription(testimonalDto.getDescription());
-			testimonallist.setIsActive("Y");
-			testimonalRepository.save(testimonallist);
+		TestimonalsModel testimonaladd = testimonalRepository.getTestmonialsById(testimonalDto.getTestimonalId());
+
+		if (testimonaladd == null) {
+			TestimonalsModel testlist = new TestimonalsModel();
+
+			testlist.setContent(testimonalDto.getContent());
+			testlist.setGivenByName(testimonalDto.getGivenByName());
+			testlist.setVideoLink(testimonalDto.getVideoLink());
+			testlist.setDescription(testimonalDto.getDescription());
+
+			testimonalRepository.save(testlist);
 			message = "new testimonial is added sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
@@ -408,8 +410,9 @@ public class CoursesandOnlineexamService {
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
 		}
-
 	}
+
+
 
 	/// update////
 
@@ -434,7 +437,6 @@ public class CoursesandOnlineexamService {
 				testimonallist.setGivenByName(testimonalDto.getGivenByName());
 				testimonallist.setVideoLink(testimonalDto.getVideoLink());
 				testimonallist.setDescription(testimonalDto.getDescription());
-				testimonallist.setIsActive("Y");
 				testimonalRepository.save(testimonallist);
 				message = " testimonial is Updated sucessfully";
 				LOG.info(message);

@@ -12,5 +12,9 @@ public interface TaskRepository extends JpaRepository<TaskModel, Integer> {
 	
 	@Query(value = "SELECT * FROM `task` WHERE `task_Id`= :taskId", nativeQuery = true)
 	TaskModel getTaskById(@Param("taskId") int taskId);
+	
+	
+	@Query(value = "SELECT * FROM `task` WHERE `description`= :description", nativeQuery = true)
+	TaskModel getTaskBydesc(@Param("description") String description);
 
 }

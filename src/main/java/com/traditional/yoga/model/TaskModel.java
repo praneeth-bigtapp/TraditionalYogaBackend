@@ -34,7 +34,7 @@ public class TaskModel {
 	@Column(name = "Due_date")
 	private String dueDate;
 
-	@Column(name = "create_by")
+	@Column(name = "created_by")
 	private String createdBy;
 
 	@Column(name = "created_date")
