@@ -23,15 +23,12 @@ public class DonarModel {
 
 	@Column(name = "email")
 	private String email;
-	
-	
+
 	@Column(name = "donar_name")
 	private String donarName;
 
 	@Column(name = "pan_number")
 	private String panNumber;
-	
-	
 
 	@Column(name = "contact_number")
 	private String contactNumber;
@@ -39,7 +36,6 @@ public class DonarModel {
 	@Column(name = "indian_citizen")
 	private String indianCitizen;
 
-	
 	@OneToOne
 	@JoinColumn(name = "country_id", referencedColumnName = "country_id")
 	private CountryModel countryId;
@@ -104,8 +100,6 @@ public class DonarModel {
 	public void setIndianCitizen(String indianCitizen) {
 		this.indianCitizen = indianCitizen;
 	}
-
-	
 
 	public String getTaxBenefits() {
 		return taxBenefits;
@@ -187,6 +181,4 @@ public class DonarModel {
 		this.countryId = countryId;
 	}
 
-	
-	
 }

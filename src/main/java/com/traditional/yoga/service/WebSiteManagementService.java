@@ -252,25 +252,14 @@ public class WebSiteManagementService {
 	public Object bannerMange(String operation, BannerViewRequest bannerViewdto) {
 		httpStatus = HttpStatus.OK;
 		try {
-			if (operation.equals("add")) {
-				BannerModel bannernew = bannerRepository.getbannerbyId(bannerViewdto.getBannerId());
-				if (bannernew == null) {
-					BannerModel bannerList = new BannerModel();
-					bannerList.setBannerName(bannerViewdto.getBannerName());
-					bannerList.setCourseTitle(bannerViewdto.getCourseTitle());
-					bannerList.setImagePath(bannerViewdto.getImagePath());
-					bannerList.setFromDate(bannerViewdto.getFromDate());
-					bannerList.setToDate(bannerViewdto.getToDate());
-					bannerList.setDescription(bannerViewdto.getDescription());
-					bannerList.setCategoryId(bannerViewdto.getCategoryId());
-					bannerList.setDateOfAdd(generalUtils.getCurrentDate());
-					bannerRepository.save(bannerList);
-					message = "new banner is added sucessfully";
-					LOG.info(message);
-					response = new Response(message, httpStatus.value(), null);
-				}
+			if (operation.equals(Constants.ADD)) {
+				addBanner(bannerViewdto);
+			} else if (operation.equals(Constants.SAVE)) {
+				updateBanner(bannerViewdto);
+			} else if (operation.equals(Constants.DELETE)) {
+				deleteBanner(bannerViewdto);
 			} else {
-				message = Constants.ALREADY_EXIST;
+				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
@@ -283,6 +272,74 @@ public class WebSiteManagementService {
 			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
 		}
 		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	private void addBanner(BannerViewRequest bannerDto) {
+		BannerModel bannerDb = bannerRepository.getbannerbyId(bannerDto.getBannerId());
+		if (bannerDb == null) {
+			BannerModel newBanner = new BannerModel();
+			newBanner.setBannerName(bannerDto.getBannerName());
+			newBanner.setCourseTitle(bannerDto.getCourseTitle());
+			newBanner.setImagePath(bannerDto.getImagePath());
+			newBanner.setFromDate(bannerDto.getFromDate());
+			newBanner.setToDate(bannerDto.getToDate());
+			newBanner.setDescription(bannerDto.getDescription());
+			newBanner.setCategoryId(bannerDto.getCategoryId());
+			newBanner.setDateOfAdd(generalUtils.getCurrentDate());
+
+			bannerRepository.save(newBanner);
+			httpStatus = HttpStatus.OK;
+			message = "new banner is added sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "banner is already exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void updateBanner(BannerViewRequest bannerDto) {
+		BannerModel bannerDb = bannerRepository.getbannerbyId(bannerDto.getBannerId());
+		if (bannerDb != null) {
+			bannerDb.setBannerName(bannerDto.getBannerName());
+			bannerDb.setCourseTitle(bannerDto.getCourseTitle());
+			bannerDb.setImagePath(bannerDto.getImagePath());
+			bannerDb.setFromDate(bannerDto.getFromDate());
+			bannerDb.setToDate(bannerDto.getToDate());
+			bannerDb.setDescription(bannerDto.getDescription());
+			bannerDb.setCategoryId(bannerDto.getCategoryId());
+			bannerDb.setDateOfAdd(generalUtils.getCurrentDate());
+
+			bannerRepository.save(bannerDb);
+			httpStatus = HttpStatus.OK;
+			message = "banner is updated sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "banner is not exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void deleteBanner(BannerViewRequest bannerDto) {
+		BannerModel bannerDb = bannerRepository.getbannerbyId(bannerDto.getBannerId());
+		if (bannerDb != null) {
+			bannerRepository.deleteById(bannerDto.getBannerId());
+
+			httpStatus = HttpStatus.OK;
+			message = "banner is deleted sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "banner is not exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
 	}
 
 	public Object manageScripcutures(String operation, ScripcturesRequest scripcuturesdto) {
@@ -571,26 +628,23 @@ public class WebSiteManagementService {
 
 //	Photo Gallery
 
-	public Object createGallary(PhotoGalleryRequest photoGalleryRequestDto) {
+	public Object mangeGallary(PhotoGalleryRequest photoGalleryRequestDto, String operation) {
 		try {
-			PhotoGalleryModel newGallery = photoGalleryRepository
-					.getGalleryName(photoGalleryRequestDto.getGalleryName());
-			if (newGallery == null) {
-				newGallery = new PhotoGalleryModel();
-				newGallery.setGalleryName(photoGalleryRequestDto.getGalleryName());
-				newGallery.setGalleryDescription(photoGalleryRequestDto.getGalleryDescription());
-				newGallery.setCreatedDate(generalUtils.getCurrentDate());
-				photoGalleryRepository.save(newGallery);
-				httpStatus = HttpStatus.OK;
-				message = "new gallery is created sucessfully";
-				LOG.info(message);
-				response = new Response(message, httpStatus.value(), null);
+			if (operation.equals(Constants.ADD)) {
+				addPhotoGallery(photoGalleryRequestDto);
+			} else if (operation.equals(Constants.SAVE)) {
+				updatePhotoGallery(photoGalleryRequestDto);
+			} else if (operation.equals(Constants.ACTIVE)) {
+				activePhotoGallery(photoGalleryRequestDto);
+			} else if (operation.equals(Constants.DELETE)) {
+				deletePhotoGallery(photoGalleryRequestDto);
 			} else {
-				message = "Gallery Already Exits";
+				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
 			}
+
 		} catch (Exception e) {
 			message = "Exception in banner creation";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
@@ -599,6 +653,81 @@ public class WebSiteManagementService {
 			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
 		}
 		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	private void addPhotoGallery(PhotoGalleryRequest photoGalleryRequestDto) {
+		PhotoGalleryModel newGallery = photoGalleryRepository.getGalleryName(photoGalleryRequestDto.getGalleryName());
+		if (newGallery == null) {
+			newGallery = new PhotoGalleryModel();
+			newGallery.setGalleryName(photoGalleryRequestDto.getGalleryName());
+			newGallery.setGalleryDescription(photoGalleryRequestDto.getGalleryDescription());
+			newGallery.setCreatedDate(generalUtils.getCurrentDate());
+			photoGalleryRepository.save(newGallery);
+			httpStatus = HttpStatus.OK;
+			message = "new gallery is created sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "Gallery Already Exits";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void updatePhotoGallery(PhotoGalleryRequest photoGalleryRequestDto) {
+		PhotoGalleryModel photoGalleryDb = photoGalleryRepository
+				.getPhotoGallery(photoGalleryRequestDto.getPhotoGalleryId());
+		if (photoGalleryDb != null) {
+			photoGalleryDb.setGalleryName(photoGalleryRequestDto.getGalleryName());
+			photoGalleryDb.setGalleryDescription(photoGalleryRequestDto.getGalleryDescription());
+			photoGalleryDb.setUpdatedDate(generalUtils.getCurrentDate());
+			photoGalleryRepository.save(photoGalleryDb);
+			httpStatus = HttpStatus.OK;
+			message = "photo gallery is updated sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "photo gallery is not exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+	
+	private void activePhotoGallery(PhotoGalleryRequest photoGalleryRequestDto) {
+		PhotoGalleryModel photoGalleryDb = photoGalleryRepository
+				.getPhotoGallery(photoGalleryRequestDto.getPhotoGalleryId());
+		if (photoGalleryDb != null) {
+			photoGalleryDb.setActive(photoGalleryRequestDto.getActive());
+			photoGalleryRepository.save(photoGalleryDb);
+			httpStatus = HttpStatus.OK;
+			message = "photo gallery is updated sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "photo gallery is not exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void deletePhotoGallery(PhotoGalleryRequest photoGalleryRequestDto) {
+		PhotoGalleryModel photoGalleryDb = photoGalleryRepository
+				.getPhotoGallery(photoGalleryRequestDto.getPhotoGalleryId());
+		if (photoGalleryDb != null) {
+			photoGalleryRepository.deleteById(photoGalleryRequestDto.getPhotoGalleryId());
+			httpStatus = HttpStatus.OK;
+			message = "photo gallery is deleted sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "photo gallery is not exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
 	}
 
 	public Object uploadGallary(MultipartFile file, HttpServletRequest request) {

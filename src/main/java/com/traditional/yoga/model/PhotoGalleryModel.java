@@ -40,6 +40,9 @@ public class PhotoGalleryModel {
 	@Column(name = "image_id")
 	private int imageId;
 
+	@Column(name = "active")
+	private String active;
+
 	public int getPhotoGalleryId() {
 		return photoGalleryId;
 	}
@@ -110,6 +113,14 @@ public class PhotoGalleryModel {
 
 	public void setImageId(int imageId) {
 		this.imageId = imageId;
+	}
+
+	public String getActive() {
+		return active;
+	}
+
+	public void setActive(String active) {
+		this.active = active;
 	}
 
 }

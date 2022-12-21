@@ -10,6 +10,6 @@ import com.traditional.yoga.model.ClassMediaModel;
 @Repository
 public interface ClassMediaRepository extends JpaRepository<ClassMediaModel, Integer> {
 
-	@Query(value = "SELECT * FROM `class_media` WHERE `class_media_id`= :classMediaId", nativeQuery = true)
+	@Query(value = "SELECT * FROM `class_media` WHERE `class_media_id`= :classMediaId ", nativeQuery = true)
 	ClassMediaModel getClassMediaById(@Param("classMediaId") int classMediaId);
 }

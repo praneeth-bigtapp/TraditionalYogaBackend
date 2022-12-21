@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.traditional.yoga.dto.request.AudioManagementRequest;
+import com.traditional.yoga.dto.request.ClassMediaRequest;
 import com.traditional.yoga.dto.request.CourseMediaPracticeRequest;
 import com.traditional.yoga.dto.request.CourseMediaRequest;
 import com.traditional.yoga.dto.request.CourseRequest;
@@ -44,11 +45,19 @@ public class CourseManagementController {
 		return courseManagementService.addCourse(courseDto);
 	}
 
-	@PostMapping("/addCourseMedia")
+	@PostMapping("/classMedia")
+	public Object classMediaManage(@RequestHeader("token") String token, @RequestBody ClassMediaRequest classMediaDto,
+			@RequestParam("operation") String operation) {
+		LOG.info("Entering into class Media");
+		return courseManagementService.classMediaManage(classMediaDto, operation);
+	}
+
+	@PostMapping("/courseMedia")
 	public Object courseMediaManage(@RequestHeader("token") String token,
-			@RequestBody CourseMediaRequest courseMediaDto, @RequestParam("type") String type) {
+			@RequestBody CourseMediaRequest courseMediaDto, @RequestParam("operation") String operation,
+			@RequestParam("type") String type) {
 		LOG.info("Entering into Course Media");
-		return courseManagementService.courseMediaManage(courseMediaDto, type);
+		return courseManagementService.courseMediaManage(courseMediaDto, operation, type);
 	}
 
 	@PostMapping("/addCourseMediaPractice")
@@ -67,8 +76,7 @@ public class CourseManagementController {
 
 	@PostMapping("/performance/updateRating")
 	public Object manageRating(@RequestHeader("token") String token,
-			@RequestBody PerformaceRatingRequest performanceRatingDto,
-			@RequestParam("section") int section) {
+			@RequestBody PerformaceRatingRequest performanceRatingDto, @RequestParam("section") int section) {
 		LOG.info("Entering into getAll Method");
 		return courseManagementService.manageRating(performanceRatingDto, section);
 	}

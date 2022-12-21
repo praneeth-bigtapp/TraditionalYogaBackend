@@ -14,12 +14,14 @@ import com.traditional.yoga.dto.ParameterSectionA;
 import com.traditional.yoga.dto.ParameterSectionB;
 import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.AudioManagementRequest;
+import com.traditional.yoga.dto.request.ClassMediaRequest;
 import com.traditional.yoga.dto.request.CourseMediaPracticeRequest;
 import com.traditional.yoga.dto.request.CourseMediaRequest;
 import com.traditional.yoga.dto.request.CourseRequest;
 import com.traditional.yoga.dto.request.PerformaceRatingRequest;
 import com.traditional.yoga.dto.response.ParameterResponse;
 import com.traditional.yoga.model.AudioManagementModel;
+import com.traditional.yoga.model.ClassMediaModel;
 import com.traditional.yoga.model.CourseMediaModel;
 import com.traditional.yoga.model.CourseMediaPracticeModel;
 import com.traditional.yoga.model.CourseModel;
@@ -129,45 +131,89 @@ public class CourseManagementService {
 		return new ResponseEntity<>(response, httpStatus);
 	}
 
-	public Object courseMediaManage(CourseMediaRequest courseMediaDto, String type) {
+	public Object classMediaManage(ClassMediaRequest classMediaDto, String operation) {
+		try {
+			if (operation.equals(Constants.ADD)) {
+				addClassMedia(classMediaDto);
+			} else if (operation.equals(Constants.SAVE)) {
+				updateClassMedia(classMediaDto);
+			} else if (operation.equals(Constants.DELETE)) {
+				deleteClassMedia(classMediaDto);
+			} else {
+				message = Constants.OPERATION_ERROR;
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Exception in Class Media";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
 
+	private void addClassMedia(ClassMediaRequest classMediaDto) {
+		ClassMediaModel newClassMedia = new ClassMediaModel();
+		newClassMedia.setCourseId(courseRepository.getCourseById(classMediaDto.getCourseId()));
+		newClassMedia.setDate(classMediaDto.getDate());
+		newClassMedia.setNoOfMediaFiles(classMediaDto.getNoOfMediaFiles());
+		newClassMedia.setTypeOfClass(classMediaDto.getTypeOfClass());
+
+		classMediaRepository.save(newClassMedia);
+		httpStatus = HttpStatus.OK;
+		message = "Class Media added sucessfully";
+		LOG.info(message);
+		response = new Response(message, httpStatus.value(), null);
+	}
+
+	private void updateClassMedia(ClassMediaRequest classMediaDto) {
+		ClassMediaModel classMediaDb = classMediaRepository.getClassMediaById(classMediaDto.getClassMediaId());
+		if (classMediaDb != null) {
+			classMediaDb.setCourseId(courseRepository.getCourseById(classMediaDto.getCourseId()));
+			classMediaDb.setDate(classMediaDto.getDate());
+			classMediaDb.setNoOfMediaFiles(classMediaDto.getNoOfMediaFiles());
+			classMediaDb.setTypeOfClass(classMediaDto.getTypeOfClass());
+
+			classMediaRepository.save(classMediaDb);
+			httpStatus = HttpStatus.OK;
+			message = "Class Media updated sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "Class Media is not exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void deleteClassMedia(ClassMediaRequest classMediaDto) {
+		ClassMediaModel classMediaDb = classMediaRepository.getClassMediaById(classMediaDto.getClassMediaId());
+		if (classMediaDb != null) {
+			classMediaRepository.deleteById(classMediaDto.getClassMediaId());
+			httpStatus = HttpStatus.OK;
+			message = "Class Media deleted sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "Class Media is not exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	public Object courseMediaManage(CourseMediaRequest courseMediaDto, String operation, String type) {
 		try {
 			if (type.equals("video")) {
-				CourseMediaModel newCourseMedia = new CourseMediaModel();
-				newCourseMedia.setCourseLink(courseMediaDto.getCourseLink());
-				newCourseMedia.setCourseId(null);
-				newCourseMedia.setDate(courseMediaDto.getDate());
-				newCourseMedia.setTitle(courseMediaDto.getTitle());
-				newCourseMedia.setDescription(courseMediaDto.getDescription());
-				courseMediaRepository.save(newCourseMedia);
-				httpStatus = HttpStatus.OK;
-				message = "Course Media added sucessfully";
-				LOG.info(message);
-				response = new Response(message, httpStatus.value(), null);
+				courseVideo(courseMediaDto, operation);
 			} else if (type.equals("shortVideo")) {
-				CourseMediaModel newCourseMedia = new CourseMediaModel();
-				newCourseMedia.setCourseId(null);
-				newCourseMedia.setCourseLink(courseMediaDto.getCourseLink());
-				newCourseMedia.setDate(courseMediaDto.getDate());
-				newCourseMedia.setDuration(courseMediaDto.getDuration());
-				newCourseMedia.setTitle(courseMediaDto.getTitle());
-				newCourseMedia.setCatgoryId(courseMediaDto.getCatgoryId());
-				newCourseMedia.setDescription(courseMediaDto.getDescription());
-				courseMediaRepository.save(newCourseMedia);
-				httpStatus = HttpStatus.OK;
-				message = "Course Short Video added sucessfully";
-				LOG.info(message);
-				response = new Response(message, httpStatus.value(), null);
+				courseShortVideo(courseMediaDto, operation);
 			} else if (type.equals("glimpses")) {
-				CourseMediaModel newCourseMedia = new CourseMediaModel();
-				newCourseMedia.setCourseId(null);
-				newCourseMedia.setDate(courseMediaDto.getDate());
-				newCourseMedia.setFileName(courseMediaDto.getFileName());
-				courseMediaRepository.save(newCourseMedia);
-				httpStatus = HttpStatus.OK;
-				message = "Glimpses added sucessfully";
-				LOG.info(message);
-				response = new Response(message, httpStatus.value(), null);
+				glimpses(courseMediaDto, operation);
 			} else {
 				message = "Operation Doesn't exist";
 				httpStatus = HttpStatus.CONFLICT;
@@ -182,6 +228,216 @@ public class CourseManagementService {
 			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
 		}
 		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	private void glimpses(CourseMediaRequest courseMediaDto, String operation) {
+		if (operation.equals(Constants.ADD)) {
+			addCourseGlimpses(courseMediaDto);
+		} else if (operation.equals(Constants.SAVE)) {
+			updateCourseGlimpses(courseMediaDto);
+		} else if (operation.equals(Constants.DELETE)) {
+			deleteCourseGlimpses(courseMediaDto);
+		} else {
+			message = Constants.OPERATION_ERROR;
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+
+	}
+
+	private void addCourseGlimpses(CourseMediaRequest courseMediaDto) {
+		CourseMediaModel newCourseMedia = new CourseMediaModel();
+		newCourseMedia.setCourseId(courseMediaDto.getCourseId());
+		newCourseMedia.setDate(courseMediaDto.getDate());
+		newCourseMedia.setFileName(courseMediaDto.getFileName());
+
+		courseMediaRepository.save(newCourseMedia);
+		httpStatus = HttpStatus.OK;
+		message = "Course Glimpses added sucessfully";
+		LOG.info(message);
+		response = new Response(message, httpStatus.value(), null);
+	}
+
+	private void updateCourseGlimpses(CourseMediaRequest courseMediaDto) {
+		CourseMediaModel courseMediaDb = courseMediaRepository.getCourseMediaById(courseMediaDto.getCourseMediaId());
+		if (courseMediaDb != null) {
+			courseMediaDb.setCourseId(courseMediaDto.getCourseId());
+			courseMediaDb.setDate(courseMediaDto.getDate());
+			courseMediaDb.setFileName(courseMediaDto.getFileName());
+
+			courseMediaRepository.save(courseMediaDb);
+			httpStatus = HttpStatus.OK;
+			message = "Course Glimpses updated sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "Course Glimpses is not exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void deleteCourseGlimpses(CourseMediaRequest courseMediaDto) {
+		CourseMediaModel courseMediaDb = courseMediaRepository.getCourseMediaById(courseMediaDto.getCourseMediaId());
+		if (courseMediaDb != null) {
+			courseMediaRepository.deleteById(courseMediaDto.getCourseMediaId());
+			httpStatus = HttpStatus.OK;
+			message = "Course Glimpses deleted sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "Course Glimpses is not exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void courseShortVideo(CourseMediaRequest courseMediaDto, String operation) {
+		if (operation.equals(Constants.ADD)) {
+			addCourseShortVideo(courseMediaDto);
+		} else if (operation.equals(Constants.SAVE)) {
+			updateCourseShortVideo(courseMediaDto);
+		} else if (operation.equals(Constants.DELETE)) {
+			deleteCourseShortVideo(courseMediaDto);
+		} else {
+			message = Constants.OPERATION_ERROR;
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void addCourseShortVideo(CourseMediaRequest courseMediaDto) {
+		CourseMediaModel newCourseMedia = new CourseMediaModel();
+		newCourseMedia.setCourseId(courseMediaDto.getCourseId());
+		newCourseMedia.setCourseLink(courseMediaDto.getCourseLink());
+		newCourseMedia.setDate(courseMediaDto.getDate());
+		newCourseMedia.setDuration(courseMediaDto.getDuration());
+		newCourseMedia.setTitle(courseMediaDto.getTitle());
+		newCourseMedia.setCatgoryId(courseMediaDto.getCatgoryId());
+		newCourseMedia.setDescription(courseMediaDto.getDescription());
+
+		courseMediaRepository.save(newCourseMedia);
+		httpStatus = HttpStatus.OK;
+		message = "Course Short Video added sucessfully";
+		LOG.info(message);
+		response = new Response(message, httpStatus.value(), null);
+	}
+
+	private void updateCourseShortVideo(CourseMediaRequest courseMediaDto) {
+		CourseMediaModel courseShortVideoDb = courseMediaRepository
+				.getCourseMediaById(courseMediaDto.getCourseMediaId());
+
+		if (courseShortVideoDb != null) {
+			courseShortVideoDb.setCourseId(courseMediaDto.getCourseId());
+			courseShortVideoDb.setCourseLink(courseMediaDto.getCourseLink());
+			courseShortVideoDb.setDate(courseMediaDto.getDate());
+			courseShortVideoDb.setDuration(courseMediaDto.getDuration());
+			courseShortVideoDb.setTitle(courseMediaDto.getTitle());
+			courseShortVideoDb.setCatgoryId(courseMediaDto.getCatgoryId());
+			courseShortVideoDb.setDescription(courseMediaDto.getDescription());
+
+			courseMediaRepository.save(courseShortVideoDb);
+			httpStatus = HttpStatus.OK;
+			message = "Course Short Video updated sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "Course Short Video is not exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void deleteCourseShortVideo(CourseMediaRequest courseMediaDto) {
+		CourseMediaModel courseShortVideoDb = courseMediaRepository
+				.getCourseMediaById(courseMediaDto.getCourseMediaId());
+
+		if (courseShortVideoDb != null) {
+			courseMediaRepository.deleteById(courseMediaDto.getCourseMediaId());
+			httpStatus = HttpStatus.OK;
+			message = "Course Short Video delete sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "Course Short Video is not exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void courseVideo(CourseMediaRequest courseMediaDto, String operation) {
+		if (operation.equals(Constants.ADD)) {
+			addCourseVideo(courseMediaDto);
+		} else if (operation.equals(Constants.SAVE)) {
+			updateCourseVideo(courseMediaDto);
+		} else if (operation.equals(Constants.DELETE)) {
+			deleteCourseVideo(courseMediaDto);
+		} else {
+			message = Constants.OPERATION_ERROR;
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+
+	}
+
+	private void addCourseVideo(CourseMediaRequest courseMediaDto) {
+		CourseMediaModel newCourseMedia = new CourseMediaModel();
+		newCourseMedia.setCourseLink(courseMediaDto.getCourseLink());
+		newCourseMedia.setCourseId(courseMediaDto.getCourseId());
+		newCourseMedia.setDate(courseMediaDto.getDate());
+		newCourseMedia.setTitle(courseMediaDto.getTitle());
+		newCourseMedia.setDescription(courseMediaDto.getDescription());
+
+		courseMediaRepository.save(newCourseMedia);
+		httpStatus = HttpStatus.OK;
+		message = "Course Video added sucessfully";
+		LOG.info(message);
+		response = new Response(message, httpStatus.value(), null);
+	}
+
+	private void updateCourseVideo(CourseMediaRequest courseMediaDto) {
+		CourseMediaModel courseVideoDb = courseMediaRepository.getCourseMediaById(courseMediaDto.getCourseMediaId());
+		if (courseVideoDb != null) {
+			courseVideoDb.setCourseLink(courseMediaDto.getCourseLink());
+			courseVideoDb.setCourseId(courseMediaDto.getCourseId());
+			courseVideoDb.setDate(courseMediaDto.getDate());
+			courseVideoDb.setTitle(courseMediaDto.getTitle());
+			courseVideoDb.setDescription(courseMediaDto.getDescription());
+
+			courseMediaRepository.save(courseVideoDb);
+			httpStatus = HttpStatus.OK;
+			message = "Course Video updated sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "Course Video is not exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void deleteCourseVideo(CourseMediaRequest courseMediaDto) {
+		CourseMediaModel courseVideoDb = courseMediaRepository.getCourseMediaById(courseMediaDto.getCourseMediaId());
+		if (courseVideoDb != null) {
+			courseMediaRepository.deleteById(courseMediaDto.getCourseMediaId());
+			httpStatus = HttpStatus.OK;
+			message = "Course Video delete sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "Course Video is not exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
 	}
 
 	public Object courseMediaPraticeManage(CourseMediaPracticeRequest courseMediaDto) {

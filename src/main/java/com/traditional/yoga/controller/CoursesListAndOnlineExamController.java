@@ -66,11 +66,11 @@ public class CoursesListAndOnlineExamController {
 	}
 
 	@PostMapping("/task")
-	public Object managetask(@RequestHeader("token") String token, @RequestBody TaskRequest taskDto,
+	public Object manageTask(@RequestHeader("token") String token, @RequestBody TaskRequest taskDto,
 			@RequestParam("operation") String operation) {
 		authenticate(token);
 		LOG.info("Entering into task{} Method", operation);
-		return coursesListService.managetask(operation, taskDto);
+		return coursesListService.manageTask(operation, taskDto);
 	}
 
 	@PostMapping("/testimonal")

@@ -11,6 +11,7 @@ public class PhotoGalleryRequest {
 	private String updatedDate;
 	private int noOfPhoto;
 	private int imageId;
+	private String active;
 
 	public int getPhotoGalleryId() {
 		return photoGalleryId;
@@ -82,6 +83,14 @@ public class PhotoGalleryRequest {
 
 	public void setImageId(int imageId) {
 		this.imageId = imageId;
+	}
+
+	public String getActive() {
+		return active;
+	}
+
+	public void setActive(String active) {
+		this.active = active;
 	}
 
 }

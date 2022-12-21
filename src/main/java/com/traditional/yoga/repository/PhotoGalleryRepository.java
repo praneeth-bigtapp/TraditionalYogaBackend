@@ -10,7 +10,7 @@ import com.traditional.yoga.model.PhotoGalleryModel;
 @Repository
 public interface PhotoGalleryRepository extends JpaRepository<PhotoGalleryModel, Integer> {
 
-	@Query(value = "SELECT * FROM `photo_gallery` WHERE `photo_gallery_id`= :photoGalleryId", nativeQuery = true)
+	@Query(value = "SELECT * FROM `photo_gallery` WHERE `photo_gallery_id`= :photoGalleryId ", nativeQuery = true)
 	PhotoGalleryModel getPhotoGallery(@Param("photoGalleryId") int photoGalleryId);
 	
 	@Query(value = "SELECT * FROM `photo_gallery` WHERE `gallery_name`= :galleryName", nativeQuery = true)

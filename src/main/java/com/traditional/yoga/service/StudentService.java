@@ -28,6 +28,7 @@ import com.traditional.yoga.repository.DonationRepository;
 import com.traditional.yoga.repository.EpurchaseInformation;
 import com.traditional.yoga.repository.StudentRepository;
 import com.traditional.yoga.repository.VolunteerRepository;
+import com.traditional.yoga.utils.Constants;
 import com.traditional.yoga.utils.GeneralUtils;
 
 @Service
@@ -125,7 +126,7 @@ public class StudentService {
 				member.setStudents(studentRepository.getStudentByMentor(courseId));
 				httpStatus = HttpStatus.OK;
 				return new ResponseEntity<>(member, httpStatus);
-			}  else {
+			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
 				LOG.error(message);
@@ -212,9 +213,11 @@ public class StudentService {
 	public Object blockListUsersManage(String operation, BlackListRequest blockListDto) {
 		httpStatus = HttpStatus.OK;
 		try {
-			if (operation.equals("add")) {
+			if (operation.equals(Constants.ADD)) {
 				addBlockListUser(blockListDto);
-			} else if (operation.equals("delete")) {
+			} else if (operation.equals(Constants.UPDATE)) {
+				updateBlockListUser(blockListDto);
+			} else if (operation.equals(Constants.SAVE)) {
 				deleteBlockListUser(blockListDto);
 			} else {
 				message = "Operation Doesn't exist";
@@ -235,15 +238,52 @@ public class StudentService {
 	private void addBlockListUser(BlackListRequest blockListDto) {
 		BlackListModel blackListNew = blackListUserRepository.getBlackListByEmail(blockListDto.getBlacklistUserEmail());
 		if (blackListNew == null) {
-			BlackListModel newList = new BlackListModel();
-			newList.setBlacklistUserEmail(blockListDto.getBlacklistUserEmail());
-			newList.setComments(blockListDto.getComments());
-			newList.setDate(generalUtils.getCurrentDate());
-			blackListUserRepository.save(newList);
-			httpStatus = HttpStatus.OK;
-			message = "new blacklist user is  added sucessfully";
-			LOG.info(message);
-			response = new Response(message, httpStatus.value(), null);
+			Boolean validEmail = studentRepository.getCountByBlackList(blockListDto.getBlacklistUserEmail()) == 0;
+			if (Boolean.TRUE.equals(validEmail)) {
+				BlackListModel newList = new BlackListModel();
+				newList.setBlacklistUserEmail(blockListDto.getBlacklistUserEmail());
+				newList.setComments(blockListDto.getComments());
+				newList.setDate(generalUtils.getCurrentDate());
+
+				blackListUserRepository.save(newList);
+				httpStatus = HttpStatus.OK;
+				message = "new blacklist user is added sucessfully";
+				LOG.info(message);
+				response = new Response(message, httpStatus.value(), null);
+			} else {
+				message = "User mail id is not present in our user Records";
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} else {
+			message = "User mail id Already is in Backlist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void updateBlockListUser(BlackListRequest blockListDto) {
+		BlackListModel blackListDb = blackListUserRepository.getBlackListById(blockListDto.getBlacklistuserId());
+		if (blackListDb != null) {
+			Boolean validEmail = studentRepository.getCountByBlackList(blockListDto.getBlacklistUserEmail()) == 0;
+			if (Boolean.TRUE.equals(validEmail)) {
+				blackListDb.setBlacklistUserEmail(blockListDto.getBlacklistUserEmail());
+				blackListDb.setComments(blockListDto.getComments());
+				blackListDb.setDate(generalUtils.getCurrentDate());
+
+				blackListUserRepository.save(blackListDb);
+				httpStatus = HttpStatus.OK;
+				message = "blacklist user is updated sucessfully";
+				LOG.info(message);
+				response = new Response(message, httpStatus.value(), null);
+			} else {
+				message = "User mail id is not present in our user Records";
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
 		} else {
 			message = "User mail id Already is in Backlist";
 			httpStatus = HttpStatus.CONFLICT;
@@ -330,7 +370,7 @@ public class StudentService {
 			return new ResponseEntity<>(response, httpStatus);
 		}
 	}
-	
+
 //	Map Region to Mentor
 	public Object mapRegionMentor(StudentRequest studentDto) {
 		StudentModel mapCourse = studentRepository.getStudentById(studentDto.getStudentId());

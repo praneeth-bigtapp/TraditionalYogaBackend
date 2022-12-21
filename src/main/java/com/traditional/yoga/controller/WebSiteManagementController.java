@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.traditional.yoga.dto.request.AlertRequest;
+import com.traditional.yoga.dto.request.BannerViewRequest;
 import com.traditional.yoga.dto.request.NotificationRequest;
 import com.traditional.yoga.dto.request.PageRequest;
 import com.traditional.yoga.dto.request.PearlsOfWisdomRequest;
@@ -58,20 +58,12 @@ public class WebSiteManagementController {
 //		return webSiteManagementService.alertManage(operation, alertDto);
 //	}
 
-//	@PostMapping("/banner")
-//	public Object manageUser(@RequestHeader("token") String token, @RequestBody BannerViewRequest bannerViewdto,
-//			@RequestParam("operation") String operation) {
-//		authenticate(token);
-//		return webSiteManagementService.bannerMange(operation, bannerViewdto);
-//	}
 	@PostMapping("/banner")
-	public Object banner(@RequestHeader("token") String token,
-			@RequestParam(required = true, value = "File") MultipartFile file,
-			@RequestParam(required = true, value = "bannerViewdto") String bannerString) {
+	public Object banner(@RequestHeader("token") String token, BannerViewRequest bannerDto,
+			@RequestParam("operation") String operation) {
 		authenticate(token);
 		LOG.info("Entering into banner Method");
-//		return webSiteManagementService.banner(bannerString);
-		return null;
+		return webSiteManagementService.bannerMange(operation, bannerDto);
 	}
 
 	@PostMapping("/scripctures")
@@ -102,11 +94,11 @@ public class WebSiteManagementController {
 		return webSiteManagementService.regionMange(operation, regiondto);
 	}
 
-	@PostMapping("/createGallary")
-	public Object createGallary(@RequestHeader("token") String token,
-			@RequestBody PhotoGalleryRequest photoGalleryRequestDto) {
-		LOG.info("Creating a new gallery");
-		return webSiteManagementService.createGallary(photoGalleryRequestDto);
+	@PostMapping("/photoGallary")
+	public Object mangeGallary(@RequestHeader("token") String token,
+			@RequestBody PhotoGalleryRequest photoGalleryRequestDto, @RequestParam("operation") String operation) {
+		LOG.info("Entered into Photo Gallary");
+		return webSiteManagementService.mangeGallary(photoGalleryRequestDto, operation);
 	}
 
 	@PostMapping("/wisdom")
@@ -115,7 +107,7 @@ public class WebSiteManagementController {
 		authenticate(token);
 		return webSiteManagementService.managewisdom(operation, wisdomdto);
 	}
-	
+
 	@PostMapping("/alerts")
 	public Object managealert(@RequestHeader("token") String token, @RequestBody AlertRequest alertdto,
 			@RequestParam("operation") String operation) {

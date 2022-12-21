@@ -225,7 +225,7 @@ public class CoursesandOnlineexamService {
 	}
 
 	// Manage Exam ////
-	
+
 	public Object mangeExams(String operation, OnlineExamReqest onlineExamDto) {
 		this.httpStatus = HttpStatus.OK;
 		try {
@@ -310,13 +310,13 @@ public class CoursesandOnlineexamService {
 		}
 	}
 
-	public Object managetask(String operation, TaskRequest taskDto) {
-
+	public Object manageTask(String operation, TaskRequest taskDto) {
 		this.httpStatus = HttpStatus.OK;
 		try {
-
 			if (operation.equals(Constants.ADD)) {
 				addTask(taskDto);
+			} else if (operation.equals(Constants.UPDATE)) {
+				updateTask(taskDto);
 			} else if (operation.equals(Constants.DELETE)) {
 				deleteTask(taskDto);
 			} else {
@@ -357,6 +357,28 @@ public class CoursesandOnlineexamService {
 		}
 
 	}
+	
+	private void updateTask(TaskRequest taskDto) {
+		TaskModel taskDb = taskRepository.getTaskById(taskDto.getTaskId());
+		if (taskDb != null) {
+			taskDb.setCoursesId(taskDto.getCoursesId());
+			taskDb.setTaskName(taskDto.getTaskName());
+			taskDb.setDescription(taskDto.getDescription());
+			taskDb.setMediafile(taskDto.getMediafile());
+			taskDb.setDueDate(taskDto.getDueDate());
+			taskDb.setIsActive(Constants.YES);
+			taskRepository.save(taskDb);
+			
+			message = "task is updated sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "task Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
 
 	private void deleteTask(TaskRequest taskDto) {
 		TaskModel deleteTask = taskRepository.getTaskById(taskDto.getTaskId());
@@ -366,7 +388,7 @@ public class CoursesandOnlineexamService {
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = "Testimonal Doesn't exist";
+			message = "task Doesn't exist";
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
