@@ -30,6 +30,6 @@ public interface StudentRepository extends JpaRepository<StudentModel, Integer> 
 	@Query(value = "SELECT COUNT(*) FROM `student_details` WHERE `course_id`= :courseId  AND `mentor_status` = 0", nativeQuery = true)
 	int getCountByMentor(@Param("courseId") int courseId);
 	
-	@Query(value = "SELECT COUNT(*) FROM `student_details` WHERE `email_address`= :eamilId ", nativeQuery = true)
+	@Query(value = "SELECT COUNT(*) FROM `student_details` WHERE `email_id`= :eamilId ", nativeQuery = true)
 	int getCountByBlackList(@Param("eamilId") String eamilId);
 }

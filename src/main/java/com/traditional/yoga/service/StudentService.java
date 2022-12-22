@@ -17,7 +17,6 @@ import com.traditional.yoga.dto.request.StudentRequest;
 import com.traditional.yoga.dto.request.VolunteerRequest;
 import com.traditional.yoga.dto.response.MemberResponse;
 import com.traditional.yoga.model.BlackListModel;
-import com.traditional.yoga.model.CourseModel;
 import com.traditional.yoga.model.DonationModel;
 import com.traditional.yoga.model.EPurchaseInformation;
 import com.traditional.yoga.model.StudentModel;
@@ -313,13 +312,11 @@ public class StudentService {
 	public Object mapStudentCourse(StudentRequest studentDto) {
 		StudentModel mapCourse = studentRepository.getStudentById(studentDto.getStudentId());
 		if (mapCourse != null) {
-			CourseModel course = new CourseModel();
 			mapCourse.setStudentCategory(studentDto.getStudentCategory());
-			course.setCourseId(studentDto.getCourseId());
-			mapCourse.setCourseId(course);
+			mapCourse.setCourseId(courseRepository.getCourseById(studentDto.getCourseId()));
 			studentRepository.save(mapCourse);
 			httpStatus = HttpStatus.OK;
-			message = "Student Mapped sucessfully";
+			message = "Student Course Mapped sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 			return new ResponseEntity<>(response, httpStatus);
