@@ -2,7 +2,7 @@ package com.traditional.yoga.dto.request;
 
 public class BlackListRequest {
 
-	private int blacklistuserId;
+	private int blacklistUserId;
 	private String blacklistUserEmail;
 	private String comments;
 	private String date;
@@ -12,12 +12,12 @@ public class BlackListRequest {
 	private String updatedBy;
 	private String isActive;
 
-	public int getBlacklistuserId() {
-		return blacklistuserId;
+	public int getBlacklistUserId() {
+		return blacklistUserId;
 	}
 
-	public void setBlacklistuserId(int blacklistuserId) {
-		this.blacklistuserId = blacklistuserId;
+	public void setBlacklistUserId(int blacklistUserId) {
+		this.blacklistUserId = blacklistUserId;
 	}
 
 	public String getBlacklistUserEmail() {

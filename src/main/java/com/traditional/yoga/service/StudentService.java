@@ -266,7 +266,7 @@ public class StudentService {
 	}
 
 	private void updateBlockListUser(BlackListRequest blockListDto) {
-		BlackListModel blackListDb = blackListUserRepository.getBlackListById(blockListDto.getBlacklistuserId());
+		BlackListModel blackListDb = blackListUserRepository.getBlackListById(blockListDto.getBlacklistUserId());
 		if (blackListDb != null) {
 			Boolean validEmail = studentRepository.getCountByBlackList(blockListDto.getBlacklistUserEmail()) == 0;
 			if (Boolean.TRUE.equals(validEmail)) {
@@ -294,9 +294,9 @@ public class StudentService {
 	}
 
 	private void deleteBlockListUser(BlackListRequest blockListDto) {
-		BlackListModel blacklistDb = blackListUserRepository.getBlackListById(blockListDto.getBlacklistuserId());
+		BlackListModel blacklistDb = blackListUserRepository.getBlackListById(blockListDto.getBlacklistUserId());
 		if (blacklistDb != null) {
-			blackListUserRepository.deleteById(blockListDto.getBlacklistuserId());
+			blackListUserRepository.deleteById(blockListDto.getBlacklistUserId());
 			httpStatus = HttpStatus.OK;
 			message = "BlackListUser deleted sucessfully";
 			LOG.info(message);

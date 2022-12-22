@@ -32,10 +32,10 @@ public class PraticeLibaryService {
 		LOG.info("Fetching praticeLibary related {} data", operationType);
 
 		try {
-			if (operationType.equals("praticelibary")) {
+			if (operationType.equals("praticeLibary")) {
 				httpStatus = HttpStatus.OK;
 				return new ResponseEntity<>(praticeLibaryRepository.findAll(), httpStatus);
-			} else if (operationType.equals("categorylibary")) {
+			} else if (operationType.equals("categoryLibary")) {
 				return new ResponseEntity<>(categoryLibaryRepository.findAll(), httpStatus);
 			} else {
 				message = "Unknown Operation";

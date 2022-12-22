@@ -59,7 +59,7 @@ public class WebSiteManagementController {
 //	}
 
 	@PostMapping("/banner")
-	public Object banner(@RequestHeader("token") String token, BannerViewRequest bannerDto,
+	public Object banner(@RequestHeader("token") String token, @RequestBody BannerViewRequest bannerDto,
 			@RequestParam("operation") String operation) {
 		authenticate(token);
 		LOG.info("Entering into banner Method");

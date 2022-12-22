@@ -221,7 +221,7 @@ public class CourseManagementService {
 				response = new Response(message, httpStatus.value(), message);
 			}
 		} catch (Exception e) {
-			message = "Exception in Role";
+			message = "Exception in Course Media";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());
