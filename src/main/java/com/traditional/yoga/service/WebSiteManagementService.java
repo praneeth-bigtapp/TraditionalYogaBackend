@@ -286,6 +286,8 @@ public class WebSiteManagementService {
 			newBanner.setDescription(bannerDto.getDescription());
 			newBanner.setCategoryId(bannerDto.getCategoryId());
 			newBanner.setDateOfAdd(generalUtils.getCurrentDate());
+			newBanner.setCreatedDate(generalUtils.getCurrentDate());
+			newBanner.setIsActive("Y");
 
 			bannerRepository.save(newBanner);
 			httpStatus = HttpStatus.OK;
@@ -311,7 +313,7 @@ public class WebSiteManagementService {
 			bannerDb.setDescription(bannerDto.getDescription());
 			bannerDb.setCategoryId(bannerDto.getCategoryId());
 			bannerDb.setDateOfAdd(generalUtils.getCurrentDate());
-
+			bannerDb.setUpdateDate(generalUtils.getCurrentDate());
 			bannerRepository.save(bannerDb);
 			httpStatus = HttpStatus.OK;
 			message = "banner is updated sucessfully";

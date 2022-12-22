@@ -11,6 +11,11 @@ public class BannerViewRequest {
 	private String description;
 	private int categoryId;
 	private String dateOfAdd;
+	private String createdBy;
+	private String createdDate;
+	private String updateBy;
+	private String updateDate;
+	private String isActive;
 
 	public int getBannerId() {
 		return bannerId;
@@ -83,5 +88,47 @@ public class BannerViewRequest {
 	public void setDateOfAdd(String dateOfAdd) {
 		this.dateOfAdd = dateOfAdd;
 	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getUpdateBy() {
+		return updateBy;
+	}
+
+	public void setUpdateBy(String updateBy) {
+		this.updateBy = updateBy;
+	}
+
+	public String getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(String updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	public String getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(String isActive) {
+		this.isActive = isActive;
+	}
+	
+	
 
 }
