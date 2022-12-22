@@ -25,6 +25,17 @@ public class BlackListModel {
 	@Column(name = "comments")
 	private String comments;
 
+	@Column(name = "created_date")
+	private String createdDate;
+	@Column(name = "created_by")
+	private String createdBy;
+	@Column(name = "updated_date")
+	private String updateDate;
+	@Column(name = "updated_by")
+	private String updatedBy;
+	@Column(name = "is_active")
+	private String isActive;
+
 	public int getBlacklistuserId() {
 		return blacklistuserId;
 	}
@@ -55,6 +66,46 @@ public class BlackListModel {
 
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+
+	public String getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(String updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public String getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(String isActive) {
+		this.isActive = isActive;
 	}
 
 }

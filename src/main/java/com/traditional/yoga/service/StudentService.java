@@ -244,7 +244,8 @@ public class StudentService {
 				newList.setBlacklistUserEmail(blockListDto.getBlacklistUserEmail());
 				newList.setComments(blockListDto.getComments());
 				newList.setDate(generalUtils.getCurrentDate());
-
+				newList.setCreatedDate(generalUtils.getCurrentDate());
+				newList.setIsActive("Y");
 				blackListUserRepository.save(newList);
 				httpStatus = HttpStatus.OK;
 				message = "new blacklist user is added sucessfully";
@@ -272,7 +273,7 @@ public class StudentService {
 				blackListDb.setBlacklistUserEmail(blockListDto.getBlacklistUserEmail());
 				blackListDb.setComments(blockListDto.getComments());
 				blackListDb.setDate(generalUtils.getCurrentDate());
-
+				blackListDb.setUpdateDate(generalUtils.getCurrentDate());
 				blackListUserRepository.save(blackListDb);
 				httpStatus = HttpStatus.OK;
 				message = "blacklist user is updated sucessfully";
