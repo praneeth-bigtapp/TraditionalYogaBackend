@@ -31,11 +31,15 @@ import com.traditional.yoga.repository.TaskRepository;
 import com.traditional.yoga.repository.TestimonalRepository;
 import com.traditional.yoga.repository.TypeofTestRepository;
 import com.traditional.yoga.utils.Constants;
+import com.traditional.yoga.utils.GeneralUtils;
 
 @Service
 public class CoursesandOnlineexamService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CoursesandOnlineexamService.class);
+
+	@Autowired
+	GeneralUtils generalUtils;
 
 	@Autowired
 	CoursesListRepository coursesListRepository;
@@ -357,7 +361,7 @@ public class CoursesandOnlineexamService {
 		}
 
 	}
-	
+
 	private void updateTask(TaskRequest taskDto) {
 		TaskModel taskDb = taskRepository.getTaskById(taskDto.getTaskId());
 		if (taskDb != null) {
@@ -368,7 +372,7 @@ public class CoursesandOnlineexamService {
 			taskDb.setDueDate(taskDto.getDueDate());
 			taskDb.setIsActive(Constants.YES);
 			taskRepository.save(taskDb);
-			
+
 			message = "task is updated sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
@@ -407,6 +411,10 @@ public class CoursesandOnlineexamService {
 				updateTestimonal(testimonalDto);
 			} else if (operation.equals(Constants.DELETE)) {
 				deleteTestimonal(testimonalDto);
+			} else if (operation.equals("active")) {
+				activeTestimonal(testimonalDto);
+			} else if (operation.equals("deactive")) {
+				deactiveTestimonal(testimonalDto);
 			} else {
 				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
@@ -424,7 +432,6 @@ public class CoursesandOnlineexamService {
 	}
 
 	// ADD testimonal///
-
 	private void addTestimonal(TestimoalRequest testimonalDto) {
 		TestimonalsModel testimonalnew = testimonalRepository.getTestmonialsById(testimonalDto.getTestimonalId());
 		if (testimonalnew == null) {
@@ -434,6 +441,8 @@ public class CoursesandOnlineexamService {
 			testlist.setGivenByName(testimonalDto.getGivenByName());
 			testlist.setVideoLink(testimonalDto.getVideoLink());
 			testlist.setDescription(testimonalDto.getDescription());
+			testlist.setCreatedDate(generalUtils.getCurrentDate());
+			testlist.setIsActive("Y");
 
 			testimonalRepository.save(testlist);
 			message = "new testimonial is added sucessfully";
@@ -459,6 +468,7 @@ public class CoursesandOnlineexamService {
 			testimonalnew.setGivenByName(testimonalDto.getGivenByName());
 			testimonalnew.setVideoLink(testimonalDto.getVideoLink());
 			testimonalnew.setDescription(testimonalDto.getDescription());
+			testimonalnew.setUpdateDate(generalUtils.getCurrentDate());
 			testimonalRepository.save(testimonalnew);
 
 			message = "Testimonial is updated successfully";
@@ -486,6 +496,42 @@ public class CoursesandOnlineexamService {
 			response = new Response(message, httpStatus.value(), null);
 		} else {
 			message = "Testimonal Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	// active the testimonial//
+
+	private void activeTestimonal(TestimoalRequest testimonalDto) {
+		TestimonalsModel testimonal = testimonalRepository.getTestmonialsById(testimonalDto.getTestimonalId());
+		if (testimonal != null) {
+			testimonal.setIsActive("Y");
+			testimonalRepository.save(testimonal);
+			message = "Testimonal is activated successfully";
+			LOG.info(message);
+			response = new Response(message, HttpStatus.OK.value(), null);
+		} else {
+			message = "Testimonal does not exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	// deactive the testimonial////
+
+	private void deactiveTestimonal(TestimoalRequest testimonalDto) {
+		TestimonalsModel testimonal = testimonalRepository.getTestmonialsById(testimonalDto.getTestimonalId());
+		if (testimonal != null) {
+			testimonal.setIsActive("N");
+			testimonalRepository.save(testimonal);
+			message = "Testimonal is deactivated successfully";
+			LOG.info(message);
+			response = new Response(message, HttpStatus.OK.value(), null);
+		} else {
+			message = "Testimonal does not exist";
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
