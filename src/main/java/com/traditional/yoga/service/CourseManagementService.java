@@ -295,6 +295,9 @@ public class CourseManagementService {
 		}
 	}
 
+	
+	
+	////short VIDEO/////
 	private void courseShortVideo(CourseMediaRequest courseMediaDto, String operation) {
 		if (operation.equals(Constants.ADD)) {
 			addCourseShortVideo(courseMediaDto);

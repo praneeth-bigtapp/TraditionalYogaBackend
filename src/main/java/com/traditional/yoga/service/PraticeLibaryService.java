@@ -316,7 +316,7 @@ public class PraticeLibaryService {
 
 	private void deleteGlimpses(PraticeLibaryRequest praticelibaryDto) {
 		PraticeLibaryModel praticeDb = praticeLibaryRepository.getpraticeById(praticelibaryDto.getPraticeLibaryId());
-		if (praticeDb == null) {
+		if (praticeDb != null) {
 			praticeLibaryRepository.deleteById(praticelibaryDto.getPraticeLibaryId());
 			message = "Glimpses record is deleted sucessfully";
 			LOG.info(message);
