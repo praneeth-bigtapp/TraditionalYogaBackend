@@ -16,6 +16,7 @@ import com.traditional.yoga.dto.request.EPurchaseRequest;
 import com.traditional.yoga.dto.request.StudentRequest;
 import com.traditional.yoga.dto.request.VolunteerRequest;
 import com.traditional.yoga.dto.response.MemberResponse;
+import com.traditional.yoga.dto.response.StudentProfileResponse;
 import com.traditional.yoga.model.BlackListModel;
 import com.traditional.yoga.model.DonationModel;
 import com.traditional.yoga.model.EPurchaseInformation;
@@ -25,6 +26,10 @@ import com.traditional.yoga.repository.BlackListUserRepository;
 import com.traditional.yoga.repository.CourseRepository;
 import com.traditional.yoga.repository.DonationRepository;
 import com.traditional.yoga.repository.EpurchaseInformation;
+import com.traditional.yoga.repository.GenderRepository;
+import com.traditional.yoga.repository.ProfessionsRepository;
+import com.traditional.yoga.repository.QualificationRepository;
+import com.traditional.yoga.repository.RoleRepository;
 import com.traditional.yoga.repository.StudentRepository;
 import com.traditional.yoga.repository.VolunteerRepository;
 import com.traditional.yoga.utils.Constants;
@@ -52,6 +57,18 @@ public class StudentService {
 
 	@Autowired
 	VolunteerRepository volunteerRepository;
+
+	@Autowired
+	RoleRepository roleRepository;
+
+	@Autowired
+	ProfessionsRepository professionsRepository;
+
+	@Autowired
+	GenderRepository genderRepository;
+
+	@Autowired
+	QualificationRepository qualificationRepository;
 
 	@Autowired
 	BlackListUserRepository blackListUserRepository;
@@ -143,9 +160,42 @@ public class StudentService {
 
 //	Student
 	public Object studentProfile(StudentRequest studentDto) {
-		httpStatus = HttpStatus.OK;
 		StudentModel std = studentRepository.getStudentById(studentDto.getStudentId());
-		return new ResponseEntity<>(std, httpStatus);
+		if (std != null) {
+			StudentProfileResponse st = new StudentProfileResponse();
+			st.setStudentId(std.getStudentId());
+			st.setName(std.getName());
+			st.setStudentCategory(std.getStudentCategory());
+			st.setAge(std.getAge());
+			st.setMobile(std.getMobile());
+			st.setAddress(std.getAddress());
+			st.setEmailId(std.getEmailId());
+			st.setRegesiterDate(std.getRegesiterDate());
+			st.setRegistedIpAddress(std.getRegistedIpAddress());
+			st.setActive(std.getActive());
+			st.setCourse(std.getCourseId());
+
+			String roleName = roleRepository.getRoleById(std.getRoleId()).getRoleName();
+			st.setRole(roleName);
+
+			String professionName = professionsRepository.getProfessionsById(std.getProfessionId()).getProfessionName();
+			st.setProfession(professionName);
+
+			String genderName = genderRepository.getGenderById(std.getGenderId()).getGenderName();
+			st.setGender(genderName);
+
+			String qualificationName = qualificationRepository.getQualificationById(std.getQulificationId())
+					.getQualificationName();
+			st.setQualification(qualificationName);
+			httpStatus = HttpStatus.OK;
+			return new ResponseEntity<>(st, httpStatus);
+		} else {
+			message = "Operation Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+			return new ResponseEntity<>(response, httpStatus);
+		}
 	}
 
 //	Donation

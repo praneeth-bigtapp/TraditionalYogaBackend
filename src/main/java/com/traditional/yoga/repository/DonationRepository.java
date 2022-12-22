@@ -15,7 +15,7 @@ public interface DonationRepository extends JpaRepository<DonationModel, Integer
 	@Query(value = "SELECT * FROM `donation` WHERE `donation_id`= :donationId", nativeQuery = true)
 	DonationModel getDonationById(@Param("donationId") int donationId);
 
-	@Query(value = "SELECT * FROM `donation` WHERE `student_id`= :studentId", nativeQuery = true)
-	List<DonationModel> getDonationByStudentId(@Param("studentId") int studentId);
+	@Query(value = "SELECT * FROM `donation` WHERE `donar_id`= :donarId", nativeQuery = true)
+	List<DonationModel> getDonationByStudentId(@Param("donarId") int donarId);
 
 }

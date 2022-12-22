@@ -608,7 +608,7 @@ public class CoursesandOnlineexamService {
 	}
 
 	private void addmaterials(AddCoursemateialRequest materialDto) {
-		AddCoursesMaterialModel materialnew = addMaterialRepository.getmaterialById(materialDto.getCourseMaterialId());
+		AddCoursesMaterialModel materialnew = addMaterialRepository.getMaterialById(materialDto.getCourseMaterialId());
 		if (materialnew == null) {
 			AddCoursesMaterialModel materialList = new AddCoursesMaterialModel();
 //			

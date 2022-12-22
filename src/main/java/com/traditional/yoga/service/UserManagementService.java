@@ -267,6 +267,7 @@ public class UserManagementService {
 		if (roleDb != null) {
 			roleRepository.deleteById(roleDb.getRoleId());
 			message = "Role deleted sucessfully";
+			httpStatus = HttpStatus.OK;
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
@@ -283,10 +284,9 @@ public class UserManagementService {
 			RoleModel roleCheck = roleRepository.getRoleByName(roleDto.getRoleName());
 			if (roleCheck == null) {
 				roleDb.setRoleName(roleDto.getRoleName());
-				roleDb.setRoleId(roleDto.getRoleId());
-				roleDb.setActive(roleDto.getActive());
 				roleRepository.save(roleDb);
 				message = "Role saved sucessfully";
+				httpStatus = HttpStatus.OK;
 				LOG.info(message);
 				response = new Response(message, httpStatus.value(), null);
 			} else {
@@ -307,11 +307,10 @@ public class UserManagementService {
 	private void activeRole(RoleRequest roleDto) {
 		RoleModel roleDb = roleRepository.getRoleById(roleDto.getRoleId());
 		if (roleDb != null) {
-			roleDb.setRoleName(roleDto.getRoleName());
-			roleDb.setRoleId(roleDto.getRoleId());
 			roleDb.setActive(roleDto.getActive());
 			roleRepository.save(roleDb);
 			message = "Role saved sucessfully";
+			httpStatus = HttpStatus.OK;
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
@@ -374,6 +373,7 @@ public class UserManagementService {
 		if (menuDb != null) {
 			modelRepository.deleteById(menuDto.getModuleId());
 			message = "Menu deleted sucessfully";
+			httpStatus = HttpStatus.OK; 
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
@@ -420,6 +420,7 @@ public class UserManagementService {
 			menuDb.setStatus(menuDto.getStatus());
 			modelRepository.save(menuDb);
 			message = "Menu saved sucessfully";
+			httpStatus = HttpStatus.OK; 
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
@@ -436,6 +437,7 @@ public class UserManagementService {
 			ModuleModel newMenu = new ModuleModel();
 			newMenu.setModuleName(menuDto.getModuleName());
 			modelRepository.save(newMenu);
+			httpStatus = HttpStatus.OK; 
 			message = "Menu added sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
@@ -534,12 +536,10 @@ public class UserManagementService {
 	private void activeSubMenu(SubMenuRequest subMenuDto) {
 		SubModuleModel subMenuDb = subModelRepository.getSubModuleById(subMenuDto.getSubMenuId());
 		if (subMenuDb != null) {
-			subMenuDb.setSubModuleId(subMenuDto.getSubMenuId());
-			subMenuDb.setModuleId(modelRepository.getModuleById(subMenuDto.getMenuId()));
-			subMenuDb.setSubModuleName(subMenuDto.getSubMenuName());
 			subMenuDb.setStatus(subMenuDto.getStatus());
 			subModelRepository.save(subMenuDb);
 			message = "Sub-Menu saved sucessfully";
+			httpStatus = HttpStatus.OK;
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
@@ -608,6 +608,7 @@ public class UserManagementService {
 		try {
 			rolePermissions = rolePermissionRepository.getPermissionByroleId(roleId);
 			message = "Role permission fetched sucessfully";
+			httpStatus = HttpStatus.OK;
 			LOG.info(message);
 		} catch (Exception e) {
 			message = "";
