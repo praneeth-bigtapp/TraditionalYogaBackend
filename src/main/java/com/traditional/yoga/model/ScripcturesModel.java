@@ -15,7 +15,7 @@ public class ScripcturesModel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "scripctures_id")
-	private String scripcturesId;
+	private int scripcturesId;
 	@Lob
 	@Column(name = "coverpage_image")
 	private String coverImage;
@@ -23,17 +23,17 @@ public class ScripcturesModel {
 	private String uploadFile;
 	@Column(name = "title")
 	private String title;
-	
+
 	@Column(name = "description")
 	private String description;
 	@Column(name = "meta_keywords")
 	private String metaKeyWords;
 
-	public String getScripcturesId() {
+	public int getScripcturesId() {
 		return scripcturesId;
 	}
 
-	public void setScripcturesId(String scripcturesId) {
+	public void setScripcturesId(int scripcturesId) {
 		this.scripcturesId = scripcturesId;
 	}
 
