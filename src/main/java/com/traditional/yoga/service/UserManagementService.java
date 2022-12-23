@@ -244,6 +244,8 @@ public class UserManagementService {
 				updateRole(roleDto);
 			} else if (operation.equals(Constants.ACTIVE)) {
 				activeRole(roleDto);
+			} else if (operation.equals(Constants.DEACTIVE)) {
+				deactivateRole(roleDto);
 			} else if (operation.equals(Constants.DELETE)) {
 				deleteRole(roleDto);
 			} else {
@@ -282,23 +284,23 @@ public class UserManagementService {
 		RoleModel roleDb = roleRepository.getRoleById(roleDto.getRoleId());
 		if (roleDb != null) {
 			RoleModel roleCheck = roleRepository.getRoleByName(roleDto.getRoleName());
-			if (roleCheck == null) {
+			if (roleCheck == null || roleCheck.getRoleId() == roleDto.getRoleId()) {
 				roleDb.setRoleName(roleDto.getRoleName());
+				roleDb.setRoleId(roleDto.getRoleId());
+				roleDb.setActive(roleDto.getActive());
 				roleRepository.save(roleDb);
-				message = "Role saved sucessfully";
-				httpStatus = HttpStatus.OK;
+				message = "Role updated successfully";
 				LOG.info(message);
 				response = new Response(message, httpStatus.value(), null);
 			} else {
-				message = "Updated Role is already exist";
+				message = "Error: Role with the specified name already exists";
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
 			}
-
 		} else {
-			message = "Role Doesn't exist";
-			httpStatus = HttpStatus.CONFLICT;
+			message = "Error: Role not found";
+			httpStatus = HttpStatus.NOT_FOUND;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
 		}
@@ -316,6 +318,24 @@ public class UserManagementService {
 		} else {
 			message = "Role Doesn't exist";
 			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void deactivateRole(RoleRequest roleDto) {
+		RoleModel roleDb = roleRepository.getRoleById(roleDto.getRoleId());
+		if (roleDb != null) {
+			roleDb.setRoleName(roleDto.getRoleName());
+			roleDb.setRoleId(roleDto.getRoleId());
+			roleDb.setActive("N");
+			roleRepository.save(roleDb);
+			message = "Role deactivated successfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "Error: Role not found";
+			httpStatus = HttpStatus.NOT_FOUND;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
 		}
@@ -373,7 +393,7 @@ public class UserManagementService {
 		if (menuDb != null) {
 			modelRepository.deleteById(menuDto.getModuleId());
 			message = "Menu deleted sucessfully";
-			httpStatus = HttpStatus.OK; 
+			httpStatus = HttpStatus.OK;
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
@@ -420,7 +440,7 @@ public class UserManagementService {
 			menuDb.setStatus(menuDto.getStatus());
 			modelRepository.save(menuDb);
 			message = "Menu saved sucessfully";
-			httpStatus = HttpStatus.OK; 
+			httpStatus = HttpStatus.OK;
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
@@ -437,7 +457,7 @@ public class UserManagementService {
 			ModuleModel newMenu = new ModuleModel();
 			newMenu.setModuleName(menuDto.getModuleName());
 			modelRepository.save(newMenu);
-			httpStatus = HttpStatus.OK; 
+			httpStatus = HttpStatus.OK;
 			message = "Menu added sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
@@ -641,7 +661,6 @@ public class UserManagementService {
 		}
 		return new ResponseEntity<>(response, httpStatus);
 	}
-
 
 	public Object addDefaultPermissions(int roleId) {
 		List<RolePermissionModel> roleDefatultRolePermissions = constructDefaultpermissios(roleId);
