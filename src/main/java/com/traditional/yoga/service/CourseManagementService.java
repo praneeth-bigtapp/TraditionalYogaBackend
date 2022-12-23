@@ -295,9 +295,7 @@ public class CourseManagementService {
 		}
 	}
 
-	
-	
-	////short VIDEO/////
+	//// short VIDEO/////
 	private void courseShortVideo(CourseMediaRequest courseMediaDto, String operation) {
 		if (operation.equals(Constants.ADD)) {
 			addCourseShortVideo(courseMediaDto);
@@ -624,24 +622,25 @@ public class CourseManagementService {
 	}
 
 	private void updateAudio(AudioManagementRequest audioManagementDto) {
-		AudioManagementModel userDb = audioManagementRepository.getAudioById(audioManagementDto.getId());
-		if (userDb != null) {
-			userDb.setCourseId(audioManagementDto.getCourseId());
-			userDb.setAudioCategoryId(audioManagementDto.getAudioCategoryId());
-			userDb.setUploadCategory(audioManagementDto.getUploadCategory());
-			userDb.setAudioFile(audioManagementDto.getAudioFile());
-			userDb.setAudioTitle(audioManagementDto.getAudioTitle());
-			userDb.setAudioDesc(audioManagementDto.getAudioDesc());
-			userDb.setAudioDuration(audioManagementDto.getAudioDuration());
-			userDb.setMetakey(audioManagementDto.getMetakey());
-			userDb.setActive(audioManagementDto.getActive());
-			audioManagementRepository.save(userDb);
-			message = "Audio details added sucessfully";
+		AudioManagementModel audioDb = audioManagementRepository.getAudioById(audioManagementDto.getId());
+		if (audioDb != null) {
+			audioDb.setCourseId(audioManagementDto.getCourseId());
+			audioDb.setAudioCategoryId(audioManagementDto.getAudioCategoryId());
+			audioDb.setUploadCategory(audioManagementDto.getUploadCategory());
+			audioDb.setAudioFile(audioManagementDto.getAudioFile());
+			audioDb.setAudioTitle(audioManagementDto.getAudioTitle());
+			audioDb.setAudioDesc(audioManagementDto.getAudioDesc());
+			audioDb.setAudioDuration(audioManagementDto.getAudioDuration());
+			audioDb.setMetakey(audioManagementDto.getMetakey());
+			audioDb.setActive(audioManagementDto.getActive());
+			audioManagementRepository.save(audioDb);
+			message = "audio file updated successfully";
+			httpStatus = HttpStatus.OK;
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = "Audio details are not found";
-			httpStatus = HttpStatus.CONFLICT;
+			message = "audio file not found";
+			httpStatus = HttpStatus.NOT_FOUND;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
 		}

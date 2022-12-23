@@ -158,9 +158,9 @@ public class WebSiteManagementService {
 			if (operation.equals(Constants.ADD)) {
 				addalert(alertdto);
 			} else if (operation.equals(Constants.UPDATE)) {
-				updatealert(alertdto);
+				updateAlert(alertdto);
 			} else if (operation.equals(Constants.DELETE)) {
-				deletequote(alertdto);
+				deleteAlert(alertdto);
 			} else {
 				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
@@ -199,40 +199,27 @@ public class WebSiteManagementService {
 		}
 	}
 
-	private void updatealert(AlertRequest alertdto) {
-		AlertModel newAlert = alertRepository.getalertById(alertdto.getAlertId());
-		if (newAlert != null) {
-			AlertModel newAlertCheck = alertRepository.getalertBydescription(alertdto.getAlertDescription());
-			AlertModel newAlertCheck1 = alertRepository.getalertBystartdate(alertdto.getStartDate());
-			AlertModel newAlertCheck2 = alertRepository.getalertByenddate(alertdto.getStartDate());
-
-			if (newAlertCheck == null || newAlertCheck1 == null || newAlertCheck2 == null) {
-				newAlert.setCategoryId(alertdto.getCategoryId());
-				newAlert.setAlertDescription(alertdto.getAlertDescription());
-				newAlert.setStartDate(alertdto.getStartDate());
-				newAlert.setEndDate(alertdto.getEndDate());
-
-				alertRepository.save(newAlert);
-				message = "alert saved sucessfully";
-				LOG.info(message);
-				response = new Response(message, httpStatus.value(), null);
-			} else {
-				message = Constants.DOES_NOT_EXIST;
-				httpStatus = HttpStatus.CONFLICT;
-				LOG.error(message);
-				response = new Response(message, httpStatus.value(), message);
-			}
-
+	private void updateAlert(AlertRequest alertDto) {
+		AlertModel alertDb = alertRepository.getalertById(alertDto.getAlertId());
+		if (alertDb != null) {
+			alertDb.setCategoryId(alertDto.getCategoryId());
+			alertDb.setAlertDescription(alertDto.getAlertDescription());
+			alertDb.setStartDate(alertDto.getStartDate());
+			alertDb.setEndDate(alertDto.getEndDate());
+			alertRepository.save(alertDb);
+			message = "alert updated successfully";
+			httpStatus = HttpStatus.OK;
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = Constants.ALERT_EXCEPTION;
-			httpStatus = HttpStatus.CONFLICT;
+			message = "alert not found";
+			httpStatus = HttpStatus.NOT_FOUND;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
 		}
-
 	}
 
-	private void deletequote(AlertRequest alertdto) {
+	private void deleteAlert(AlertRequest alertdto) {
 		AlertModel newAlert = alertRepository.getalertById(alertdto.getAlertId());
 		if (newAlert != null) {
 			alertRepository.deleteById(newAlert.getAlertId());
@@ -696,7 +683,7 @@ public class WebSiteManagementService {
 			response = new Response(message, httpStatus.value(), message);
 		}
 	}
-	
+
 	private void activePhotoGallery(PhotoGalleryRequest photoGalleryRequestDto) {
 		PhotoGalleryModel photoGalleryDb = photoGalleryRepository
 				.getPhotoGallery(photoGalleryRequestDto.getPhotoGalleryId());

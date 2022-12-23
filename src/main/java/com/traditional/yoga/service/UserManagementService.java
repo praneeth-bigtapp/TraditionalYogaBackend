@@ -309,6 +309,7 @@ public class UserManagementService {
 	private void activeRole(RoleRequest roleDto) {
 		RoleModel roleDb = roleRepository.getRoleById(roleDto.getRoleId());
 		if (roleDb != null) {
+			roleDb.setRoleName(roleDto.getRoleName());
 			roleDb.setActive(roleDto.getActive());
 			roleRepository.save(roleDb);
 			message = "Role saved sucessfully";
