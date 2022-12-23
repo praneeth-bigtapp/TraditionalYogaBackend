@@ -26,6 +26,7 @@ import com.traditional.yoga.model.CourseMediaModel;
 import com.traditional.yoga.model.CourseMediaPracticeModel;
 import com.traditional.yoga.model.CourseModel;
 import com.traditional.yoga.model.PerformaceRatingModel;
+import com.traditional.yoga.repository.AudioCategoryLibaryRepository;
 import com.traditional.yoga.repository.AudioManagementRepository;
 import com.traditional.yoga.repository.ClassMediaRepository;
 import com.traditional.yoga.repository.CourseCategoryRepository;
@@ -34,6 +35,7 @@ import com.traditional.yoga.repository.CourseMediaPracticeRepository;
 import com.traditional.yoga.repository.CourseMediaRepository;
 import com.traditional.yoga.repository.CourseMediaTypeRepository;
 import com.traditional.yoga.repository.CourseRepository;
+import com.traditional.yoga.repository.MasterAudioRepository;
 import com.traditional.yoga.repository.PerformaceRatingRepository;
 import com.traditional.yoga.utils.Constants;
 
@@ -69,6 +71,12 @@ public class CourseManagementService {
 	@Autowired
 	AudioManagementRepository audioManagementRepository;
 
+	@Autowired
+	MasterAudioRepository masterAudioRepository;
+
+	@Autowired
+	AudioCategoryLibaryRepository audioCategoryLibaryRepository;
+
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
 	String message;
@@ -95,6 +103,12 @@ public class CourseManagementService {
 			} else if (operationType.equals("audio")) {
 				httpStatus = HttpStatus.OK;
 				return new ResponseEntity<>(audioManagementRepository.findAll(), httpStatus);
+			} else if (operationType.equals("audio-type")) {
+				httpStatus = HttpStatus.OK;
+				return new ResponseEntity<>(masterAudioRepository.findAll(), httpStatus);
+			} else if (operationType.equals("audio-category")) {
+				httpStatus = HttpStatus.OK;
+				return new ResponseEntity<>(audioCategoryLibaryRepository.findAll(), httpStatus);
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -609,13 +623,14 @@ public class CourseManagementService {
 		newAudio.setCourseId(audioManagementDto.getCourseId());
 		newAudio.setAudioCategoryId(audioManagementDto.getAudioCategoryId());
 		newAudio.setUploadCategory(audioManagementDto.getUploadCategory());
+		newAudio.setAudioType(audioManagementDto.getAudioType());
 		newAudio.setAudioFile(audioManagementDto.getAudioFile());
 		newAudio.setAudioTitle(audioManagementDto.getAudioTitle());
 		newAudio.setAudioDesc(audioManagementDto.getAudioDesc());
 		newAudio.setAudioDuration(audioManagementDto.getAudioDuration());
 		newAudio.setMetakey(audioManagementDto.getMetakey());
-		newAudio.setActive(audioManagementDto.getActive());
-		audioManagementRepository.save(newAudio);
+		newAudio.setIsActive(audioManagementDto.getActive());
+ 		audioManagementRepository.save(newAudio);
 		message = "Audio details added sucessfully";
 		LOG.info(message);
 		response = new Response(message, httpStatus.value(), null);
@@ -627,12 +642,13 @@ public class CourseManagementService {
 			audioDb.setCourseId(audioManagementDto.getCourseId());
 			audioDb.setAudioCategoryId(audioManagementDto.getAudioCategoryId());
 			audioDb.setUploadCategory(audioManagementDto.getUploadCategory());
+			audioDb.setAudioType(audioManagementDto.getAudioType());
 			audioDb.setAudioFile(audioManagementDto.getAudioFile());
 			audioDb.setAudioTitle(audioManagementDto.getAudioTitle());
 			audioDb.setAudioDesc(audioManagementDto.getAudioDesc());
 			audioDb.setAudioDuration(audioManagementDto.getAudioDuration());
 			audioDb.setMetakey(audioManagementDto.getMetakey());
-			audioDb.setActive(audioManagementDto.getActive());
+			audioDb.setIsActive(audioManagementDto.getActive());
 			audioManagementRepository.save(audioDb);
 			message = "audio file updated successfully";
 			httpStatus = HttpStatus.OK;

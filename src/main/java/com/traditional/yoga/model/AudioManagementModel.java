@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -13,17 +15,22 @@ public class AudioManagementModel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
+	@Column(name = "audio_management_id")
 	private int id;
 
-	@Column(name = "course_id")
+	@Column(name = "courses_id")
 	private int courseId;
 
-	@Column(name = "audio_category_id ")
-	private int audioCategoryId;
+	@OneToOne
+	@JoinColumn(name = "audio_category_id", referencedColumnName = "audio_category_id")
+	private AudioCategoryLibaryModel audioCategoryId;
 
 	@Column(name = "upload_category")
 	private String uploadCategory;
+	
+	@OneToOne
+	@JoinColumn(name = "audio_type", referencedColumnName = "audio_type_id")
+	private AudioTypeModel audioType;
 
 	@Column(name = "audio_file")
 	private String audioFile;
@@ -31,13 +38,13 @@ public class AudioManagementModel {
 	@Column(name = "audio_title")
 	private String audioTitle;
 
-	@Column(name = "audio_desc")
+	@Column(name = "audio_description")
 	private String audioDesc;
 
 	@Column(name = "audio_duration")
 	private int audioDuration;
 
-	@Column(name = "metakey")
+	@Column(name = "metakey_word")
 	private String metakey;
 
 	@Column(name = "created_date")
@@ -52,8 +59,8 @@ public class AudioManagementModel {
 	@Column(name = "updated_by")
 	private String updatedBy;
 
-	@Column(name = "active")
-	private String active;
+	@Column(name = "is_active")
+	private String isActive;
 
 	public int getId() {
 		return id;
@@ -71,12 +78,20 @@ public class AudioManagementModel {
 		this.courseId = courseId;
 	}
 
-	public int getAudioCategoryId() {
+	public AudioCategoryLibaryModel getAudioCategoryId() {
 		return audioCategoryId;
 	}
 
-	public void setAudioCategoryId(int audioCategoryId) {
+	public void setAudioCategoryId(AudioCategoryLibaryModel audioCategoryId) {
 		this.audioCategoryId = audioCategoryId;
+	}
+
+	public AudioTypeModel getAudioType() {
+		return audioType;
+	}
+
+	public void setAudioType(AudioTypeModel audioType) {
+		this.audioType = audioType;
 	}
 
 	public String getUploadCategory() {
@@ -159,12 +174,12 @@ public class AudioManagementModel {
 		this.updatedBy = updatedBy;
 	}
 
-	public String getActive() {
-		return active;
+	public String getIsActive() {
+		return isActive;
 	}
 
-	public void setActive(String active) {
-		this.active = active;
+	public void setIsActive(String isActive) {
+		this.isActive = isActive;
 	}
 
 }

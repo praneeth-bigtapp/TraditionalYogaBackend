@@ -1,12 +1,16 @@
 package com.traditional.yoga.dto.request;
 
+import com.traditional.yoga.model.AudioCategoryLibaryModel;
+import com.traditional.yoga.model.AudioTypeModel;
+
 public class AudioManagementRequest {
 
 	private int id;
 	private int courseId;
-	private int audioCategoryId;
+	private AudioCategoryLibaryModel audioCategoryId;
 	private String uploadCategory;
 	private String audioFile;
+	private AudioTypeModel audioType;
 	private String audioTitle;
 	private String audioDesc;
 	private int audioDuration;
@@ -29,12 +33,20 @@ public class AudioManagementRequest {
 		this.courseId = courseId;
 	}
 
-	public int getAudioCategoryId() {
+	public AudioCategoryLibaryModel getAudioCategoryId() {
 		return audioCategoryId;
 	}
 
-	public void setAudioCategoryId(int audioCategoryId) {
+	public void setAudioCategoryId(AudioCategoryLibaryModel audioCategoryId) {
 		this.audioCategoryId = audioCategoryId;
+	}
+
+	public AudioTypeModel getAudioType() {
+		return audioType;
+	}
+
+	public void setAudioType(AudioTypeModel audioType) {
+		this.audioType = audioType;
 	}
 
 	public String getUploadCategory() {

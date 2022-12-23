@@ -244,8 +244,6 @@ public class UserManagementService {
 				updateRole(roleDto);
 			} else if (operation.equals(Constants.ACTIVE)) {
 				activeRole(roleDto);
-			} else if (operation.equals(Constants.DEACTIVE)) {
-				deactivateRole(roleDto);
 			} else if (operation.equals(Constants.DELETE)) {
 				deleteRole(roleDto);
 			} else {
@@ -319,24 +317,6 @@ public class UserManagementService {
 		} else {
 			message = "Role Doesn't exist";
 			httpStatus = HttpStatus.CONFLICT;
-			LOG.error(message);
-			response = new Response(message, httpStatus.value(), message);
-		}
-	}
-
-	private void deactivateRole(RoleRequest roleDto) {
-		RoleModel roleDb = roleRepository.getRoleById(roleDto.getRoleId());
-		if (roleDb != null) {
-			roleDb.setRoleName(roleDto.getRoleName());
-			roleDb.setRoleId(roleDto.getRoleId());
-			roleDb.setActive("N");
-			roleRepository.save(roleDb);
-			message = "Role deactivated successfully";
-			LOG.info(message);
-			response = new Response(message, httpStatus.value(), null);
-		} else {
-			message = "Error: Role not found";
-			httpStatus = HttpStatus.NOT_FOUND;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
 		}
