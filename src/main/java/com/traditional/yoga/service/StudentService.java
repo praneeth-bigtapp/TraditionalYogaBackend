@@ -96,6 +96,9 @@ public class StudentService {
 			} else if (operationType.equals("blackListUser")) {
 				httpStatus = HttpStatus.OK;
 				return blackListUserRepository.findAll();
+			} else if (operationType.equals("gender")) {
+				httpStatus = HttpStatus.OK;
+				return genderRepository.findAll();
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
