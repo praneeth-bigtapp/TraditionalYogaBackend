@@ -22,6 +22,12 @@ public class PhotoGalleryModel {
 	@Column(name = "gallery_description")
 	private String galleryDescription;
 
+	@Column(name = "from_date")
+	private String fromDate;
+
+	@Column(name = "to_date")
+	private String toDate;
+
 	@Column(name = "created_by")
 	private String createdBy;
 
@@ -65,6 +71,22 @@ public class PhotoGalleryModel {
 
 	public void setGalleryDescription(String galleryDescription) {
 		this.galleryDescription = galleryDescription;
+	}
+
+	public String getFromDate() {
+		return fromDate;
+	}
+
+	public void setFromDate(String fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public String getToDate() {
+		return toDate;
+	}
+
+	public void setToDate(String toDate) {
+		this.toDate = toDate;
 	}
 
 	public String getCreatedBy() {

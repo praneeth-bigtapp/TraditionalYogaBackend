@@ -5,6 +5,8 @@ public class PhotoGalleryRequest {
 	private int photoGalleryId;
 	private String galleryName;
 	private String galleryDescription;
+	private String fromDate;
+	private String toDate;
 	private String createdBy;
 	private String createdDate;
 	private String updatedBy;
@@ -35,6 +37,22 @@ public class PhotoGalleryRequest {
 
 	public void setGalleryDescription(String galleryDescription) {
 		this.galleryDescription = galleryDescription;
+	}
+
+	public String getFromDate() {
+		return fromDate;
+	}
+
+	public void setFromDate(String fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public String getToDate() {
+		return toDate;
+	}
+
+	public void setToDate(String toDate) {
+		this.toDate = toDate;
 	}
 
 	public String getCreatedBy() {

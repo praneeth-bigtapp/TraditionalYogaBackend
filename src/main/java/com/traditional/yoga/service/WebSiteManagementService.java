@@ -650,6 +650,8 @@ public class WebSiteManagementService {
 			newGallery = new PhotoGalleryModel();
 			newGallery.setGalleryName(photoGalleryRequestDto.getGalleryName());
 			newGallery.setGalleryDescription(photoGalleryRequestDto.getGalleryDescription());
+			newGallery.setFromDate(photoGalleryRequestDto.getFromDate());
+			newGallery.setToDate(photoGalleryRequestDto.getToDate());
 			newGallery.setCreatedDate(generalUtils.getCurrentDate());
 			photoGalleryRepository.save(newGallery);
 			httpStatus = HttpStatus.OK;
@@ -670,6 +672,8 @@ public class WebSiteManagementService {
 		if (photoGalleryDb != null) {
 			photoGalleryDb.setGalleryName(photoGalleryRequestDto.getGalleryName());
 			photoGalleryDb.setGalleryDescription(photoGalleryRequestDto.getGalleryDescription());
+			photoGalleryDb.setFromDate(photoGalleryRequestDto.getFromDate());
+			photoGalleryDb.setToDate(photoGalleryRequestDto.getToDate());
 			photoGalleryDb.setUpdatedDate(generalUtils.getCurrentDate());
 			photoGalleryRepository.save(photoGalleryDb);
 			httpStatus = HttpStatus.OK;

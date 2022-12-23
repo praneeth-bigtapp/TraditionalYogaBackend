@@ -264,9 +264,9 @@ public class StudentService {
 		try {
 			if (operation.equals(Constants.ADD)) {
 				addBlockListUser(blockListDto);
-			} else if (operation.equals(Constants.UPDATE)) {
-				updateBlockListUser(blockListDto);
 			} else if (operation.equals(Constants.SAVE)) {
+				updateBlockListUser(blockListDto);
+			} else if (operation.equals(Constants.DELETE)) {
 				deleteBlockListUser(blockListDto);
 			} else {
 				message = "Operation Doesn't exist";
@@ -288,7 +288,7 @@ public class StudentService {
 		BlackListModel blackListNew = blackListUserRepository.getBlackListByEmail(blockListDto.getBlacklistUserEmail());
 		if (blackListNew == null) {
 			Boolean validEmail = studentRepository.getCountByBlackList(blockListDto.getBlacklistUserEmail()) == 0;
-			if (Boolean.TRUE.equals(validEmail)) {
+			if (Boolean.FALSE.equals(validEmail)) {
 				BlackListModel newList = new BlackListModel();
 				newList.setBlacklistUserEmail(blockListDto.getBlacklistUserEmail());
 				newList.setComments(blockListDto.getComments());
@@ -318,7 +318,7 @@ public class StudentService {
 		BlackListModel blackListDb = blackListUserRepository.getBlackListById(blockListDto.getBlacklistUserId());
 		if (blackListDb != null) {
 			Boolean validEmail = studentRepository.getCountByBlackList(blockListDto.getBlacklistUserEmail()) == 0;
-			if (Boolean.TRUE.equals(validEmail)) {
+			if (Boolean.FALSE.equals(validEmail)) {
 				blackListDb.setBlacklistUserEmail(blockListDto.getBlacklistUserEmail());
 				blackListDb.setComments(blockListDto.getComments());
 				blackListDb.setDate(generalUtils.getCurrentDate());
@@ -335,7 +335,7 @@ public class StudentService {
 				response = new Response(message, httpStatus.value(), message);
 			}
 		} else {
-			message = "User mail id Already is in Backlist";
+			message = "Backlisted Email Id is not present";
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
