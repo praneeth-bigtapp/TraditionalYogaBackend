@@ -1,6 +1,5 @@
 package com.traditional.yoga.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,7 +17,7 @@ public class NotificationModel {
 	@Column(name = "notification_id")
 	private int notificationId;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name = "category_id", referencedColumnName = "category_id")
 	private NotificationCategoryModel categoryId;
 

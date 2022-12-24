@@ -3,6 +3,7 @@ package com.traditional.yoga.dto.request;
 public class NotificationCategory {
 
 	private int categoryId;
+	
 	private String categoryName;
 
 	public int getCategoryId() {

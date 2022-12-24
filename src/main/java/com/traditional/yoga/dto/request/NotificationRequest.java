@@ -1,26 +1,30 @@
 package com.traditional.yoga.dto.request;
 
+import com.traditional.yoga.model.NotificationCategoryModel;
+
 public class NotificationRequest {
 
-	private int noticationId;
-	private int categoryId;
+	private int notificationId;
+	private NotificationCategoryModel categoryId;
 	private String title;
 	private String uploadFile;
 	private String message;
 
-	public int getNoticationId() {
-		return noticationId;
+	
+
+	public int getNotificationId() {
+		return notificationId;
 	}
 
-	public void setNoticationId(int noticationId) {
-		this.noticationId = noticationId;
+	public void setNotificationId(int notificationId) {
+		this.notificationId = notificationId;
 	}
 
-	public int getCategoryId() {
+	public NotificationCategoryModel getCategoryId() {
 		return categoryId;
 	}
 
-	public void setCategoryId(int categoryId) {
+	public void setCategoryId(NotificationCategoryModel categoryId) {
 		this.categoryId = categoryId;
 	}
 
