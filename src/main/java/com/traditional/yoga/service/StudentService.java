@@ -32,6 +32,7 @@ import com.traditional.yoga.repository.QualificationRepository;
 import com.traditional.yoga.repository.RoleRepository;
 import com.traditional.yoga.repository.StudentRepository;
 import com.traditional.yoga.repository.VolunteerRepository;
+import com.traditional.yoga.repository.VolunteeringCategoryRepository;
 import com.traditional.yoga.utils.Constants;
 import com.traditional.yoga.utils.GeneralUtils;
 
@@ -73,6 +74,9 @@ public class StudentService {
 	@Autowired
 	BlackListUserRepository blackListUserRepository;
 
+	@Autowired
+	VolunteeringCategoryRepository volunteeringCategoryRepository;
+
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
 	String message;
@@ -99,6 +103,9 @@ public class StudentService {
 			} else if (operationType.equals("gender")) {
 				httpStatus = HttpStatus.OK;
 				return genderRepository.findAll();
+			} else if (operationType.equals("Volunteeringcategory")) {
+				httpStatus = HttpStatus.OK;
+				return volunteeringCategoryRepository.findAll();
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
