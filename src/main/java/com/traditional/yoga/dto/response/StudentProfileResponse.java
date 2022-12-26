@@ -1,6 +1,6 @@
 package com.traditional.yoga.dto.response;
 
-import com.traditional.yoga.model.CourseModel;
+import com.traditional.yoga.model.CourseListModel;
 
 public class StudentProfileResponse {
 
@@ -18,7 +18,7 @@ public class StudentProfileResponse {
 	private String regesiterDate;
 	private String registedIpAddress;
 	private String active;
-	private CourseModel course;
+	private CourseListModel course;
 
 	public int getStudentId() {
 		return studentId;
@@ -132,11 +132,11 @@ public class StudentProfileResponse {
 		this.active = active;
 	}
 
-	public CourseModel getCourse() {
+	public CourseListModel getCourse() {
 		return course;
 	}
 
-	public void setCourse(CourseModel course) {
+	public void setCourse(CourseListModel course) {
 		this.course = course;
 	}
 

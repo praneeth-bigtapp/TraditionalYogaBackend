@@ -23,7 +23,7 @@ import com.traditional.yoga.model.EPurchaseInformation;
 import com.traditional.yoga.model.StudentModel;
 import com.traditional.yoga.model.VolunteerModel;
 import com.traditional.yoga.repository.BlackListUserRepository;
-import com.traditional.yoga.repository.CourseRepository;
+import com.traditional.yoga.repository.CoursesListRepository;
 import com.traditional.yoga.repository.DonationRepository;
 import com.traditional.yoga.repository.EpurchaseInformation;
 import com.traditional.yoga.repository.GenderRepository;
@@ -48,7 +48,7 @@ public class StudentService {
 	StudentRepository studentRepository;
 
 	@Autowired
-	CourseRepository courseRepository;
+	CoursesListRepository courseRepository;
 
 	@Autowired
 	EpurchaseInformation epurchaseInformation;
@@ -376,7 +376,7 @@ public class StudentService {
 		StudentModel mapCourse = studentRepository.getStudentById(studentDto.getStudentId());
 		if (mapCourse != null) {
 			mapCourse.setStudentCategory(studentDto.getStudentCategory());
-			mapCourse.setCourseId(courseRepository.getCourseById(studentDto.getCourseId()));
+			mapCourse.setCourseId(courseRepository.getcoursesListById(studentDto.getCourseId()));
 			studentRepository.save(mapCourse);
 			httpStatus = HttpStatus.OK;
 			message = "Student Course Mapped sucessfully";

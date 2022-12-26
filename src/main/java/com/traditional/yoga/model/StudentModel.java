@@ -24,7 +24,7 @@ public class StudentModel {
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "course_id", referencedColumnName = "course_id")
-	private CourseModel courseId;
+	private CourseListModel courseId;
 
 	@Column(name = "name")
 	private String name;
@@ -90,11 +90,11 @@ public class StudentModel {
 		this.roleId = roleId;
 	}
 
-	public CourseModel getCourseId() {
+	public CourseListModel getCourseId() {
 		return courseId;
 	}
 
-	public void setCourseId(CourseModel courseId) {
+	public void setCourseId(CourseListModel courseId) {
 		this.courseId = courseId;
 	}
 

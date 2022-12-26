@@ -12,12 +12,14 @@ import com.traditional.yoga.dto.request.AddCoursemateialRequest;
 import com.traditional.yoga.dto.request.CoursesListRequest;
 import com.traditional.yoga.dto.request.MaterialCategoryRequest;
 import com.traditional.yoga.dto.request.OnlineExamReqest;
+import com.traditional.yoga.dto.request.PraticeMediaRequest;
 import com.traditional.yoga.dto.request.TaskRequest;
 import com.traditional.yoga.dto.request.TestimoalRequest;
 import com.traditional.yoga.model.AddCoursesMaterialModel;
 import com.traditional.yoga.model.CourseListModel;
 import com.traditional.yoga.model.MaterialCategoryModel;
 import com.traditional.yoga.model.OnlineExamsModel;
+import com.traditional.yoga.model.PraticeMediaModel;
 import com.traditional.yoga.model.TaskModel;
 import com.traditional.yoga.model.TestimonalsModel;
 import com.traditional.yoga.repository.AddMaterialRepository;
@@ -27,6 +29,7 @@ import com.traditional.yoga.repository.LevelofTestRepository;
 import com.traditional.yoga.repository.MaterialCategoryRepostiory;
 import com.traditional.yoga.repository.MediaRepository;
 import com.traditional.yoga.repository.OnlineExamRepository;
+import com.traditional.yoga.repository.PraticeMediaRepository;
 import com.traditional.yoga.repository.TaskRepository;
 import com.traditional.yoga.repository.TestimonalRepository;
 import com.traditional.yoga.repository.TypeofTestRepository;
@@ -71,6 +74,11 @@ public class CoursesandOnlineexamService {
 	@Autowired
 	AddMaterialRepository addMaterialRepository;
 
+	/// new
+
+	@Autowired
+	PraticeMediaRepository praticeMediaRepository;
+
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
 	String message;
@@ -108,6 +116,9 @@ public class CoursesandOnlineexamService {
 			} else if (operationType.equals("coursematerial")) {
 				httpStatus = HttpStatus.OK;
 				return addMaterialRepository.findAll();
+			} else if (operationType.equals("praticeMedia")) {
+				httpStatus = HttpStatus.OK;
+				return praticeMediaRepository.findAll();
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -633,4 +644,103 @@ public class CoursesandOnlineexamService {
 		}
 
 	}
+
+	// pratice-Media
+
+	public Object managemateials(String operation, PraticeMediaRequest mediaDto) {
+
+		this.httpStatus = HttpStatus.OK;
+		try {
+
+			if (operation.equals(Constants.ADD)) {
+				addMedia(mediaDto);
+			} else if (operation.equals(Constants.SAVE)) {
+				updateMedia(mediaDto);
+			} else if (operation.equals(Constants.DELETE)) {
+				deleteMedia(mediaDto.getMediaId());
+			} else {
+				message = Constants.OPERATION_ERROR;
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Exception in adding materials";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	private void addMedia(PraticeMediaRequest mediaDto) {
+		PraticeMediaModel mediaNew = praticeMediaRepository.getmediaById(mediaDto.getMediaId());
+		if (mediaNew == null) {
+			PraticeMediaModel mediaList = new PraticeMediaModel();
+			mediaList.setCourseId(mediaDto.getCourseId());
+			mediaList.setPraticeDate(mediaDto.getPraticeDate());
+			mediaList.setPraticeTime(mediaDto.getPraticeTime());
+			mediaList.setVideoLink(mediaDto.getVideoLink());
+			mediaList.setVideoTitle(mediaDto.getVideoTitle());
+			mediaList.setDurationVideo(mediaDto.getDurationVideo());
+			mediaList.setMetaKeyword(mediaDto.getMetaKeyword());
+			mediaList.setFileUpload(mediaDto.getFileUpload());
+			mediaList.setDescription(mediaDto.getDescription());
+			mediaList.setInstruction(mediaDto.getInstruction());
+			mediaList.setCreatedDate(mediaDto.getCreatedDate());
+			mediaList.setIsActive("Y");
+			praticeMediaRepository.save(mediaList);
+			message = "material to courses is added sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "material  already exists";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+
+	}
+
+	private void updateMedia(PraticeMediaRequest mediaDto) {
+		PraticeMediaModel media = praticeMediaRepository.getmediaById(mediaDto.getMediaId());
+		if (media == null) {
+			message = "media with ID " + mediaDto.getMediaId() + " not found";
+			httpStatus = HttpStatus.NOT_FOUND;
+			response = new Response(message, httpStatus.value(), message);
+		} else {
+			media.setCourseId(mediaDto.getCourseId());
+			media.setPraticeDate(mediaDto.getPraticeDate());
+			media.setPraticeTime(mediaDto.getPraticeTime());
+			media.setVideoLink(mediaDto.getVideoLink());
+			media.setVideoTitle(mediaDto.getVideoTitle());
+			media.setDurationVideo(mediaDto.getDurationVideo());
+			media.setMetaKeyword(mediaDto.getMetaKeyword());
+			media.setFileUpload(mediaDto.getFileUpload());
+			media.setDescription(mediaDto.getDescription());
+			media.setInstruction(mediaDto.getInstruction());
+			media.setUpdateDate(mediaDto.getUpdateDate());
+			media.setIsActive("Y");
+			praticeMediaRepository.save(media);
+			message = "media updated successfully";
+			httpStatus = HttpStatus.OK;
+			response = new Response(message, httpStatus.value(), null);
+		}
+	}
+
+	private void deleteMedia(int mediaId) {
+		PraticeMediaModel media = praticeMediaRepository.getmediaById(mediaId);
+		if (media == null) {
+			message = "media with ID " + mediaId + " not found";
+			httpStatus = HttpStatus.NOT_FOUND;
+			response = new Response(message, httpStatus.value(), message);
+		} else {
+			praticeMediaRepository.delete(media);
+			message = "media deleted successfully";
+			httpStatus = HttpStatus.OK;
+			response = new Response(message, httpStatus.value(), null);
+		}
+	}
+
 }

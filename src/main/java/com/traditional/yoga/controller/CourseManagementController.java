@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.traditional.yoga.dto.request.AudioManagementRequest;
-import com.traditional.yoga.dto.request.ClassMediaRequest;
 import com.traditional.yoga.dto.request.CourseMediaPracticeRequest;
 import com.traditional.yoga.dto.request.CourseMediaRequest;
-import com.traditional.yoga.dto.request.CourseRequest;
 import com.traditional.yoga.dto.request.PerformaceRatingRequest;
 import com.traditional.yoga.service.CourseManagementService;
 
@@ -38,19 +36,6 @@ public class CourseManagementController {
 		return courseManagementService.getAll(operation);
 	}
 
-//	Course
-	@PostMapping("/addCourse")
-	public Object courseManage(@RequestHeader("token") String token, @RequestBody CourseRequest courseDto) {
-		LOG.info("Entering into Course");
-		return courseManagementService.addCourse(courseDto);
-	}
-
-	@PostMapping("/classMedia")
-	public Object classMediaManage(@RequestHeader("token") String token, @RequestBody ClassMediaRequest classMediaDto,
-			@RequestParam("operation") String operation) {
-		LOG.info("Entering into class Media");
-		return courseManagementService.classMediaManage(classMediaDto, operation);
-	}
 
 	@PostMapping("/courseMedia")
 	public Object courseMediaManage(@RequestHeader("token") String token,

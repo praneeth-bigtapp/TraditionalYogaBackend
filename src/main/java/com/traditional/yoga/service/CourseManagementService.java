@@ -14,27 +14,20 @@ import com.traditional.yoga.dto.ParameterSectionA;
 import com.traditional.yoga.dto.ParameterSectionB;
 import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.AudioManagementRequest;
-import com.traditional.yoga.dto.request.ClassMediaRequest;
 import com.traditional.yoga.dto.request.CourseMediaPracticeRequest;
 import com.traditional.yoga.dto.request.CourseMediaRequest;
-import com.traditional.yoga.dto.request.CourseRequest;
 import com.traditional.yoga.dto.request.PerformaceRatingRequest;
 import com.traditional.yoga.dto.response.ParameterResponse;
 import com.traditional.yoga.model.AudioManagementModel;
-import com.traditional.yoga.model.ClassMediaModel;
 import com.traditional.yoga.model.CourseMediaModel;
 import com.traditional.yoga.model.CourseMediaPracticeModel;
-import com.traditional.yoga.model.CourseModel;
 import com.traditional.yoga.model.PerformaceRatingModel;
 import com.traditional.yoga.repository.AudioCategoryLibaryRepository;
 import com.traditional.yoga.repository.AudioManagementRepository;
-import com.traditional.yoga.repository.ClassMediaRepository;
-import com.traditional.yoga.repository.CourseCategoryRepository;
 import com.traditional.yoga.repository.CourseMediaCategoryRepository;
 import com.traditional.yoga.repository.CourseMediaPracticeRepository;
 import com.traditional.yoga.repository.CourseMediaRepository;
 import com.traditional.yoga.repository.CourseMediaTypeRepository;
-import com.traditional.yoga.repository.CourseRepository;
 import com.traditional.yoga.repository.MasterAudioRepository;
 import com.traditional.yoga.repository.PerformaceRatingRepository;
 import com.traditional.yoga.utils.Constants;
@@ -44,14 +37,7 @@ public class CourseManagementService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CourseManagementService.class);
 
-	@Autowired
-	CourseCategoryRepository courseCategoryRepository;
-
-	@Autowired
-	CourseRepository courseRepository;
-
-	@Autowired
-	ClassMediaRepository classMediaRepository;
+	
 
 	@Autowired
 	CourseMediaRepository courseMediaRepository;
@@ -85,13 +71,7 @@ public class CourseManagementService {
 		LOG.info("Fetching Student related {} data", operationType);
 
 		try {
-			if (operationType.equals("courseCategory")) {
-				httpStatus = HttpStatus.OK;
-				return new ResponseEntity<>(courseCategoryRepository.findAll(), httpStatus);
-			} else if (operationType.equals("classMedia")) {
-				httpStatus = HttpStatus.OK;
-				return new ResponseEntity<>(classMediaRepository.findAll(), httpStatus);
-			} else if (operationType.equals("courseMediaCategory")) {
+			if (operationType.equals("courseMediaCategory")) {
 				httpStatus = HttpStatus.OK;
 				return new ResponseEntity<>(courseMediaCategoryRepository.findAll(), httpStatus);
 			} else if (operationType.equals("courseMediaPractice")) {
@@ -122,101 +102,6 @@ public class CourseManagementService {
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			response = new Response(message, httpStatus.value(), httpStatus.getReasonPhrase());
 			return new ResponseEntity<>(response, httpStatus);
-		}
-	}
-
-	public Object addCourse(CourseRequest courseDto) {
-		CourseModel newCourse = new CourseModel();
-		newCourse.setCategory(courseDto.getCategory());
-		newCourse.setCourseName(courseDto.getCourseName());
-		newCourse.setCourseType(courseDto.getCourseType());
-		newCourse.setSection(courseDto.getSection());
-		newCourse.setEndDate(courseDto.getEndDate());
-		newCourse.setStartDate(courseDto.getStartDate());
-		newCourse.setCourseDuration(courseDto.getCourseDuration());
-		newCourse.setVerficationRequired(courseDto.getVerficationRequired());
-		newCourse.setCurrentStatus(courseDto.getCurrentStatus());
-		courseRepository.save(newCourse);
-
-		httpStatus = HttpStatus.OK;
-		message = "Course added sucessfully";
-		LOG.info(message);
-		response = new Response(message, httpStatus.value(), null);
-		return new ResponseEntity<>(response, httpStatus);
-	}
-
-	public Object classMediaManage(ClassMediaRequest classMediaDto, String operation) {
-		try {
-			if (operation.equals(Constants.ADD)) {
-				addClassMedia(classMediaDto);
-			} else if (operation.equals(Constants.SAVE)) {
-				updateClassMedia(classMediaDto);
-			} else if (operation.equals(Constants.DELETE)) {
-				deleteClassMedia(classMediaDto);
-			} else {
-				message = Constants.OPERATION_ERROR;
-				httpStatus = HttpStatus.CONFLICT;
-				LOG.error(message);
-				response = new Response(message, httpStatus.value(), message);
-			}
-		} catch (Exception e) {
-			message = "Exception in Class Media";
-			httpStatus = HttpStatus.EXPECTATION_FAILED;
-			LOG.error(message);
-			LOG.error(e.getLocalizedMessage());
-			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
-		}
-		return new ResponseEntity<>(response, httpStatus);
-	}
-
-	private void addClassMedia(ClassMediaRequest classMediaDto) {
-		ClassMediaModel newClassMedia = new ClassMediaModel();
-		newClassMedia.setCourseId(courseRepository.getCourseById(classMediaDto.getCourseId()));
-		newClassMedia.setDate(classMediaDto.getDate());
-		newClassMedia.setNoOfMediaFiles(classMediaDto.getNoOfMediaFiles());
-		newClassMedia.setTypeOfClass(classMediaDto.getTypeOfClass());
-
-		classMediaRepository.save(newClassMedia);
-		httpStatus = HttpStatus.OK;
-		message = "Class Media added sucessfully";
-		LOG.info(message);
-		response = new Response(message, httpStatus.value(), null);
-	}
-
-	private void updateClassMedia(ClassMediaRequest classMediaDto) {
-		ClassMediaModel classMediaDb = classMediaRepository.getClassMediaById(classMediaDto.getClassMediaId());
-		if (classMediaDb != null) {
-			classMediaDb.setCourseId(courseRepository.getCourseById(classMediaDto.getCourseId()));
-			classMediaDb.setDate(classMediaDto.getDate());
-			classMediaDb.setNoOfMediaFiles(classMediaDto.getNoOfMediaFiles());
-			classMediaDb.setTypeOfClass(classMediaDto.getTypeOfClass());
-
-			classMediaRepository.save(classMediaDb);
-			httpStatus = HttpStatus.OK;
-			message = "Class Media updated sucessfully";
-			LOG.info(message);
-			response = new Response(message, httpStatus.value(), null);
-		} else {
-			message = "Class Media is not exist";
-			httpStatus = HttpStatus.CONFLICT;
-			LOG.error(message);
-			response = new Response(message, httpStatus.value(), message);
-		}
-	}
-
-	private void deleteClassMedia(ClassMediaRequest classMediaDto) {
-		ClassMediaModel classMediaDb = classMediaRepository.getClassMediaById(classMediaDto.getClassMediaId());
-		if (classMediaDb != null) {
-			classMediaRepository.deleteById(classMediaDto.getClassMediaId());
-			httpStatus = HttpStatus.OK;
-			message = "Class Media deleted sucessfully";
-			LOG.info(message);
-			response = new Response(message, httpStatus.value(), null);
-		} else {
-			message = "Class Media is not exist";
-			httpStatus = HttpStatus.CONFLICT;
-			LOG.error(message);
-			response = new Response(message, httpStatus.value(), message);
 		}
 	}
 
@@ -494,8 +379,8 @@ public class CourseManagementService {
 				if (id == 2) {
 					ParameterSectionA parameterSectionA = new ParameterSectionA();
 					parameterSectionA.setPerformanceId(rating.getId());
-					parameterSectionA.setCourseId(rating.getCourseId().getCourseId());
-					parameterSectionA.setCourseName(rating.getCourseId().getCourseName());
+					parameterSectionA.setCourseId(rating.getCourseId().getCoursesId());
+					parameterSectionA.setCourseName(rating.getCourseId().getCoursesName());
 					parameterSectionA.setParametersId(rating.getParametersId().getParametersId());
 					parameterSectionA.setParametersName(rating.getParametersId().getParametersName());
 					parameterSectionA.setRatingGood(rating.getRatingGood());
@@ -507,8 +392,8 @@ public class CourseManagementService {
 				} else if (id == 1) {
 					ParameterSectionB parameterSectionB = new ParameterSectionB();
 					parameterSectionB.setPerformanceId(rating.getId());
-					parameterSectionB.setCourseId(rating.getCourseId().getCourseId());
-					parameterSectionB.setCourseName(rating.getCourseId().getCourseName());
+					parameterSectionB.setCourseId(rating.getCourseId().getCoursesId());
+					parameterSectionB.setCourseName(rating.getCourseId().getCoursesName());
 					parameterSectionB.setParametersId(rating.getParametersId().getParametersId());
 					parameterSectionB.setParametersName(rating.getParametersId().getParametersName());
 					parameterSectionB.setRating(rating.getRatingGood());
@@ -630,7 +515,7 @@ public class CourseManagementService {
 		newAudio.setAudioDuration(audioManagementDto.getAudioDuration());
 		newAudio.setMetakey(audioManagementDto.getMetakey());
 		newAudio.setIsActive(audioManagementDto.getActive());
- 		audioManagementRepository.save(newAudio);
+		audioManagementRepository.save(newAudio);
 		message = "Audio details added sucessfully";
 		LOG.info(message);
 		response = new Response(message, httpStatus.value(), null);
