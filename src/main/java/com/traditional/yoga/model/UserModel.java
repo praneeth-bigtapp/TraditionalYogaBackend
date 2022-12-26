@@ -26,7 +26,7 @@ public class UserModel {
 	private String email;
 	
 	@Column(name = "mobile")
-	private Integer mobile;
+	private Long mobile;
 	
 	@Column(name = "role_id")
 	private Integer roleId;
@@ -81,11 +81,11 @@ public class UserModel {
 		this.email = email;
 	}
 
-	public Integer getMobile() {
+	public Long getMobile() {
 		return mobile;
 	}
 
-	public void setMobile(Integer mobile) {
+	public void setMobile(Long mobile) {
 		this.mobile = mobile;
 	}
 

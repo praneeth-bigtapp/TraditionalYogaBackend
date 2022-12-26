@@ -12,10 +12,10 @@ import com.traditional.yoga.model.RolePermissionModel;
 @Repository
 public interface RolePermissionRepository extends JpaRepository<RolePermissionModel, Integer> {
 
-	@Query(value = "SELECT * FROM `role_permissions` WHERE `role_Id`=:roleId", nativeQuery = true)
+	@Query(value = "SELECT * FROM `role_permissions` WHERE `role_Id`=:roleId AND `permission_id`<>6", nativeQuery = true)
 	List<RolePermissionModel> getPermissionByroleId(@Param("roleId") int roleId);
-	
-	@Query(value="SELECT COUNT(*) FROM `role_permissions` WHERE `role_Id`=:roleId AND `sub_module_id` =:subModuleId AND permission_id<>6", nativeQuery = true)
+
+	@Query(value = "SELECT COUNT(*) FROM `role_permissions` WHERE `role_Id`=:roleId AND `sub_module_id` =:subModuleId AND permission_id<>6", nativeQuery = true)
 	int findCountOfSubModulesPermissions(@Param("roleId") int roleId, @Param("subModuleId") int subModuleId);
-	
+
 }

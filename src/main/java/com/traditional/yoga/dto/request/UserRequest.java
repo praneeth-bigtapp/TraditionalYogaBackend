@@ -6,7 +6,7 @@ public class UserRequest {
 	private String userName;
 	private String password;
 	private String email;
-	private Integer mobile;
+	private Long mobile;
 	private Integer roleId;
 	private Integer ageFrom;
 	private Integer ageTo;
@@ -47,11 +47,11 @@ public class UserRequest {
 		this.email = email;
 	}
 
-	public Integer getMobile() {
+	public Long getMobile() {
 		return mobile;
 	}
 
-	public void setMobile(Integer mobile) {
+	public void setMobile(Long mobile) {
 		this.mobile = mobile;
 	}
 

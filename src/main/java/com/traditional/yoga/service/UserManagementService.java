@@ -328,7 +328,7 @@ public class UserManagementService {
 			RoleModel newRole = new RoleModel();
 			newRole.setRoleName(roleDto.getRoleName());
 			newRole.setRoleId(roleDto.getRoleId());
-			newRole.setActive("Y");
+			newRole.setActive(Constants.YES);
 			roleRepository.save(newRole);
 			message = "Role added sucessfully";
 			LOG.info(message);
@@ -557,7 +557,7 @@ public class UserManagementService {
 			SubModuleModel newMenu = new SubModuleModel();
 			newMenu.setModuleId(modelRepository.getModuleById(subMenuDto.getMenuId()));
 			newMenu.setSubModuleName(subMenuDto.getSubMenuName());
-			newMenu.setStatus("Y");
+			newMenu.setStatus(Constants.YES);
 			subModelRepository.save(newMenu);
 			message = "Sub-Menu added sucessfully";
 			LOG.info(message);
@@ -577,10 +577,11 @@ public class UserManagementService {
 			List<RoleModel> role = roleRepository.findAll();
 			for (RoleModel eachRole : role) {
 				RolePermissionModel updateRolePermission = new RolePermissionModel();
-				updateRolePermission.setRoleId(eachRole.getRoleId());
-				updateRolePermission.setModuleId(subMenu.getModuleId().getModuleId());
-				updateRolePermission.setSubModuleId(subMenu.getSubModuleId());
-				updateRolePermission.setPermissionId(6);
+				updateRolePermission.setRole(roleRepository.getRoleById(eachRole.getRoleId()));
+				updateRolePermission.setModule(modelRepository.getModuleById(subMenu.getModuleId().getModuleId()));
+				updateRolePermission.setSubModule(subModelRepository.getSubModuleById(subMenu.getSubModuleId()));
+				updateRolePermission
+						.setPermission(permissionRepository.getPermissionById(Constants.DEFAULT_PERMISSION));
 				rolePermissionRepository.save(updateRolePermission);
 			}
 		}
@@ -590,11 +591,10 @@ public class UserManagementService {
 		List<RoleModel> role = roleRepository.findAll();
 		for (RoleModel eachRole : role) {
 			RolePermissionModel updateRolePermission = new RolePermissionModel();
-			updateRolePermission.setRoleId(eachRole.getRoleId());
-			updateRolePermission.setPermissionId(6);
+			updateRolePermission.setRole(roleRepository.getRoleById(eachRole.getRoleId()));
+			updateRolePermission.setPermission(permissionRepository.getPermissionById(Constants.DEFAULT_PERMISSION));
 			rolePermissionRepository.save(updateRolePermission);
 		}
-
 	}
 
 	/**
@@ -604,18 +604,21 @@ public class UserManagementService {
 	 * @return
 	 */
 	public Object getPermissionsByRole(int roleId) {
-		this.httpStatus = HttpStatus.OK;
 		List<RolePermissionModel> rolePermissions = new ArrayList<>();
 		try {
 			rolePermissions = rolePermissionRepository.getPermissionByroleId(roleId);
 			message = "Role permission fetched sucessfully";
 			httpStatus = HttpStatus.OK;
 			LOG.info(message);
+			return new ResponseEntity<>(rolePermissions, httpStatus);
 		} catch (Exception e) {
-			message = "";
+			message = "Exception in Get Permissions";
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+			return new ResponseEntity<>(message, httpStatus);
 		}
-		return new ResponseEntity<>(rolePermissions, httpStatus);
 	}
 
 	/**
@@ -677,10 +680,10 @@ public class UserManagementService {
 			for (SubModuleModel eachSubModule : moduleSubModuleList) {
 				subModuleId = eachSubModule.getSubModuleId();
 				rolePermissions = new RolePermissionModel();
-				rolePermissions.setPermissionId(6);
-				rolePermissions.setModuleId(moduleId);
-				rolePermissions.setRoleId(roleId);
-				rolePermissions.setSubModuleId(subModuleId);
+				rolePermissions.setPermission(permissionRepository.getPermissionById(Constants.DEFAULT_PERMISSION));
+				rolePermissions.setModule(modelRepository.getModuleById(moduleId));
+				rolePermissions.setRole(roleRepository.getRoleById(roleId));
+				rolePermissions.setSubModule(subModelRepository.getSubModuleById(subModuleId));
 				rolePermissionsList.add(rolePermissions);
 			}
 		}

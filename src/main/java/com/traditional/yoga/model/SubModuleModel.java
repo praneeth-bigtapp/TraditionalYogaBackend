@@ -25,6 +25,12 @@ public class SubModuleModel {
 
 	@Column(name = "sub_module_name")
 	private String subModuleName;
+	
+	@Column(name = "routing_link")
+	private String routingLink;
+	
+	@Column(name = "icon")
+	private String icon;
 
 	@Column(name = "status")
 	private String status;
@@ -51,6 +57,22 @@ public class SubModuleModel {
 
 	public void setSubModuleName(String subModuleName) {
 		this.subModuleName = subModuleName;
+	}
+
+	public String getRoutingLink() {
+		return routingLink;
+	}
+
+	public void setRoutingLink(String routingLink) {
+		this.routingLink = routingLink;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
 	}
 
 	public String getStatus() {

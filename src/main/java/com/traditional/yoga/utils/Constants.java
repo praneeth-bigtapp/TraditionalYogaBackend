@@ -37,6 +37,9 @@ public class Constants {
 	public static final String ROLE_EXIST = ROLE + " " + ALREADY_EXIST;
 	public static final String MENU_ERROR = MENU + " " + DOES_NOT_EXIST;
 	public static final String MENU_EXIST = MENU + " " + ALREADY_EXIST;
+	
+//	Role Permission
+	public static final int DEFAULT_PERMISSION = 6;
 
 //	Website Management
 	public static final String BANNER_EXCEPTION = EXCEPTION + " banner creation";

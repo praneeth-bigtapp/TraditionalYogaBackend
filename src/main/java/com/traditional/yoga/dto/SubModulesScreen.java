@@ -4,6 +4,8 @@ public class SubModulesScreen {
 
 	private int subModuleId;
 	private String subModuleName;
+	private String routingLink;
+	private String icon;
 	private int permissionId;
 	private String permissionName;
 
@@ -21,6 +23,22 @@ public class SubModulesScreen {
 
 	public void setSubModuleName(String subModuleName) {
 		this.subModuleName = subModuleName;
+	}
+
+	public String getRoutingLink() {
+		return routingLink;
+	}
+
+	public void setRoutingLink(String routingLink) {
+		this.routingLink = routingLink;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
 	}
 
 	public int getPermissionId() {

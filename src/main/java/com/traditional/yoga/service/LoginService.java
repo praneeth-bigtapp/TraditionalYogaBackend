@@ -18,11 +18,8 @@ import com.traditional.yoga.dto.RolePermissions;
 import com.traditional.yoga.dto.SubModulesScreen;
 import com.traditional.yoga.dto.request.LoginRequest;
 import com.traditional.yoga.dto.response.LoginResponse;
-import com.traditional.yoga.model.ModuleModel;
-import com.traditional.yoga.model.PermissionModel;
 import com.traditional.yoga.model.RoleModel;
 import com.traditional.yoga.model.RolePermissionModel;
-import com.traditional.yoga.model.SubModuleModel;
 import com.traditional.yoga.model.UserModel;
 import com.traditional.yoga.repository.ModelRepository;
 import com.traditional.yoga.repository.PermissionRepository;
@@ -44,7 +41,7 @@ public class LoginService {
 
 	@Autowired
 	ModelRepository modelRepository;
-
+	
 	@Autowired
 	SubModelRepository subModelRepository;
 
@@ -144,16 +141,18 @@ public class LoginService {
 
 //		Module
 		for (RolePermissionModel eachPermission : rolePermissions) {
-			ModuleModel moduleName = modelRepository.getModuleById(eachPermission.getModuleId());
-			SubModuleModel subModulesName = subModelRepository.getSubModuleById(eachPermission.getSubModuleId());
-			PermissionModel permissionName = permissionRepository.getPermissionById(eachPermission.getPermissionId());
+//			ModuleModel moduleName = modelRepository.getModuleById(eachPermission.getModuleId());
+//			SubModuleModel subModulesName = subModelRepository.getSubModuleById(eachPermission.getSubModuleId());
+//			PermissionModel permissionName = permissionRepository.getPermissionById(eachPermission.getPermissionId());
 
 			ModuleScreens moduleScreens = new ModuleScreens();
-			moduleScreens.setModuleName(moduleName.getModuleName());
-			moduleScreens.setSubModuleId(eachPermission.getSubModuleId());
-			moduleScreens.setSubModuleName(subModulesName.getSubModuleName());
-			moduleScreens.setPermissionId(eachPermission.getPermissionId());
-			moduleScreens.setPermissionName(permissionName.getPermissionName());
+			moduleScreens.setModuleName(eachPermission.getModule().getModuleName());
+			moduleScreens.setSubModuleId(eachPermission.getSubModule().getSubModuleId());
+			moduleScreens.setSubModuleName(eachPermission.getSubModule().getSubModuleName());
+			moduleScreens.setRoutingLink(eachPermission.getSubModule().getRoutingLink());
+			moduleScreens.setIcon(eachPermission.getSubModule().getIcon());
+			moduleScreens.setPermissionId(eachPermission.getPermission().getPermissionId());
+			moduleScreens.setPermissionName(eachPermission.getPermission().getPermissionName());
 
 			if (!moduleScreensMapList.contains(moduleScreens)) {
 				moduleScreensMapList.add(moduleScreens);
@@ -162,13 +161,15 @@ public class LoginService {
 
 //		Sub Module		
 		for (ModuleScreens eachModuleScreen : moduleScreensMapList) {
-			int permissionCount = rolePermissionRepository.findCountOfSubModulesPermissions(roleId,
-					eachModuleScreen.getSubModuleId());
-			if (permissionCount > 0) {
+//			int permissionCount = rolePermissionRepository.findCountOfSubModulesPermissions(roleId,
+//					eachModuleScreen.getSubModuleId());
+//			if (permissionCount > 0) {
 				SubModulesScreen subModules = new SubModulesScreen();
 
 				subModules.setSubModuleId(eachModuleScreen.getSubModuleId());
 				subModules.setSubModuleName(eachModuleScreen.getSubModuleName());
+				subModules.setRoutingLink(eachModuleScreen.getRoutingLink());
+				subModules.setIcon(eachModuleScreen.getIcon());
 				subModules.setPermissionId(eachModuleScreen.getPermissionId());
 				subModules.setPermissionName(eachModuleScreen.getPermissionName());
 
@@ -181,7 +182,7 @@ public class LoginService {
 							.get(eachModuleScreen.getModuleName());
 					moduleSubmoduleList.add(subModules);
 				}
-			}
+//			}
 		}
 
 //		Assign to permissions
