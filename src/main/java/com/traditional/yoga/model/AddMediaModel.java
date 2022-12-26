@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "material_media")
-public class AddMeidaModel {
+public class AddMediaModel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

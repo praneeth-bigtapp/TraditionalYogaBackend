@@ -20,7 +20,7 @@ public class PerformaceRatingModel {
 	private int id;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "course_id", referencedColumnName = "course_id")
+	@JoinColumn(name = "course_id", referencedColumnName = "courses_id")
 	private CourseListModel courseId;
 
 	@OneToOne(cascade = CascadeType.ALL)

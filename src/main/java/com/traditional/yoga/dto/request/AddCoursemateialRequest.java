@@ -1,6 +1,6 @@
 package com.traditional.yoga.dto.request;
 
-import com.traditional.yoga.model.AddMeidaModel;
+import com.traditional.yoga.model.AddMediaModel;
 import com.traditional.yoga.model.CourseListModel;
 import com.traditional.yoga.model.MaterialCategoryModel;
 
@@ -11,7 +11,7 @@ public class AddCoursemateialRequest {
 	private String addCategory;
 	private String addDescription;
 	private MaterialCategoryModel materialCategoryId;
-	private AddMeidaModel mediaId;
+	private AddMediaModel mediaId;
 	private String videoLink;
 	private String fileUpload;
 	private String message;
@@ -61,11 +61,11 @@ public class AddCoursemateialRequest {
 		this.materialCategoryId = materialCategoryId;
 	}
 
-	public AddMeidaModel getMediaId() {
+	public AddMediaModel getMediaId() {
 		return mediaId;
 	}
 
-	public void setMediaId(AddMeidaModel mediaId) {
+	public void setMediaId(AddMediaModel mediaId) {
 		this.mediaId = mediaId;
 	}
 

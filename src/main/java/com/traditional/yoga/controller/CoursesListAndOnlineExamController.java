@@ -17,6 +17,8 @@ import com.traditional.yoga.dto.request.AddCoursemateialRequest;
 import com.traditional.yoga.dto.request.CoursesListRequest;
 import com.traditional.yoga.dto.request.MaterialCategoryRequest;
 import com.traditional.yoga.dto.request.OnlineExamReqest;
+import com.traditional.yoga.dto.request.PraticeDocumentRequest;
+import com.traditional.yoga.dto.request.PraticeImageRequest;
 import com.traditional.yoga.dto.request.PraticeMediaRequest;
 import com.traditional.yoga.dto.request.TaskRequest;
 import com.traditional.yoga.dto.request.TestimoalRequest;
@@ -105,5 +107,22 @@ public class CoursesListAndOnlineExamController {
 		LOG.info("Entering into praticeMedia{} Method", operation);
 		return coursesListService.managemedia(operation, mediaDto);
 	}
+	
+	
+	@PostMapping("/praticeImageMedia")
+	public Object manageimage(@RequestHeader("token") String token, @RequestBody PraticeImageRequest imageDto,
+			@RequestParam("operation") String operation) {
+		authenticate(token);
+		LOG.info("Entering into praticeImage{} Method", operation);
+		return coursesListService.manageimage(operation, imageDto);
+	}
 
+	
+	@PostMapping("/praticedocumentMedia")
+	public Object manageDocument(@RequestHeader("token") String token, @RequestBody  PraticeDocumentRequest documentDto,
+			@RequestParam("operation") String operation) {
+		authenticate(token);
+		LOG.info("Entering into praticeDocument{} Method", operation);
+		return coursesListService.manageDocument(operation, documentDto);
+	}
 }

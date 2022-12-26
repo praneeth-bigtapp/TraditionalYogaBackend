@@ -34,7 +34,7 @@ public class AddCoursesMaterialModel {
 
 	@OneToOne
 	@JoinColumn(name = "media_id", referencedColumnName = "media_id")
-	private AddMeidaModel mediaId;
+	private AddMediaModel mediaId;
 
 	@Column(name = "Video_link")
 	private String videoLink;
@@ -100,11 +100,11 @@ public class AddCoursesMaterialModel {
 		this.materialCategoryId = materialCategoryId;
 	}
 
-	public AddMeidaModel getMediaId() {
+	public AddMediaModel getMediaId() {
 		return mediaId;
 	}
 
-	public void setMediaId(AddMeidaModel mediaId) {
+	public void setMediaId(AddMediaModel mediaId) {
 		this.mediaId = mediaId;
 	}
 

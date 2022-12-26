@@ -12,6 +12,8 @@ import com.traditional.yoga.dto.request.AddCoursemateialRequest;
 import com.traditional.yoga.dto.request.CoursesListRequest;
 import com.traditional.yoga.dto.request.MaterialCategoryRequest;
 import com.traditional.yoga.dto.request.OnlineExamReqest;
+import com.traditional.yoga.dto.request.PraticeDocumentRequest;
+import com.traditional.yoga.dto.request.PraticeImageRequest;
 import com.traditional.yoga.dto.request.PraticeMediaRequest;
 import com.traditional.yoga.dto.request.TaskRequest;
 import com.traditional.yoga.dto.request.TestimoalRequest;
@@ -19,6 +21,8 @@ import com.traditional.yoga.model.AddCoursesMaterialModel;
 import com.traditional.yoga.model.CourseListModel;
 import com.traditional.yoga.model.MaterialCategoryModel;
 import com.traditional.yoga.model.OnlineExamsModel;
+import com.traditional.yoga.model.PraticeDocumentModel;
+import com.traditional.yoga.model.PraticeImageModel;
 import com.traditional.yoga.model.PraticeMediaModel;
 import com.traditional.yoga.model.TaskModel;
 import com.traditional.yoga.model.TestimonalsModel;
@@ -29,6 +33,8 @@ import com.traditional.yoga.repository.LevelofTestRepository;
 import com.traditional.yoga.repository.MaterialCategoryRepostiory;
 import com.traditional.yoga.repository.MediaRepository;
 import com.traditional.yoga.repository.OnlineExamRepository;
+import com.traditional.yoga.repository.PraticeDocumentRepository;
+import com.traditional.yoga.repository.PraticeImageRepository;
 import com.traditional.yoga.repository.PraticeMediaRepository;
 import com.traditional.yoga.repository.TaskRepository;
 import com.traditional.yoga.repository.TestimonalRepository;
@@ -79,6 +85,12 @@ public class CoursesandOnlineexamService {
 	@Autowired
 	PraticeMediaRepository praticeMediaRepository;
 
+	@Autowired
+	PraticeImageRepository praticeImageRepository;
+
+	@Autowired
+	PraticeDocumentRepository praticeDocumentRepository;
+
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
 	String message;
@@ -119,6 +131,12 @@ public class CoursesandOnlineexamService {
 			} else if (operationType.equals("praticeMedia")) {
 				httpStatus = HttpStatus.OK;
 				return praticeMediaRepository.findAll();
+			} else if (operationType.equals("praticeImageMedia")) {
+				httpStatus = HttpStatus.OK;
+				return praticeImageRepository.findAll();
+			} else if (operationType.equals("praticeDocumentMedia")) {
+				httpStatus = HttpStatus.OK;
+				return praticeDocumentRepository.findAll();
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -688,7 +706,7 @@ public class CoursesandOnlineexamService {
 			mediaList.setFileUpload(mediaDto.getFileUpload());
 			mediaList.setDescription(mediaDto.getDescription());
 			mediaList.setInstruction(mediaDto.getInstruction());
-			mediaList.setCreatedDate(mediaDto.getCreatedDate());
+			mediaList.setCreatedDate(generalUtils.getCurrentDate());
 			mediaList.setIsActive("Y");
 			praticeMediaRepository.save(mediaList);
 			message = "material to courses is added sucessfully";
@@ -720,7 +738,7 @@ public class CoursesandOnlineexamService {
 			media.setFileUpload(mediaDto.getFileUpload());
 			media.setDescription(mediaDto.getDescription());
 			media.setInstruction(mediaDto.getInstruction());
-			media.setUpdateDate(mediaDto.getUpdateDate());
+			media.setUpdateDate(generalUtils.getCurrentDate());
 			media.setIsActive("Y");
 			praticeMediaRepository.save(media);
 			message = "media updated successfully";
@@ -739,6 +757,170 @@ public class CoursesandOnlineexamService {
 			praticeMediaRepository.delete(media);
 			message = "media deleted successfully";
 			httpStatus = HttpStatus.OK;
+			response = new Response(message, httpStatus.value(), null);
+		}
+	}
+
+	public Object manageimage(String operation, PraticeImageRequest imageDto) {
+
+		this.httpStatus = HttpStatus.OK;
+		try {
+
+			if (operation.equals(Constants.ADD)) {
+				addImage(imageDto);
+			} else if (operation.equals(Constants.SAVE)) {
+				updateImage(imageDto);
+			} else if (operation.equals(Constants.DELETE)) {
+				deleteImage(imageDto.getImageId());
+			} else {
+				message = Constants.OPERATION_ERROR;
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Exception in adding materials";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	private void addImage(PraticeImageRequest imageDto) {
+		PraticeImageModel imageNew = praticeImageRepository.getimageById(imageDto.getImageId());
+		if (imageNew == null) {
+			PraticeImageModel imageList = new PraticeImageModel();
+			imageList.setCourseId(imageDto.getCourseId());
+			imageList.setImageTitle(imageDto.getImageTitle());
+			imageList.setUploadFile(imageDto.getUploadFile());
+			imageList.setDescription(imageDto.getDescription());
+			imageList.setCreatedDate(generalUtils.getCurrentDate());
+			imageList.setIsActive("Y");
+			praticeImageRepository.save(imageList);
+			message = "material to courses is added sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "material  already exists";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+
+	}
+
+	private void updateImage(PraticeImageRequest imageDto) {
+		PraticeImageModel image = praticeImageRepository.getimageById(imageDto.getImageId());
+		if (image == null) {
+			message = "No image found with the given ID.";
+			httpStatus = HttpStatus.NOT_FOUND;
+			response = new Response(message, httpStatus.value(), message);
+		} else {
+			image.setCourseId(imageDto.getCourseId());
+			image.setImageTitle(imageDto.getImageTitle());
+			image.setUploadFile(imageDto.getUploadFile());
+			image.setDescription(imageDto.getDescription());
+			image.setUpdateDate(generalUtils.getCurrentDate());
+			image.setIsActive("Y");
+			praticeImageRepository.save(image);
+			message = "Image updated successfully.";
+			response = new Response(message, httpStatus.value(), null);
+		}
+	}
+
+	private void deleteImage(int imageId) {
+		PraticeImageModel image = praticeImageRepository.getimageById(imageId);
+		if (image == null) {
+			message = "No image found with the given ID.";
+			httpStatus = HttpStatus.NOT_FOUND;
+			response = new Response(message, httpStatus.value(), message);
+		} else {
+			praticeImageRepository.delete(image);
+			message = "Image deleted successfully.";
+			response = new Response(message, httpStatus.value(), null);
+		}
+	}
+
+	public Object manageDocument(String operation, PraticeDocumentRequest documentDto) {
+
+		this.httpStatus = HttpStatus.OK;
+		try {
+
+			if (operation.equals(Constants.ADD)) {
+				addDocument(documentDto);
+			} else if (operation.equals(Constants.SAVE)) {
+				updateDocument(documentDto);
+			} else if (operation.equals(Constants.DELETE)) {
+				deleteDocument(documentDto.getDocumentId());
+			} else {
+				message = Constants.OPERATION_ERROR;
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Exception in adding materials";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	private void addDocument(PraticeDocumentRequest documentDto) {
+		PraticeDocumentModel documentNew = praticeDocumentRepository.getdocumentById(documentDto.getDocumentId());
+		if (documentNew == null) {
+			PraticeDocumentModel documentList = new PraticeDocumentModel();
+			documentList.setCourseId(documentDto.getCourseId());
+			documentList.setDocumentTitle(documentDto.getDocumentTitle());
+			documentList.setUploadFile(documentDto.getUploadFile());
+			documentList.setDescription(documentDto.getDescription());
+			documentList.setCreatedDate(generalUtils.getCurrentDate());
+			documentList.setIsActive("Y");
+			praticeDocumentRepository.save(documentList);
+			message = "material to courses is added sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "material  already exists";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+
+	}
+
+	private void updateDocument(PraticeDocumentRequest documentDto) {
+		PraticeDocumentModel document = praticeDocumentRepository.getdocumentById(documentDto.getDocumentId());
+		if (document == null) {
+			message = "No document found with the given ID.";
+			httpStatus = HttpStatus.NOT_FOUND;
+			response = new Response(message, httpStatus.value(), message);
+		} else {
+			document.setCourseId(documentDto.getCourseId());
+			document.setDocumentTitle(documentDto.getDocumentTitle());
+			document.setUploadFile(documentDto.getUploadFile());
+			document.setDescription(documentDto.getDescription());
+			document.setUpdateDate(generalUtils.getCurrentDate());
+			document.setIsActive("Y");
+			praticeDocumentRepository.save(document);
+			message = "Document updated successfully.";
+			response = new Response(message, httpStatus.value(), null);
+		}
+	}
+
+	private void deleteDocument(int documentId) {
+		PraticeDocumentModel document = praticeDocumentRepository.getdocumentById(documentId);
+		if (document == null) {
+			message = "No document found with the given ID.";
+			httpStatus = HttpStatus.NOT_FOUND;
+			response = new Response(message, httpStatus.value(), message);
+		} else {
+			praticeDocumentRepository.delete(document);
+			message = "Document deleted successfully.";
 			response = new Response(message, httpStatus.value(), null);
 		}
 	}
