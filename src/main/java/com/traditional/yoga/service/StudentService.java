@@ -103,9 +103,12 @@ public class StudentService {
 			} else if (operationType.equals("gender")) {
 				httpStatus = HttpStatus.OK;
 				return genderRepository.findAll();
-			} else if (operationType.equals("Volunteeringcategory")) {
+			} else if (operationType.equals("VolunteerCategory")) {
 				httpStatus = HttpStatus.OK;
 				return volunteeringCategoryRepository.findAll();
+			} else if (operationType.equals("qualification")) {
+				httpStatus = HttpStatus.OK;
+				return qualificationRepository.findAll();
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
