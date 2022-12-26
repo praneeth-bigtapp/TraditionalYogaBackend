@@ -647,7 +647,7 @@ public class CoursesandOnlineexamService {
 
 	// pratice-Media
 
-	public Object managemateials(String operation, PraticeMediaRequest mediaDto) {
+	public Object managemedia(String operation, PraticeMediaRequest mediaDto) {
 
 		this.httpStatus = HttpStatus.OK;
 		try {
