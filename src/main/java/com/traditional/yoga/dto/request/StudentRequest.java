@@ -1,5 +1,9 @@
 package com.traditional.yoga.dto.request;
 
+/**
+ * @author bigtapp
+ *
+ */
 public class StudentRequest {
 
 	private int studentId;
@@ -20,6 +24,8 @@ public class StudentRequest {
 	private String emailId;
 	private String regesiterDate;
 	private String registedIpAddress;
+	private int statusId;
+	private String statusName;
 	private String active;
 
 	public int getStudentId() {
@@ -164,6 +170,22 @@ public class StudentRequest {
 
 	public void setRegistedIpAddress(String registedIpAddress) {
 		this.registedIpAddress = registedIpAddress;
+	}
+
+	public int getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(int statusId) {
+		this.statusId = statusId;
+	}
+
+	public String getStatusName() {
+		return statusName;
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
 	}
 
 	public String getActive() {

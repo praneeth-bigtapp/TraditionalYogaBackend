@@ -31,6 +31,7 @@ import com.traditional.yoga.repository.ProfessionsRepository;
 import com.traditional.yoga.repository.QualificationRepository;
 import com.traditional.yoga.repository.RoleRepository;
 import com.traditional.yoga.repository.StudentRepository;
+import com.traditional.yoga.repository.StudentStatusRepostiory;
 import com.traditional.yoga.repository.VolunteerRepository;
 import com.traditional.yoga.repository.VolunteeringCategoryRepository;
 import com.traditional.yoga.utils.Constants;
@@ -77,6 +78,9 @@ public class StudentService {
 	@Autowired
 	VolunteeringCategoryRepository volunteeringCategoryRepository;
 
+	@Autowired
+	StudentStatusRepostiory studentStatusRepostiory;
+
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
 	String message;
@@ -112,6 +116,9 @@ public class StudentService {
 			} else if (operationType.equals("volunteer")) {
 				httpStatus = HttpStatus.OK;
 				return volunteerRepository.findAll();
+			} else if (operationType.equals("studentStatus")) {
+				httpStatus = HttpStatus.OK;
+				return studentStatusRepostiory.findAll();
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -188,9 +195,10 @@ public class StudentService {
 			st.setEmailId(std.getEmailId());
 			st.setRegesiterDate(std.getRegesiterDate());
 			st.setRegistedIpAddress(std.getRegistedIpAddress());
+			st.setStatusId(std.getStatus().getStatusId());
+			st.setStatusName(std.getStatus().getStatusName());
 			st.setActive(std.getActive());
 			st.setCourse(std.getCourseId());
-
 			String roleName = roleRepository.getRoleById(std.getRoleId()).getRoleName();
 			st.setRole(roleName);
 

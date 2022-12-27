@@ -71,6 +71,10 @@ public class StudentModel {
 	@Column(name = "registed_ip_address")
 	private String registedIpAddress;
 
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "status_id", referencedColumnName = "status_id")
+	private StudentStatus status;
+
 	@Column(name = "is_active")
 	private String active;
 
@@ -216,6 +220,14 @@ public class StudentModel {
 
 	public void setRegistedIpAddress(String registedIpAddress) {
 		this.registedIpAddress = registedIpAddress;
+	}
+
+	public StudentStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(StudentStatus status) {
+		this.status = status;
 	}
 
 	public String getActive() {

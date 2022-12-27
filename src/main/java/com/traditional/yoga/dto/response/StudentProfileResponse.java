@@ -17,6 +17,8 @@ public class StudentProfileResponse {
 	private String emailId;
 	private String regesiterDate;
 	private String registedIpAddress;
+	private int statusId;
+	private String statusName;
 	private String active;
 	private CourseListModel course;
 
@@ -122,6 +124,22 @@ public class StudentProfileResponse {
 
 	public void setRegistedIpAddress(String registedIpAddress) {
 		this.registedIpAddress = registedIpAddress;
+	}
+
+	public int getStatusId() {
+		return statusId;
+	}
+
+	public void setStatusId(int statusId) {
+		this.statusId = statusId;
+	}
+
+	public String getStatusName() {
+		return statusName;
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
 	}
 
 	public String getActive() {
