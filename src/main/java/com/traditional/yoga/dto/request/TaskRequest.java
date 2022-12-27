@@ -7,6 +7,7 @@ public class TaskRequest {
 	private int taskId;
 	private String taskName;
 	private CourseListModel coursesId;
+	private String DateOfAssigement;
 	private String description;
 	private String mediafile;
 	private String dueDate;
@@ -30,6 +31,14 @@ public class TaskRequest {
 
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
+	}
+
+	public String getDateOfAssigement() {
+		return DateOfAssigement;
+	}
+
+	public void setDateOfAssigement(String dateOfAssigement) {
+		DateOfAssigement = dateOfAssigement;
 	}
 
 	public String getDescription() {
@@ -104,6 +113,4 @@ public class TaskRequest {
 		this.coursesId = coursesId;
 	}
 
-	
-	
 }

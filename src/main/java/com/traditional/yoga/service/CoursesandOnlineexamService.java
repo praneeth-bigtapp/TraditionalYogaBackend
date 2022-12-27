@@ -373,6 +373,7 @@ public class CoursesandOnlineexamService {
 		if (tasknew == null) {
 			TaskModel tasklist = new TaskModel();
 			tasklist.setCoursesId(taskDto.getCoursesId());
+			tasklist.setDateOfAssigement(taskDto.getDateOfAssigement());
 			tasklist.setTaskName(taskDto.getTaskName());
 			tasklist.setDescription(taskDto.getDescription());
 			tasklist.setMediafile(taskDto.getMediafile());
@@ -395,6 +396,7 @@ public class CoursesandOnlineexamService {
 		TaskModel taskDb = taskRepository.getTaskById(taskDto.getTaskId());
 		if (taskDb != null) {
 			taskDb.setCoursesId(taskDto.getCoursesId());
+			taskDb.setDateOfAssigement(taskDto.getDateOfAssigement());
 			taskDb.setTaskName(taskDto.getTaskName());
 			taskDb.setDescription(taskDto.getDescription());
 			taskDb.setMediafile(taskDto.getMediafile());

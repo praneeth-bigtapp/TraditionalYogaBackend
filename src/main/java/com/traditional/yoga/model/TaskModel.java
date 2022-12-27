@@ -20,10 +20,13 @@ public class TaskModel {
 
 	@Column(name = "task_name")
 	private String taskName;
-	
+
 	@OneToOne
 	@JoinColumn(name = "courses_id", referencedColumnName = "courses_id")
 	private CourseListModel coursesId;
+
+	@Column(name = "Date_of_assignment")
+	private String DateOfAssigement;
 
 	@Column(name = "description")
 	private String description;
@@ -63,6 +66,14 @@ public class TaskModel {
 
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
+	}
+
+	public String getDateOfAssigement() {
+		return DateOfAssigement;
+	}
+
+	public void setDateOfAssigement(String dateOfAssigement) {
+		DateOfAssigement = dateOfAssigement;
 	}
 
 	public String getDescription() {
@@ -136,7 +147,5 @@ public class TaskModel {
 	public void setCoursesId(CourseListModel coursesId) {
 		this.coursesId = coursesId;
 	}
-	
-	
 
 }
