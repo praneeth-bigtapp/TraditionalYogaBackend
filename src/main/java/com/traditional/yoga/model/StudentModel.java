@@ -23,7 +23,7 @@ public class StudentModel {
 	private int roleId;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "courses_id", referencedColumnName = "courses_id")
+	@JoinColumn(name = "course_id", referencedColumnName = "courses_id")
 	private CourseListModel courseId;
 
 	@Column(name = "name")

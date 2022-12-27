@@ -22,11 +22,11 @@ public class VolunteerModel {
 	@Column(name = "student_id")
 	private int studentId;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name = "category_id", referencedColumnName = "Volunteering_category_id")
 	private VolunteeringCategoryModel categoryName;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name = "course_id", referencedColumnName = "courses_id")
 	private CourseListModel courseId;
 
