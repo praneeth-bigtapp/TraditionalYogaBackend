@@ -1,10 +1,13 @@
 package com.traditional.yoga.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -19,11 +22,13 @@ public class VolunteerModel {
 	@Column(name = "student_id")
 	private int studentId;
 
-	@Column(name = "category_name")
-	private String categoryName;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "category_id", referencedColumnName = "Volunteering_category_id")
+	private VolunteeringCategoryModel categoryName;
 
-	@Column(name = "course_id")
-	private int courseId;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "course_id", referencedColumnName = "courses_id")
+	private CourseListModel courseId;
 
 	@Column(name = "start_date")
 	private String startDate;
@@ -53,19 +58,19 @@ public class VolunteerModel {
 		this.studentId = studentId;
 	}
 
-	public String getCategoryName() {
+	public VolunteeringCategoryModel getCategoryName() {
 		return categoryName;
 	}
 
-	public void setCategoryName(String categoryName) {
+	public void setCategoryName(VolunteeringCategoryModel categoryName) {
 		this.categoryName = categoryName;
 	}
 
-	public int getCourseId() {
+	public CourseListModel getCourseId() {
 		return courseId;
 	}
 
-	public void setCourseId(int courseId) {
+	public void setCourseId(CourseListModel courseId) {
 		this.courseId = courseId;
 	}
 

@@ -109,6 +109,9 @@ public class StudentService {
 			} else if (operationType.equals("qualification")) {
 				httpStatus = HttpStatus.OK;
 				return qualificationRepository.findAll();
+			} else if (operationType.equals("volunteer")) {
+				httpStatus = HttpStatus.OK;
+				return volunteerRepository.findAll();
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
