@@ -12,6 +12,7 @@ import com.traditional.yoga.dto.request.PraticeLibaryRequest;
 import com.traditional.yoga.model.PraticeLibaryModel;
 import com.traditional.yoga.repository.CategoryLibaryRepository;
 import com.traditional.yoga.repository.PraticeLibaryRepository;
+import com.traditional.yoga.repository.SubCategoryPraticeRepsoitory;
 import com.traditional.yoga.utils.Constants;
 
 @Service
@@ -24,6 +25,9 @@ public class PraticeLibaryService {
 	@Autowired
 	CategoryLibaryRepository categoryLibaryRepository;
 
+	@Autowired
+	SubCategoryPraticeRepsoitory subCategoryPraticeRepsoitory;
+
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
 	String message;
@@ -34,9 +38,11 @@ public class PraticeLibaryService {
 		try {
 			if (operationType.equals("praticeLibary")) {
 				httpStatus = HttpStatus.OK;
-				return new ResponseEntity<>(praticeLibaryRepository.findAll(), httpStatus);
+				return praticeLibaryRepository.findAll();
 			} else if (operationType.equals("categoryLibary")) {
 				return new ResponseEntity<>(categoryLibaryRepository.findAll(), httpStatus);
+			} else if (operationType.equals("subCategory")) {
+				return new ResponseEntity<>(subCategoryPraticeRepsoitory.findAll(), httpStatus);
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -57,12 +63,8 @@ public class PraticeLibaryService {
 
 		this.httpStatus = HttpStatus.OK;
 		try {
-			if (type.equals("recordSession")) {
+			if (type.equals("praticeLibary")) {
 				recordSession(operation, praticelibaryDto);
-			} else if (type.equals("shortVideo")) {
-				shortVideo(operation, praticelibaryDto);
-			} else if (type.equals("glimpses")) {
-				glimpses(operation, praticelibaryDto);
 			} else {
 				message = Constants.TYPE_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
@@ -106,7 +108,12 @@ public class PraticeLibaryService {
 		PraticeLibaryModel praticemodel = praticeLibaryRepository.getpraticeById(praticelibaryDto.getPraticeLibaryId());
 		if (praticemodel == null) {
 			PraticeLibaryModel newlibary = new PraticeLibaryModel();
-			newlibary.setCategoryId(Constants.RECORDED_SESSION);
+//			newlibary.setLibraryCategoryId(
+//					categoryLibaryRepository.getpraticecategoryById(praticelibaryDto.getLibraryCategoryId()));
+//			
+			newlibary.setLibraryCategoryId(praticelibaryDto.getLibraryCategoryId());
+			newlibary.setSubCategoryId(
+					subCategoryPraticeRepsoitory.getsubCategorybyId(praticelibaryDto.getSubCategoryId()));
 			newlibary.setVideoLink(praticelibaryDto.getVideoLink());
 			newlibary.setDuration(praticelibaryDto.getDuration());
 			newlibary.setTitle(praticelibaryDto.getTitle());
@@ -114,7 +121,7 @@ public class PraticeLibaryService {
 			newlibary.setMetaKeyword(praticelibaryDto.getMetaKeyword());
 
 			praticeLibaryRepository.save(newlibary);
-			message = "Record-session video link is  added sucessfully";
+			message = "pratice Libary is  added sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
@@ -128,14 +135,19 @@ public class PraticeLibaryService {
 	private void updateRecordSession(PraticeLibaryRequest praticelibaryDto) {
 		PraticeLibaryModel praticeDb = praticeLibaryRepository.getpraticeById(praticelibaryDto.getPraticeLibaryId());
 		if (praticeDb != null) {
-			praticeDb.setCategoryId(Constants.RECORDED_SESSION);
+
+//			praticeDb.setLibraryCategoryId(
+//					categoryLibaryRepository.getpraticecategoryById(praticelibaryDto.getLibraryCategoryId()));
+			praticeDb.setLibraryCategoryId(praticelibaryDto.getLibraryCategoryId());
+			praticeDb.setSubCategoryId(
+					subCategoryPraticeRepsoitory.getsubCategorybyId(praticelibaryDto.getSubCategoryId()));
 			praticeDb.setVideoLink(praticelibaryDto.getVideoLink());
 			praticeDb.setDuration(praticelibaryDto.getDuration());
 			praticeDb.setTitle(praticelibaryDto.getTitle());
 			praticeDb.setMessage(praticelibaryDto.getMessage());
 			praticeDb.setMetaKeyword(praticelibaryDto.getMetaKeyword());
 			praticeLibaryRepository.save(praticeDb);
-			message = "Pratice Libary Record-session video link is  updated sucessfully";
+			message = "Pratice Libary  is  updated sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
@@ -150,179 +162,11 @@ public class PraticeLibaryService {
 		PraticeLibaryModel praticeDb = praticeLibaryRepository.getpraticeById(praticelibaryDto.getPraticeLibaryId());
 		if (praticeDb != null) {
 			praticeLibaryRepository.deleteById(praticelibaryDto.getPraticeLibaryId());
-			message = "Pratice Libary Record-session video link is  deleted sucessfully";
+			message = "Pratice Libary is  deleted sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
 			message = "Pratice Libary is not exist";
-			httpStatus = HttpStatus.CONFLICT;
-			LOG.error(message);
-			response = new Response(message, httpStatus.value(), message);
-		}
-	}
-
-	private void shortVideo(String operation, PraticeLibaryRequest praticelibaryDto) {
-		try {
-			if (operation.equals(Constants.ADD)) {
-				addShortVideo(praticelibaryDto);
-			} else if (operation.equals(Constants.SAVE)) {
-				updateShortVideo(praticelibaryDto);
-			} else if (operation.equals(Constants.DELETE)) {
-				deleteShortVideo(praticelibaryDto);
-			} else {
-				message = Constants.OPERATION_ERROR;
-				httpStatus = HttpStatus.CONFLICT;
-				LOG.error(message);
-				response = new Response(message, httpStatus.value(), message);
-			}
-		} catch (Exception e) {
-			message = "Exception in Short Video";
-			httpStatus = HttpStatus.EXPECTATION_FAILED;
-			LOG.error(message);
-			LOG.error(e.getLocalizedMessage());
-			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
-		}
-	}
-
-	private void addShortVideo(PraticeLibaryRequest praticelibaryDto) {
-		PraticeLibaryModel praticemodel = praticeLibaryRepository.getpraticeById(praticelibaryDto.getPraticeLibaryId());
-		if (praticemodel == null) {
-			PraticeLibaryModel newlibary = new PraticeLibaryModel();
-			newlibary.setCategoryId(Constants.SHORT_VIDEOS);
-			newlibary.setVideoLink(praticelibaryDto.getVideoLink());
-			newlibary.setDuration(praticelibaryDto.getDuration());
-			newlibary.setTitle(praticelibaryDto.getTitle());
-			newlibary.setMessage(praticelibaryDto.getMessage());
-			newlibary.setMetaKeyword(praticelibaryDto.getMetaKeyword());
-
-			praticeLibaryRepository.save(newlibary);
-			message = "Short video link is  added sucessfully";
-			LOG.info(message);
-			response = new Response(message, httpStatus.value(), null);
-		} else {
-			message = "This video is already exist";
-			httpStatus = HttpStatus.CONFLICT;
-			LOG.error(message);
-			response = new Response(message, httpStatus.value(), message);
-		}
-	}
-
-	private void updateShortVideo(PraticeLibaryRequest praticelibaryDto) {
-		PraticeLibaryModel praticeDb = praticeLibaryRepository.getpraticeById(praticelibaryDto.getPraticeLibaryId());
-		if (praticeDb != null) {
-			praticeDb.setCategoryId(Constants.SHORT_VIDEOS);
-			praticeDb.setVideoLink(praticelibaryDto.getVideoLink());
-			praticeDb.setDuration(praticelibaryDto.getDuration());
-			praticeDb.setTitle(praticelibaryDto.getTitle());
-			praticeDb.setMessage(praticelibaryDto.getMessage());
-			praticeDb.setMetaKeyword(praticelibaryDto.getMetaKeyword());
-
-			praticeLibaryRepository.save(praticeDb);
-			message = "Short video link is  updated sucessfully";
-			LOG.info(message);
-			response = new Response(message, httpStatus.value(), null);
-		} else {
-			message = "This video is not exist";
-			httpStatus = HttpStatus.CONFLICT;
-			LOG.error(message);
-			response = new Response(message, httpStatus.value(), message);
-		}
-	}
-
-	private void deleteShortVideo(PraticeLibaryRequest praticelibaryDto) {
-		PraticeLibaryModel praticemodelDb = praticeLibaryRepository
-				.getpraticeById(praticelibaryDto.getPraticeLibaryId());
-		if (praticemodelDb != null) {
-			praticeLibaryRepository.deleteById(praticelibaryDto.getPraticeLibaryId());
-			message = "Short video link is  deleted sucessfully";
-			LOG.info(message);
-			response = new Response(message, httpStatus.value(), null);
-		} else {
-			message = "This video is not exist";
-			httpStatus = HttpStatus.CONFLICT;
-			LOG.error(message);
-			response = new Response(message, httpStatus.value(), message);
-		}
-	}
-
-	private void glimpses(String operation, PraticeLibaryRequest praticelibaryDto) {
-		try {
-			if (operation.equals(Constants.ADD)) {
-				addGlimpses(praticelibaryDto);
-			} else if (operation.equals(Constants.SAVE)) {
-				updateGlimpses(praticelibaryDto);
-			} else if (operation.equals(Constants.DELETE)) {
-				deleteGlimpses(praticelibaryDto);
-			} else {
-				message = Constants.OPERATION_ERROR;
-				httpStatus = HttpStatus.CONFLICT;
-				LOG.error(message);
-				response = new Response(message, httpStatus.value(), message);
-			}
-		} catch (Exception e) {
-			message = "Exception in glimpses";
-			httpStatus = HttpStatus.EXPECTATION_FAILED;
-			LOG.error(message);
-			LOG.error(e.getLocalizedMessage());
-			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
-		}
-
-	}
-
-	private void addGlimpses(PraticeLibaryRequest praticelibaryDto) {
-		PraticeLibaryModel praticeModel = praticeLibaryRepository.getpraticeById(praticelibaryDto.getPraticeLibaryId());
-		if (praticeModel == null) {
-			PraticeLibaryModel newGlimpse = new PraticeLibaryModel();
-			newGlimpse.setCategoryId(Constants.GLIMPSES);
-			newGlimpse.setVideoLink(praticelibaryDto.getVideoLink());
-			newGlimpse.setDuration(praticelibaryDto.getDuration());
-			newGlimpse.setTitle(praticelibaryDto.getTitle());
-			newGlimpse.setMessage(praticelibaryDto.getMessage());
-			newGlimpse.setMetaKeyword(praticelibaryDto.getMetaKeyword());
-
-			praticeLibaryRepository.save(newGlimpse);
-			message = "Glimpses record is added sucessfully";
-			LOG.info(message);
-			response = new Response(message, httpStatus.value(), null);
-		} else {
-			message = "Glimpses record is already exist";
-			httpStatus = HttpStatus.CONFLICT;
-			LOG.error(message);
-			response = new Response(message, httpStatus.value(), message);
-		}
-	}
-
-	private void updateGlimpses(PraticeLibaryRequest praticelibaryDto) {
-		PraticeLibaryModel praticeDb = praticeLibaryRepository.getpraticeById(praticelibaryDto.getPraticeLibaryId());
-		if (praticeDb != null) {
-			praticeDb.setCategoryId(Constants.GLIMPSES);
-			praticeDb.setVideoLink(praticelibaryDto.getVideoLink());
-			praticeDb.setDuration(praticelibaryDto.getDuration());
-			praticeDb.setTitle(praticelibaryDto.getTitle());
-			praticeDb.setMessage(praticelibaryDto.getMessage());
-			praticeDb.setMetaKeyword(praticelibaryDto.getMetaKeyword());
-
-			praticeLibaryRepository.save(praticeDb);
-			message = "Glimpses record is updated sucessfully";
-			LOG.info(message);
-			response = new Response(message, httpStatus.value(), null);
-		} else {
-			message = "Glimpses record is not exist";
-			httpStatus = HttpStatus.CONFLICT;
-			LOG.error(message);
-			response = new Response(message, httpStatus.value(), message);
-		}
-	}
-
-	private void deleteGlimpses(PraticeLibaryRequest praticelibaryDto) {
-		PraticeLibaryModel praticeDb = praticeLibaryRepository.getpraticeById(praticelibaryDto.getPraticeLibaryId());
-		if (praticeDb != null) {
-			praticeLibaryRepository.deleteById(praticelibaryDto.getPraticeLibaryId());
-			message = "Glimpses record is deleted sucessfully";
-			LOG.info(message);
-			response = new Response(message, httpStatus.value(), null);
-		} else {
-			message = "Glimpses record is not exist";
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);

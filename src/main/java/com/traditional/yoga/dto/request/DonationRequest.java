@@ -16,6 +16,8 @@ public class DonationRequest {
 	private String description;
 	private String modeOfPayment;
 
+	private String registerMember;
+
 	public int getDonationId() {
 		return donationId;
 	}
@@ -86,6 +88,14 @@ public class DonationRequest {
 
 	public void setModeOfPayment(String modeOfPayment) {
 		this.modeOfPayment = modeOfPayment;
+	}
+
+	public String getRegisterMember() {
+		return registerMember;
+	}
+
+	public void setRegisterMember(String registerMember) {
+		this.registerMember = registerMember;
 	}
 
 }

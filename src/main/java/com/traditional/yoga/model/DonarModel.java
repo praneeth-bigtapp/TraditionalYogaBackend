@@ -55,6 +55,9 @@ public class DonarModel {
 	@Column(name = "stripe_credit_card")
 	private int stripeCreditCard;
 
+	@Column(name = "registed_member")
+	private String registerMember;
+
 	@Column(name = "card_name")
 	private String cardName;
 
@@ -179,6 +182,14 @@ public class DonarModel {
 
 	public void setCountryId(CountryModel countryId) {
 		this.countryId = countryId;
+	}
+
+	public String getRegisterMember() {
+		return registerMember;
+	}
+
+	public void setRegisterMember(String registerMember) {
+		this.registerMember = registerMember;
 	}
 
 }

@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -16,8 +18,13 @@ public class PraticeLibaryModel {
 	@Column(name = "pratice_libary_id")
 	private int praticeLibaryId;
 
-	@Column(name = "library_category_id")
-	private int categoryId;
+	@OneToOne
+	@JoinColumn(name = "library_category_id", referencedColumnName = "category_id")
+	private LibaryCategoryModel libraryCategoryId;
+
+	@OneToOne
+	@JoinColumn(name = "sub_category_Id", referencedColumnName = "sub_category_id")
+	private SubCategoryPraticeLibaryModel subCategoryId;
 
 	@Column(name = "video_link")
 	private String videoLink;
@@ -42,12 +49,20 @@ public class PraticeLibaryModel {
 		this.praticeLibaryId = praticeLibaryId;
 	}
 
-	public int getCategoryId() {
-		return categoryId;
+	public LibaryCategoryModel getLibraryCategoryId() {
+		return libraryCategoryId;
 	}
 
-	public void setCategoryId(int categoryId) {
-		this.categoryId = categoryId;
+	public void setLibraryCategoryId(LibaryCategoryModel libraryCategoryId) {
+		this.libraryCategoryId = libraryCategoryId;
+	}
+
+	public SubCategoryPraticeLibaryModel getSubCategoryId() {
+		return subCategoryId;
+	}
+
+	public void setSubCategoryId(SubCategoryPraticeLibaryModel subCategoryId) {
+		this.subCategoryId = subCategoryId;
 	}
 
 	public String getVideoLink() {

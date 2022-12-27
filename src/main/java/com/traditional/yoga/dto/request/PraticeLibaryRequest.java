@@ -1,9 +1,12 @@
 package com.traditional.yoga.dto.request;
 
+import com.traditional.yoga.model.LibaryCategoryModel;
+
 public class PraticeLibaryRequest {
 
 	private int praticeLibaryId;
-	private int categoryId;
+	private LibaryCategoryModel libraryCategoryId;
+	private int subCategoryId;
 	private String videoLink;
 	private String duration;
 	private String title;
@@ -18,12 +21,20 @@ public class PraticeLibaryRequest {
 		this.praticeLibaryId = praticeLibaryId;
 	}
 
-	public int getCategoryId() {
-		return categoryId;
+	public LibaryCategoryModel getLibraryCategoryId() {
+		return libraryCategoryId;
 	}
 
-	public void setCategoryId(int categoryId) {
-		this.categoryId = categoryId;
+	public void setLibraryCategoryId(LibaryCategoryModel libraryCategoryId) {
+		this.libraryCategoryId = libraryCategoryId;
+	}
+
+	public int getSubCategoryId() {
+		return subCategoryId;
+	}
+
+	public void setSubCategoryId(int subCategoryId) {
+		this.subCategoryId = subCategoryId;
 	}
 
 	public String getVideoLink() {
