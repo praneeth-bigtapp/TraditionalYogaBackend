@@ -61,6 +61,12 @@ public class StudentsController {
 		LOG.info("Entering into get purchase Method");
 		return studentService.studentPurchase(studentDto);
 	}
+	
+	@PostMapping("/courseProfile")
+	public Object getStudentProfile(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto) {
+		LOG.info("Entering into get purchase Method");
+		return studentService.studentCourseProfile(studentDto);
+	}
 
 	@PostMapping("/purchase/add")
 	public Object addStudentPurchase(@RequestHeader("token") String token, @RequestBody EPurchaseRequest purchaseDto) {

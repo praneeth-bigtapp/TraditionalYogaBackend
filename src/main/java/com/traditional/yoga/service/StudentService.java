@@ -18,11 +18,13 @@ import com.traditional.yoga.dto.request.VolunteerRequest;
 import com.traditional.yoga.dto.response.MemberResponse;
 import com.traditional.yoga.dto.response.StudentProfileResponse;
 import com.traditional.yoga.model.BlackListModel;
+import com.traditional.yoga.model.CourseProfileModel;
 import com.traditional.yoga.model.DonationModel;
 import com.traditional.yoga.model.EPurchaseInformation;
 import com.traditional.yoga.model.StudentModel;
 import com.traditional.yoga.model.VolunteerModel;
 import com.traditional.yoga.repository.BlackListUserRepository;
+import com.traditional.yoga.repository.CourseProfileRepository;
 import com.traditional.yoga.repository.CoursesListRepository;
 import com.traditional.yoga.repository.DonationRepository;
 import com.traditional.yoga.repository.EpurchaseInformation;
@@ -59,6 +61,9 @@ public class StudentService {
 
 	@Autowired
 	VolunteerRepository volunteerRepository;
+
+	@Autowired
+	CourseProfileRepository courseProfileRepository;
 
 	@Autowired
 	RoleRepository roleRepository;
@@ -238,6 +243,13 @@ public class StudentService {
 //	E Purchase
 	public Object studentPurchase(StudentRequest studentDto) {
 		List<EPurchaseInformation> std = epurchaseInformation.getPurchaseByStudentId(studentDto.getStudentId());
+		httpStatus = HttpStatus.OK;
+		return new ResponseEntity<>(std, httpStatus);
+	}
+
+//	Course Profile
+	public Object studentCourseProfile(StudentRequest studentDto) {
+		List<CourseProfileModel> std = courseProfileRepository.getCourseProfileByStudentId(studentDto.getStudentId());
 		httpStatus = HttpStatus.OK;
 		return new ResponseEntity<>(std, httpStatus);
 	}
