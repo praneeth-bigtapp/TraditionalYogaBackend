@@ -89,8 +89,5 @@ public class StudentStatus {
 	public void setIsActive(String isActive) {
 		this.isActive = isActive;
 	}
-	
-	
-	
-	
+
 }

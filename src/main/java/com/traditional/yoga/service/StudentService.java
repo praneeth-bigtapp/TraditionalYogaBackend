@@ -227,6 +227,27 @@ public class StudentService {
 		}
 	}
 
+	public Object studentStatus(StudentRequest studentDto) {
+		StudentModel std = studentRepository.getStudentById(studentDto.getStudentId());
+		if (std != null) {
+			std.setStatus(studentStatusRepostiory.getStatusbyId(studentDto.getStatusId()));
+			studentRepository.save(std);
+			httpStatus = HttpStatus.OK;
+			message = "Student Status saved sucessfully";
+			response = new Response(message, httpStatus.value(), null);
+			return new ResponseEntity<>(response, httpStatus);
+		} else {
+			message = "Student Doesn't exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+			return new ResponseEntity<>(response, httpStatus);
+		}
+	}
+	
+	
+
+
 //	Donation
 	public Object studentDonation(StudentRequest studentDto) {
 		List<DonationModel> std = donationRepository.getDonationByStudentId(studentDto.getStudentId());

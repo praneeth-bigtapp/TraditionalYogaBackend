@@ -25,7 +25,6 @@ public class StudentRequest {
 	private String regesiterDate;
 	private String registedIpAddress;
 	private int statusId;
-	private String statusName;
 	private String active;
 
 	public int getStudentId() {
@@ -178,14 +177,6 @@ public class StudentRequest {
 
 	public void setStatusId(int statusId) {
 		this.statusId = statusId;
-	}
-
-	public String getStatusName() {
-		return statusName;
-	}
-
-	public void setStatusName(String statusName) {
-		this.statusName = statusName;
 	}
 
 	public String getActive() {

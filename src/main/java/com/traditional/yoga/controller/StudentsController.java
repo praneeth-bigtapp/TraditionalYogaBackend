@@ -49,6 +49,12 @@ public class StudentsController {
 		LOG.info("Entering into get Student Method");
 		return studentService.studentProfile(studentDto);
 	}
+	
+	@PostMapping("/updateStatus")
+	public Object getStudentStatus(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto) {
+		LOG.info("Entering into get Student Method");
+		return studentService.studentStatus(studentDto);
+	}
 
 	@PostMapping("/donation")
 	public Object getStudentDonation(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto) {

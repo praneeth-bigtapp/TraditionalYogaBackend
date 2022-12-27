@@ -262,31 +262,23 @@ public class WebSiteManagementService {
 	}
 
 	private void addBanner(BannerViewRequest bannerDto) {
-		BannerModel bannerDb = bannerRepository.getbannerbyId(bannerDto.getBannerId());
-		if (bannerDb == null) {
-			BannerModel newBanner = new BannerModel();
-			newBanner.setBannerName(bannerDto.getBannerName());
-			newBanner.setCourseTitle(bannerDto.getCourseTitle());
-			newBanner.setImagePath(bannerDto.getImagePath());
-			newBanner.setFromDate(bannerDto.getFromDate());
-			newBanner.setToDate(bannerDto.getToDate());
-			newBanner.setDescription(bannerDto.getDescription());
-			newBanner.setCategoryId(bannerDto.getCategoryId());
-			newBanner.setDateOfAdd(generalUtils.getCurrentDate());
-			newBanner.setCreatedDate(generalUtils.getCurrentDate());
-			newBanner.setIsActive("Y");
+		BannerModel newBanner = new BannerModel();
+		newBanner.setBannerName(bannerDto.getBannerName());
+		newBanner.setCourseTitle(bannerDto.getCourseTitle());
+		newBanner.setImagePath(bannerDto.getImagePath());
+		newBanner.setFromDate(bannerDto.getFromDate());
+		newBanner.setToDate(bannerDto.getToDate());
+		newBanner.setDescription(bannerDto.getDescription());
+		newBanner.setCategoryId(bannerDto.getCategoryId());
+		newBanner.setDateOfAdd(generalUtils.getCurrentDate());
+		newBanner.setCreatedDate(generalUtils.getCurrentDate());
+		newBanner.setIsActive(Constants.YES);
 
-			bannerRepository.save(newBanner);
-			httpStatus = HttpStatus.OK;
-			message = "new banner is added sucessfully";
-			LOG.info(message);
-			response = new Response(message, httpStatus.value(), null);
-		} else {
-			message = "banner is already exist";
-			httpStatus = HttpStatus.CONFLICT;
-			LOG.error(message);
-			response = new Response(message, httpStatus.value(), message);
-		}
+		bannerRepository.save(newBanner);
+		httpStatus = HttpStatus.OK;
+		message = "new banner is added sucessfully";
+		LOG.info(message);
+		response = new Response(message, httpStatus.value(), null);
 	}
 
 	private void updateBanner(BannerViewRequest bannerDto) {
@@ -453,25 +445,24 @@ public class WebSiteManagementService {
 	}
 
 	private void updateNotification(NotificationRequest notificationdto) {
-	    NotificationModel notificationModel = noticationRepository
-	            .getnotificationById(notificationdto.getNotificationId());
-	    if (notificationModel != null) {
-	        notificationModel.setCategoryId(notificationdto.getCategoryId());
-	        notificationModel.setTitle(notificationdto.getTitle());
-	        notificationModel.setUploadFile(notificationdto.getUploadFile());
-	        notificationModel.setMessage(notificationdto.getMessage());
-	        noticationRepository.save(notificationModel);
-	        message = "notification is updated successfully";
-	        LOG.info(message);
-	        response = new Response(message, httpStatus.value(), null);
-	    } else {
-	        message = "notification not found";
-	        httpStatus = HttpStatus.NOT_FOUND;
-	        LOG.error(message);
-	        response = new Response(message, httpStatus.value(), message);
-	    }
+		NotificationModel notificationModel = noticationRepository
+				.getnotificationById(notificationdto.getNotificationId());
+		if (notificationModel != null) {
+			notificationModel.setCategoryId(notificationdto.getCategoryId());
+			notificationModel.setTitle(notificationdto.getTitle());
+			notificationModel.setUploadFile(notificationdto.getUploadFile());
+			notificationModel.setMessage(notificationdto.getMessage());
+			noticationRepository.save(notificationModel);
+			message = "notification is updated successfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "notification not found";
+			httpStatus = HttpStatus.NOT_FOUND;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
 	}
-
 
 	private void deleteNotification(NotificationRequest notificationdto) {
 		NotificationModel notification = noticationRepository.getnotificationById(notificationdto.getNotificationId());

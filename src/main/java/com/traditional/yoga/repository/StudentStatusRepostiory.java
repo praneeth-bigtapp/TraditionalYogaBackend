@@ -9,6 +9,6 @@ import com.traditional.yoga.model.StudentStatus;
 public interface StudentStatusRepostiory extends JpaRepository<StudentStatus, Integer> {
 
 	@Query(value = "SELECT * FROM `student_current_status` WHERE `status_id`= :statusId", nativeQuery = true)
-	StudentStatus getbannerbyId(@Param("statusId") int statusId);
+	StudentStatus getStatusbyId(@Param("statusId") int statusId);
 
 }
