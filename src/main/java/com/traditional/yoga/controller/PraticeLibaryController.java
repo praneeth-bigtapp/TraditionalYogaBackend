@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.traditional.yoga.dto.request.ClassMediaGlipmses;
 import com.traditional.yoga.dto.request.ClassMediaLiveclassRequest;
 import com.traditional.yoga.dto.request.ClassMediaShortVideoRequest;
+import com.traditional.yoga.dto.request.LanguageRequest;
 import com.traditional.yoga.dto.request.PraticeLibaryRequest;
 import com.traditional.yoga.service.PraticeLibaryService;
 
@@ -52,6 +54,13 @@ public class PraticeLibaryController {
 		return praticeLibaryService.managelibary(operation, type, praticelibaryDto);
 	}
 
+	@PostMapping("/language")
+	public Object managelangauge(@RequestHeader("token") String token, @RequestBody LanguageRequest languageDto,
+			@RequestParam("operation") String operation) {
+		authenticate(token);
+		return praticeLibaryService.managelangauge(operation, languageDto);
+	}
+
 	@PostMapping("/liveClass")
 	public Object manageClassMediaLive(@RequestHeader("token") String token,
 			@RequestBody ClassMediaLiveclassRequest classDto, @RequestParam("operation") String operation) {
@@ -64,5 +73,12 @@ public class PraticeLibaryController {
 			@RequestBody ClassMediaShortVideoRequest shortDto, @RequestParam("operation") String operation) {
 		authenticate(token);
 		return praticeLibaryService.manageShortVideo(operation, shortDto);
+	}
+
+	@PostMapping("/glimpses")
+	public Object manageGlimpses(@RequestHeader("token") String token, @RequestBody ClassMediaGlipmses glimpsesDto,
+			@RequestParam("operation") String operation) {
+		authenticate(token);
+		return praticeLibaryService.manageGlimpses(operation, glimpsesDto);
 	}
 }

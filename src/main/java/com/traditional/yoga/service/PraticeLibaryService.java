@@ -8,15 +8,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.traditional.yoga.dto.Response;
+import com.traditional.yoga.dto.request.ClassMediaGlipmses;
 import com.traditional.yoga.dto.request.ClassMediaLiveclassRequest;
 import com.traditional.yoga.dto.request.ClassMediaShortVideoRequest;
+import com.traditional.yoga.dto.request.LanguageRequest;
 import com.traditional.yoga.dto.request.PraticeLibaryRequest;
+import com.traditional.yoga.model.ClassMediaGlimpsesModel;
 import com.traditional.yoga.model.ClassMediaLiveClassModel;
 import com.traditional.yoga.model.ClassMediaShortVideoModel;
+import com.traditional.yoga.model.LanguageModel;
 import com.traditional.yoga.model.PraticeLibaryModel;
 import com.traditional.yoga.repository.CategoryLibaryRepository;
+import com.traditional.yoga.repository.ClassMediaGlipsesRepository;
 import com.traditional.yoga.repository.ClassMediaLiveClassRepository;
 import com.traditional.yoga.repository.ClassMediaShortVideoRepository;
+import com.traditional.yoga.repository.LanguageRepository;
 import com.traditional.yoga.repository.PraticeLibaryRepository;
 import com.traditional.yoga.repository.SubCategoryPraticeRepsoitory;
 import com.traditional.yoga.utils.Constants;
@@ -44,6 +50,11 @@ public class PraticeLibaryService {
 	@Autowired
 	ClassMediaShortVideoRepository classMediaShortVideoRepository;
 
+	@Autowired
+	LanguageRepository languageRepository;
+	@Autowired
+	ClassMediaGlipsesRepository classMediaGlipsesRepository;
+
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
 	String message;
@@ -58,6 +69,12 @@ public class PraticeLibaryService {
 			} else if (operationType.equals("shortVideo")) {
 				httpStatus = HttpStatus.OK;
 				return classMediaShortVideoRepository.findAll();
+			} else if (operationType.equals("glimpses")) {
+				httpStatus = HttpStatus.OK;
+				return classMediaGlipsesRepository.findAll();
+			} else if (operationType.equals("language")) {
+				httpStatus = HttpStatus.OK;
+				return languageRepository.findAll();
 			} else if (operationType.equals("liveclass")) {
 				httpStatus = HttpStatus.OK;
 				return new ResponseEntity<>(classMediaLiveClassRepository.findAll(), httpStatus);
@@ -319,7 +336,7 @@ public class PraticeLibaryService {
 			ClassMediaShortVideoModel classlist = new ClassMediaShortVideoModel();
 			classlist.setCoursesId(shortDto.getCoursesId());
 			classlist.setPraticeLibaryId(shortDto.getPraticeLibaryId());
-			classlist.setSubCategoryId(shortDto.getSubCategoryId());
+			classlist.setSubCategoryId(subCategoryPraticeRepsoitory.getsubCategorybyId(shortDto.getSubCategoryId()));
 			classlist.setVideoLink(shortDto.getVideoLink());
 			classlist.setTitle(shortDto.getTitle());
 			classlist.setDescription(shortDto.getDescription());
@@ -332,7 +349,7 @@ public class PraticeLibaryService {
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = "Task " + Constants.ALREADY_EXIST;
+			message = "short Video" + Constants.ALREADY_EXIST;
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
@@ -344,14 +361,15 @@ public class PraticeLibaryService {
 		ClassMediaShortVideoModel classNew = classMediaShortVideoRepository
 				.getshortVideobyId(shortDto.getShortVideoId());
 		if (classNew == null) {
-			message = "Short video with ID " + shortDto.getShortVideoId() + " does not exist";
+			message = "Short Video with ID " + shortDto.getShortVideoId() + " does not exist";
 			httpStatus = HttpStatus.NOT_FOUND;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
 		} else {
 			classNew.setCoursesId(shortDto.getCoursesId());
 			classNew.setPraticeLibaryId(shortDto.getPraticeLibaryId());
-			classNew.setSubCategoryId(shortDto.getSubCategoryId());
+			classNew.setSubCategoryId(subCategoryPraticeRepsoitory.getsubCategorybyId(shortDto.getSubCategoryId()));
+			;
 			classNew.setVideoLink(shortDto.getVideoLink());
 			classNew.setTitle(shortDto.getTitle());
 			classNew.setDescription(shortDto.getDescription());
@@ -380,4 +398,133 @@ public class PraticeLibaryService {
 		}
 	}
 
+	///// Glimpses//////////////////////////
+
+	public Object manageGlimpses(String operation, ClassMediaGlipmses glimpsesDto) {
+		this.httpStatus = HttpStatus.OK;
+		try {
+			if (operation.equals(Constants.ADD)) {
+				addGlimpses(glimpsesDto);
+			} else if (operation.equals(Constants.UPDATE)) {
+				updateGlimpses(glimpsesDto);
+			} else if (operation.equals(Constants.DELETE)) {
+				deleteGlimpses(glimpsesDto.getGlimpsesId());
+			} else {
+				message = Constants.OPERATION_ERROR;
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Exception in adding tasks";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	private void addGlimpses(ClassMediaGlipmses glimpsesDto) {
+		ClassMediaGlimpsesModel classNew = classMediaGlipsesRepository.getGlimpsesById(glimpsesDto.getGlimpsesId());
+		if (classNew == null) {
+			ClassMediaGlimpsesModel classlist = new ClassMediaGlimpsesModel();
+			classlist.setCoursesId(glimpsesDto.getCoursesId());
+			classlist.setDate(glimpsesDto.getDate());
+			classlist.setFileUpload(glimpsesDto.getFileUpload());
+			classlist.setLanguage(glimpsesDto.getLanguage());
+			classlist.setCreatedDate(generalUtils.getCurrentDate());
+			classlist.setIsActive("Y");
+			classMediaGlipsesRepository.save(classlist);
+			message = "new Glimpses added to ClassMedia sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "short Video" + Constants.ALREADY_EXIST;
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+
+	}
+
+	private void updateGlimpses(ClassMediaGlipmses glimpsesDto) {
+		// Check if a record with the same ID exists in the database
+		ClassMediaGlimpsesModel existingGlimpses = classMediaGlipsesRepository
+				.getGlimpsesById(glimpsesDto.getGlimpsesId());
+		if (existingGlimpses != null) {
+			// Update the existing record with the new data
+			existingGlimpses.setCoursesId(glimpsesDto.getCoursesId());
+			existingGlimpses.setDate(glimpsesDto.getDate());
+			existingGlimpses.setFileUpload(glimpsesDto.getFileUpload());
+			existingGlimpses.setLanguage(glimpsesDto.getLanguage());
+			classMediaGlipsesRepository.save(existingGlimpses);
+			message = "Glimpses updated in ClassMedia sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "Glimpses with ID " + glimpsesDto.getGlimpsesId() + " not found";
+			httpStatus = HttpStatus.NOT_FOUND;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void deleteGlimpses(int glimpsesId) {
+		// Check if a record with the given ID exists in the database
+		ClassMediaGlimpsesModel existingGlimpses = classMediaGlipsesRepository.getGlimpsesById(glimpsesId);
+		if (existingGlimpses != null) {
+			// Delete the existing record
+			classMediaGlipsesRepository.delete(existingGlimpses);
+			message = "Glimpses with ID " + glimpsesId + " deleted from ClassMedia sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "Glimpses with ID " + glimpsesId + " not found";
+			httpStatus = HttpStatus.NOT_FOUND;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	public Object managelangauge(String operation, LanguageRequest languageDto) {
+		this.httpStatus = HttpStatus.OK;
+		try {
+			if (operation.equals(Constants.ADD)) {
+				addlangauge(languageDto);
+			} else {
+				message = Constants.OPERATION_ERROR;
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Exception in adding language";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	private void addlangauge(LanguageRequest languageDto) {
+		LanguageModel classNew = languageRepository.getlanguageById(languageDto.getLanguageId());
+		if (classNew == null) {
+			LanguageModel languagelist = new LanguageModel();
+			languagelist.setLanguageName(languageDto.getLanguageName());
+			languagelist.setCreatedDate(generalUtils.getCurrentDate());
+			languagelist.setIsActive("Y");
+			languageRepository.save(languagelist);
+			message = "new language is add sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "Task " + Constants.ALREADY_EXIST;
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+
+	}
 }

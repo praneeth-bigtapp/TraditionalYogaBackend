@@ -9,7 +9,7 @@ public class ClassMediaShortVideoRequest {
 	private int shortVideoId;
 	private CourseListModel coursesId;
 	private LibaryCategoryModel praticeLibaryId;
-	private SubCategoryPraticeLibaryModel subCategoryId;
+	private int subCategoryId;
 	private String videoLink;
 	private String title;
 	private String description;
@@ -45,11 +45,11 @@ public class ClassMediaShortVideoRequest {
 		this.praticeLibaryId = praticeLibaryId;
 	}
 
-	public SubCategoryPraticeLibaryModel getSubCategoryId() {
+	public int getSubCategoryId() {
 		return subCategoryId;
 	}
 
-	public void setSubCategoryId(SubCategoryPraticeLibaryModel subCategoryId) {
+	public void setSubCategoryId(int subCategoryId) {
 		this.subCategoryId = subCategoryId;
 	}
 
