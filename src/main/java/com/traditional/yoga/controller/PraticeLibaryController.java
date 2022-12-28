@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.traditional.yoga.dto.request.ClassMediaLiveclassRequest;
+import com.traditional.yoga.dto.request.ClassMediaShortVideoRequest;
 import com.traditional.yoga.dto.request.PraticeLibaryRequest;
 import com.traditional.yoga.service.PraticeLibaryService;
 
@@ -48,5 +50,19 @@ public class PraticeLibaryController {
 			@RequestParam("operation") String operation, @RequestParam("type") String type) {
 		authenticate(token);
 		return praticeLibaryService.managelibary(operation, type, praticelibaryDto);
+	}
+
+	@PostMapping("/liveClass")
+	public Object manageClassMediaLive(@RequestHeader("token") String token,
+			@RequestBody ClassMediaLiveclassRequest classDto, @RequestParam("operation") String operation) {
+		authenticate(token);
+		return praticeLibaryService.manageClassMediaLive(operation, classDto);
+	}
+
+	@PostMapping("/shortVideo")
+	public Object manageClassMediaLive(@RequestHeader("token") String token,
+			@RequestBody ClassMediaShortVideoRequest shortDto, @RequestParam("operation") String operation) {
+		authenticate(token);
+		return praticeLibaryService.manageShortVideo(operation, shortDto);
 	}
 }
