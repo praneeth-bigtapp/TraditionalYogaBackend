@@ -58,6 +58,7 @@ public class PraticeLibaryService {
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
 	String message;
+	int valueId;
 
 	public Object getAll(String operationType) {
 		LOG.info("Fetching praticeLibary related {} data", operationType);
@@ -449,26 +450,48 @@ public class PraticeLibaryService {
 	}
 
 	private void updateGlimpses(ClassMediaGlipmses glimpsesDto) {
-		// Check if a record with the same ID exists in the database
-		ClassMediaGlimpsesModel existingGlimpses = classMediaGlipsesRepository
-				.getGlimpsesById(glimpsesDto.getGlimpsesId());
-		if (existingGlimpses != null) {
-			// Update the existing record with the new data
-			existingGlimpses.setCoursesId(glimpsesDto.getCoursesId());
-			existingGlimpses.setDate(glimpsesDto.getDate());
-			existingGlimpses.setFileUpload(glimpsesDto.getFileUpload());
-			existingGlimpses.setLanguage(glimpsesDto.getLanguage());
-			classMediaGlipsesRepository.save(existingGlimpses);
-			message = "Glimpses updated in ClassMedia sucessfully";
-			LOG.info(message);
-			response = new Response(message, httpStatus.value(), null);
-		} else {
-			message = "Glimpses with ID " + glimpsesDto.getGlimpsesId() + " not found";
-			httpStatus = HttpStatus.NOT_FOUND;
-			LOG.error(message);
-			response = new Response(message, httpStatus.value(), message);
-		}
+	    // Check if a record with the same ID exists in the database
+	    ClassMediaGlimpsesModel existingGlimpses = classMediaGlipsesRepository
+	            .getGlimpsesById(glimpsesDto.getGlimpsesId());
+	    if (existingGlimpses != null) {
+	        boolean updateRecord = false;
+	        // Compare the new data with the existing data and set updateRecord to true if any of the data is different
+	        if (!existingGlimpses.getCoursesId().equals(glimpsesDto.getCoursesId())) {
+	            updateRecord = true;
+	        }
+	        if (!existingGlimpses.getDate().equals(glimpsesDto.getDate())) {
+	            updateRecord = true;
+	        }
+	        if (!existingGlimpses.getFileUpload().equals(glimpsesDto.getFileUpload())) {
+	            updateRecord = true;
+	        }
+	        if (!existingGlimpses.getLanguage().equals(glimpsesDto.getLanguage())) {
+	            updateRecord = true;
+	        }
+	        if (updateRecord) {
+	            // Update the existing record with the new data
+	            existingGlimpses.setCoursesId(glimpsesDto.getCoursesId());
+	            existingGlimpses.setDate(glimpsesDto.getDate());
+	            existingGlimpses.setFileUpload(glimpsesDto.getFileUpload());
+	            existingGlimpses.setLanguage(glimpsesDto.getLanguage());
+	            classMediaGlipsesRepository.save(existingGlimpses);
+	            message = "Glimpses updated in ClassMedia sucessfully";
+	            LOG.info(message);
+	            response = new Response(message, httpStatus.value(), null);
+	        } else {
+	            message = "No changes detected in Glimpses data";
+	            httpStatus = HttpStatus.OK;
+	            LOG.info(message);
+	            response = new Response(message, httpStatus.value(), null);
+	        }
+	    } else {
+	        message = "Glimpses with ID " + glimpsesDto.getGlimpsesId() + " not found";
+	        httpStatus = HttpStatus.NOT_FOUND;
+	        LOG.error(message);
+	        response = new Response(message, httpStatus.value(), message);
+	    }
 	}
+
 
 	private void deleteGlimpses(int glimpsesId) {
 		// Check if a record with the given ID exists in the database
@@ -515,6 +538,7 @@ public class PraticeLibaryService {
 			languagelist.setLanguageName(languageDto.getLanguageName());
 			languagelist.setCreatedDate(generalUtils.getCurrentDate());
 			languagelist.setIsActive("Y");
+			
 			languageRepository.save(languagelist);
 			message = "new language is add sucessfully";
 			LOG.info(message);

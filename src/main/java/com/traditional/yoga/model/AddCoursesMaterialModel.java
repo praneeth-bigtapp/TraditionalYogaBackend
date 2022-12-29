@@ -22,12 +22,6 @@ public class AddCoursesMaterialModel {
 	@JoinColumn(name = "courses_id", referencedColumnName = "courses_id")
 	private CourseListModel coursesId;
 
-	@Column(name = "add_category")
-	private String addCategory;
-
-	@Column(name = "add_description")
-	private String addDescription;
-
 	@OneToOne
 	@JoinColumn(name = "materal_category_id", referencedColumnName = "material_category_id")
 	private MaterialCategoryModel materialCategoryId;
@@ -35,6 +29,9 @@ public class AddCoursesMaterialModel {
 	@OneToOne
 	@JoinColumn(name = "media_id", referencedColumnName = "media_id")
 	private AddMediaModel mediaId;
+
+	@Column(name = "course_material_titile")
+	private String courseMaterialTitle;
 
 	@Column(name = "Video_link")
 	private String videoLink;
@@ -76,20 +73,12 @@ public class AddCoursesMaterialModel {
 		this.coursesId = coursesId;
 	}
 
-	public String getAddCategory() {
-		return addCategory;
+	public String getCourseMaterialTitle() {
+		return courseMaterialTitle;
 	}
 
-	public void setAddCategory(String addCategory) {
-		this.addCategory = addCategory;
-	}
-
-	public String getAddDescription() {
-		return addDescription;
-	}
-
-	public void setAddDescription(String addDescription) {
-		this.addDescription = addDescription;
+	public void setCourseMaterialTitle(String courseMaterialTitle) {
+		this.courseMaterialTitle = courseMaterialTitle;
 	}
 
 	public MaterialCategoryModel getMaterialCategoryId() {
@@ -131,8 +120,6 @@ public class AddCoursesMaterialModel {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-
-	
 
 	public String getCreatedBy() {
 		return createdBy;

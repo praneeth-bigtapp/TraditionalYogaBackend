@@ -10,11 +10,11 @@ public class Response {
 		super();
 	}
 
-	public Response(String message, int statusCode, String errorMessage) {
+	public Response(String message, int statusCode, String i ) {
 		super();
 		this.message = message;
 		this.statusCode = statusCode;
-		this.errorMessage = errorMessage;
+		this.errorMessage = i;
 	}
 
 	public String getMessage() {

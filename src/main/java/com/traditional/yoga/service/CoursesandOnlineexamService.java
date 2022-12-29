@@ -92,6 +92,7 @@ public class CoursesandOnlineexamService {
 	PraticeDocumentRepository praticeDocumentRepository;
 
 	Response response = new Response();
+
 	HttpStatus httpStatus = HttpStatus.OK;
 	String message;
 
@@ -616,41 +617,51 @@ public class CoursesandOnlineexamService {
 
 	/// ADD MATERIAL COURSES///////
 	public Object managemateials(String operation, AddCoursemateialRequest materialDto) {
-
+		boolean success = true;
 		this.httpStatus = HttpStatus.OK;
 		try {
-
 			if (operation.equals(Constants.ADD)) {
 				addmaterials(materialDto);
+			} else if (operation.equals(Constants.SAVE)) {
+				updatematerials(materialDto);
+			} else if (operation.equals(Constants.DELETE)) {
+				deleteMaterials(materialDto);
+			} else if (operation.equals(Constants.VIEW)) {
+				viewmaterials(materialDto.getCourseMaterialId());
 			} else {
+				success = false;
 				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
 			}
 		} catch (Exception e) {
+			success = false;
 			message = "Exception in adding materials";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());
 			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
 		}
-		return new ResponseEntity<>(response, httpStatus);
+		if (success) {
+			return new ResponseEntity<>(response, httpStatus);
+		} else {
+			return new ResponseEntity<>(response, httpStatus);
+		}
 	}
 
 	private void addmaterials(AddCoursemateialRequest materialDto) {
 		AddCoursesMaterialModel materialnew = addMaterialRepository.getMaterialById(materialDto.getCourseMaterialId());
 		if (materialnew == null) {
 			AddCoursesMaterialModel materialList = new AddCoursesMaterialModel();
-//			
 			materialList.setCoursesId(materialDto.getCoursesId());
-			materialList.setAddCategory(materialDto.getAddCategory());
-			materialList.setAddDescription(materialDto.getAddDescription());
 			materialList.setMaterialCategoryId(materialDto.getMaterialCategoryId());
 			materialList.setMediaId(materialDto.getMediaId());
+			materialList.setCourseMaterialTitle(materialDto.getCourseMaterialTitle());
 			materialList.setVideoLink(materialDto.getVideoLink());
 			materialList.setFileUpload(materialDto.getFileUpload());
 			materialList.setMessage(materialDto.getMessage());
+			materialList.setCreatedDate(generalUtils.getCurrentDate());
 			materialList.setIsActive("Y");
 			addMaterialRepository.save(materialList);
 			message = "material to courses is added sucessfully";
@@ -665,7 +676,61 @@ public class CoursesandOnlineexamService {
 
 	}
 
-	// pratice-Media
+	private void updatematerials(AddCoursemateialRequest materialDto) {
+		AddCoursesMaterialModel materialnew = addMaterialRepository.getMaterialById(materialDto.getCourseMaterialId());
+		if (materialnew != null) {
+			// Update the existing record with the new data
+			materialnew.setCoursesId(materialDto.getCoursesId());
+			materialnew.setMaterialCategoryId(materialDto.getMaterialCategoryId());
+			materialnew.setMediaId(materialDto.getMediaId());
+			materialnew.setCourseMaterialTitle(materialDto.getCourseMaterialTitle());
+			materialnew.setVideoLink(materialDto.getVideoLink());
+			materialnew.setFileUpload(materialDto.getFileUpload());
+			materialnew.setMessage(materialDto.getMessage());
+			materialnew.setCreatedDate(generalUtils.getCurrentDate());
+			materialnew.setIsActive("Y");
+			addMaterialRepository.save(materialnew);
+			message = "material to courses is updated sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "material with ID " + materialDto.getCourseMaterialId() + " not found";
+			httpStatus = HttpStatus.NOT_FOUND;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void deleteMaterials(AddCoursemateialRequest materialDto) {
+		AddCoursesMaterialModel materialnew = addMaterialRepository.getMaterialById(materialDto.getCourseMaterialId());
+		if (materialnew != null) {
+			// Delete the existing record from the database
+			addMaterialRepository.delete(materialnew);
+			message = "material to courses is deleted sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "material with ID " + materialDto.getCourseMaterialId() + " not found";
+			httpStatus = HttpStatus.NOT_FOUND;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private AddCoursesMaterialModel viewmaterials(int courseMaterialId) {
+		AddCoursesMaterialModel material = addMaterialRepository.getMaterialById(courseMaterialId);
+		if (material != null) {
+			return material;
+		} else {
+			message = "material with ID " + courseMaterialId + " not found";
+			httpStatus = HttpStatus.NOT_FOUND;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+			return null;
+		}
+	}
+
+	//
 
 	public Object managemedia(String operation, PraticeMediaRequest mediaDto) {
 

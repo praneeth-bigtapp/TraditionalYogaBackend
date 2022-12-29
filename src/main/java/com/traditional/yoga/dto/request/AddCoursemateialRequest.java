@@ -8,10 +8,9 @@ public class AddCoursemateialRequest {
 
 	private int courseMaterialId;
 	private CourseListModel coursesId;
-	private String addCategory;
-	private String addDescription;
 	private MaterialCategoryModel materialCategoryId;
 	private AddMediaModel mediaId;
+	private String courseMaterialTitle;
 	private String videoLink;
 	private String fileUpload;
 	private String message;
@@ -37,22 +36,6 @@ public class AddCoursemateialRequest {
 		this.coursesId = coursesId;
 	}
 
-	public String getAddCategory() {
-		return addCategory;
-	}
-
-	public void setAddCategory(String addCategory) {
-		this.addCategory = addCategory;
-	}
-
-	public String getAddDescription() {
-		return addDescription;
-	}
-
-	public void setAddDescription(String addDescription) {
-		this.addDescription = addDescription;
-	}
-
 	public MaterialCategoryModel getMaterialCategoryId() {
 		return materialCategoryId;
 	}
@@ -67,6 +50,14 @@ public class AddCoursemateialRequest {
 
 	public void setMediaId(AddMediaModel mediaId) {
 		this.mediaId = mediaId;
+	}
+
+	public String getCourseMaterialTitle() {
+		return courseMaterialTitle;
+	}
+
+	public void setCourseMaterialTitle(String courseMaterialTitle) {
+		this.courseMaterialTitle = courseMaterialTitle;
 	}
 
 	public String getVideoLink() {
