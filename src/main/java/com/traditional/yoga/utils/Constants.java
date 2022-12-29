@@ -13,6 +13,7 @@ public class Constants {
 	public static final String ACTIVE = "active";
 	public static final String DEACTIVE = "deactive";
 	public static final String DELETE = "delete";
+	public static final String VIEW = "view";
 
 //	General Messages
 	public static final String USER = "User";

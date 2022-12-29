@@ -41,6 +41,7 @@ import com.traditional.yoga.repository.PearlsOfWisdomRepository;
 import com.traditional.yoga.repository.PhotoGalleryRepository;
 import com.traditional.yoga.repository.RegionRepository;
 import com.traditional.yoga.repository.ScripcturesRepository;
+import com.traditional.yoga.repository.StatesRepository;
 import com.traditional.yoga.utils.Constants;
 import com.traditional.yoga.utils.GeneralUtils;
 
@@ -87,6 +88,9 @@ public class WebSiteManagementService {
 
 	@Autowired
 	CountryRepository countryRepository;
+	
+	@Autowired
+	StatesRepository statesRepository;
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -134,6 +138,9 @@ public class WebSiteManagementService {
 			} else if (operationType.equals("country")) {
 				httpStatus = HttpStatus.OK;
 				return countryRepository.findAll();
+			} else if (operationType.equals("states")) {
+				httpStatus = HttpStatus.OK;
+				return statesRepository.findAll();
 			} else {
 				message = Constants.UNKNOWN_OPERATION;
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;

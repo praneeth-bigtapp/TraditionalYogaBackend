@@ -90,8 +90,9 @@ public class RegistrationModel {
 	@Column(name = "pride_qualification")
 	private String prideQualification;
 
-	@Column(name = "martial_status")
-	private String martialStatus;
+	@ManyToOne
+	@JoinColumn(name = "marital_status", referencedColumnName = "marital_status_id")
+	private MaritalStatusModel maritalStatus;
 
 	@Column(name = "family_details")
 	private String familyDetails;
@@ -104,6 +105,9 @@ public class RegistrationModel {
 
 	@Column(name = "participating_family")
 	private String participatingFamily;
+
+	@Column(name = "participate_name")
+	private String participateName;
 
 	@Column(name = "past_practice")
 	private String pastPractice;
@@ -310,12 +314,12 @@ public class RegistrationModel {
 		this.prideQualification = prideQualification;
 	}
 
-	public String getMartialStatus() {
-		return martialStatus;
+	public MaritalStatusModel getMaritalStatus() {
+		return maritalStatus;
 	}
 
-	public void setMartialStatus(String martialStatus) {
-		this.martialStatus = martialStatus;
+	public void setMaritalStatus(MaritalStatusModel maritalStatus) {
+		this.maritalStatus = maritalStatus;
 	}
 
 	public String getFamilyDetails() {
@@ -348,6 +352,14 @@ public class RegistrationModel {
 
 	public void setParticipatingFamily(String participatingFamily) {
 		this.participatingFamily = participatingFamily;
+	}
+
+	public String getParticipateName() {
+		return participateName;
+	}
+
+	public void setParticipateName(String participateName) {
+		this.participateName = participateName;
 	}
 
 	public String getPastPractice() {

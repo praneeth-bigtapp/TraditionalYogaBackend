@@ -17,6 +17,7 @@ public class CountryModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "country_id")
 	private int countryId;
+	
 	@OneToOne
 	@JoinColumn(name = "region_id", referencedColumnName = "region_id")
 	private MasterRegionModel regionId;

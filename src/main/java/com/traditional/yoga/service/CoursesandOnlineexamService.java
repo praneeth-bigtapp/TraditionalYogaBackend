@@ -627,7 +627,7 @@ public class CoursesandOnlineexamService {
 			} else if (operation.equals(Constants.DELETE)) {
 				deleteMaterials(materialDto);
 			} else if (operation.equals(Constants.VIEW)) {
-				viewmaterials(materialDto.getCourseMaterialId());
+				viewMaterials(materialDto.getCourseMaterialId());
 			} else {
 				success = false;
 				message = Constants.OPERATION_ERROR;
@@ -717,7 +717,7 @@ public class CoursesandOnlineexamService {
 		}
 	}
 
-	private AddCoursesMaterialModel viewmaterials(int courseMaterialId) {
+	private AddCoursesMaterialModel viewMaterials(int courseMaterialId) {
 		AddCoursesMaterialModel material = addMaterialRepository.getMaterialById(courseMaterialId);
 		if (material != null) {
 			return material;

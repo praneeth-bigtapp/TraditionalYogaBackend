@@ -118,6 +118,9 @@ public class StudentService {
 			} else if (operationType.equals("qualification")) {
 				httpStatus = HttpStatus.OK;
 				return qualificationRepository.findAll();
+			} else if (operationType.equals("professions")) {
+				httpStatus = HttpStatus.OK;
+				return professionsRepository.findAll();
 			} else if (operationType.equals("volunteer")) {
 				httpStatus = HttpStatus.OK;
 				return volunteerRepository.findAll();
@@ -244,9 +247,6 @@ public class StudentService {
 			return new ResponseEntity<>(response, httpStatus);
 		}
 	}
-	
-	
-
 
 //	Donation
 	public Object studentDonation(StudentRequest studentDto) {

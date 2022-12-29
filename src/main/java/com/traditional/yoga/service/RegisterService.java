@@ -11,7 +11,9 @@ import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.RegistrationRequest;
 import com.traditional.yoga.model.RegistrationModel;
 import com.traditional.yoga.repository.AboutUsRepository;
+import com.traditional.yoga.repository.MaritalStatusRepository;
 import com.traditional.yoga.repository.RegistrationRepository;
+import com.traditional.yoga.utils.Constants;
 
 @Service
 public class RegisterService {
@@ -24,6 +26,9 @@ public class RegisterService {
 	@Autowired
 	RegistrationRepository registrationRepository;
 
+	@Autowired
+	MaritalStatusRepository maritalStatusRepository;
+
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
 	String message;
@@ -35,6 +40,9 @@ public class RegisterService {
 			if (operationType.equals("aboutus")) {
 				httpStatus = HttpStatus.OK;
 				return aboutUsRepository.findAll();
+			} else if (operationType.equals("maritalStatus")) {
+				httpStatus = HttpStatus.OK;
+				return maritalStatusRepository.findAll();
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -89,14 +97,12 @@ public class RegisterService {
 
 	public Object enrollFullStudent(RegistrationRequest registrationDto) {
 		try {
-			RegistrationModel newEnroll = registrationRepository.getRegistrationById(registrationDto.getRegistrationId());
+			RegistrationModel newEnroll = registrationRepository
+					.getRegistrationById(registrationDto.getRegistrationId());
 			if (newEnroll != null) {
 				newEnroll.setPassportPhoto(registrationDto.getPassportPhoto());
-				newEnroll.setProfessionId(registrationDto.getProfessionId());
 				newEnroll.setProfessionWorkingHours(registrationDto.getProfessionWorkingHours());
-				newEnroll.setEducationalId(registrationDto.getEducationalId());
 				newEnroll.setPrideQualification(registrationDto.getPrideQualification());
-				newEnroll.setMartialStatus(registrationDto.getMartialStatus());
 				newEnroll.setFamilyDetails(registrationDto.getFamilyDetails());
 				newEnroll.setConsentFamily(registrationDto.getConsentFamily());
 				newEnroll.setResistanceFamily(registrationDto.getResistanceFamily());
@@ -108,6 +114,22 @@ public class RegisterService {
 				newEnroll.setReferenceRelationship(registrationDto.getReferenceRelationship());
 				newEnroll.setReferenceMobile(registrationDto.getReferenceMobile());
 				newEnroll.setCourseBriefly(registrationDto.getCourseBriefly());
+
+				Boolean professionStatus = registrationDto.getProfessionId().getProfessionId() == 0;
+				if (Boolean.FALSE.equals(professionStatus))
+					newEnroll.setProfessionId(registrationDto.getProfessionId());
+
+				Boolean educationalStatus = registrationDto.getEducationalId().getQualificationId() == 0;
+				if (Boolean.FALSE.equals(educationalStatus))
+					newEnroll.setEducationalId(registrationDto.getEducationalId());
+
+				Boolean maritalStatus = registrationDto.getMaritalStatus().getMaritalStatusId() == 0;
+				if (Boolean.FALSE.equals(maritalStatus))
+					newEnroll.setMaritalStatus(registrationDto.getMaritalStatus());
+
+				if (registrationDto.getParticipatingFamily().equals(Constants.YES)) {
+					newEnroll.setParticipateName(registrationDto.getParticipateName());
+				}
 				registrationRepository.save(newEnroll);
 				message = "User Registered Sucessfully";
 				httpStatus = HttpStatus.OK;

@@ -2,6 +2,7 @@ package com.traditional.yoga.dto.request;
 
 import com.traditional.yoga.model.AboutUsModel;
 import com.traditional.yoga.model.GenderModel;
+import com.traditional.yoga.model.MaritalStatusModel;
 import com.traditional.yoga.model.ProfessionsModel;
 import com.traditional.yoga.model.QualificationModel;
 
@@ -29,12 +30,14 @@ public class RegistrationRequest {
 	private ProfessionsModel professionId;
 	private int professionWorkingHours;
 	private QualificationModel educationalId;
+	private String otherEducationalName;
 	private String prideQualification;
-	private String martialStatus;
+	private MaritalStatusModel maritalStatus;
 	private String familyDetails;
 	private String consentFamily;
 	private String resistanceFamily;
 	private String participatingFamily;
+	private String participateName;
 	private String pastPractice;
 	private String hobbies;
 	private String hobbiesAside;
@@ -219,6 +222,14 @@ public class RegistrationRequest {
 		this.educationalId = educationalId;
 	}
 
+	public String getOtherEducationalName() {
+		return otherEducationalName;
+	}
+
+	public void setOtherEducationalName(String otherEducationalName) {
+		this.otherEducationalName = otherEducationalName;
+	}
+
 	public String getPrideQualification() {
 		return prideQualification;
 	}
@@ -227,12 +238,12 @@ public class RegistrationRequest {
 		this.prideQualification = prideQualification;
 	}
 
-	public String getMartialStatus() {
-		return martialStatus;
+	public MaritalStatusModel getMaritalStatus() {
+		return maritalStatus;
 	}
 
-	public void setMartialStatus(String martialStatus) {
-		this.martialStatus = martialStatus;
+	public void setMaritalStatus(MaritalStatusModel maritalStatus) {
+		this.maritalStatus = maritalStatus;
 	}
 
 	public String getFamilyDetails() {
@@ -265,6 +276,14 @@ public class RegistrationRequest {
 
 	public void setParticipatingFamily(String participatingFamily) {
 		this.participatingFamily = participatingFamily;
+	}
+
+	public String getParticipateName() {
+		return participateName;
+	}
+
+	public void setParticipateName(String participateName) {
+		this.participateName = participateName;
 	}
 
 	public String getPastPractice() {
