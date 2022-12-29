@@ -11,6 +11,7 @@ public class BannerViewRequest {
 	private String description;
 	private int categoryId;
 	private String dateOfAdd;
+	private String bannerStatus;
 	private String createdBy;
 	private String createdDate;
 	private String updateBy;
@@ -85,6 +86,14 @@ public class BannerViewRequest {
 		return dateOfAdd;
 	}
 
+	public String getBannerStatus() {
+		return bannerStatus;
+	}
+
+	public void setBannerStatus(String bannerStatus) {
+		this.bannerStatus = bannerStatus;
+	}
+
 	public void setDateOfAdd(String dateOfAdd) {
 		this.dateOfAdd = dateOfAdd;
 	}
@@ -128,7 +137,5 @@ public class BannerViewRequest {
 	public void setIsActive(String isActive) {
 		this.isActive = isActive;
 	}
-	
-	
 
 }

@@ -51,4 +51,9 @@ public class Constants {
 	public static final int GLIMPSES = 3;
 	public static final int SHORT_VIDEOS = 4;
 	
+//	Banner Status
+	public static final String BANNER_STATUS_DRAFT = "Draft";
+	public static final String BANNER_STATUS_NOT_PUBLISHED = "Not Published";
+	public static final String BANNER_STATUS_PUBLISHED = "Published";
+	
 }

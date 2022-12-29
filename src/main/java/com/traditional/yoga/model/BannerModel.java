@@ -33,6 +33,9 @@ public class BannerModel {
 
 	@Column(name = "description")
 	private String description;
+	
+	@Column(name = "banner_status")
+	private String bannerStatus;
 
 	@Column(name = "categeory_id")
 	private int categoryId;
@@ -42,12 +45,16 @@ public class BannerModel {
 
 	@Column(name = "created_by")
 	private String createdBy;
+	
 	@Column(name = "created_date")
 	private String createdDate;
+	
 	@Column(name = "updated_by")
 	private String updateBy;
+	
 	@Column(name = "updated_date")
 	private String updateDate;
+	
 	@Column(name = "is_active")
 	private String isActive;
 
@@ -121,6 +128,14 @@ public class BannerModel {
 
 	public void setDateOfAdd(String dateOfAdd) {
 		this.dateOfAdd = dateOfAdd;
+	}
+
+	public String getBannerStatus() {
+		return bannerStatus;
+	}
+
+	public void setBannerStatus(String bannerStatus) {
+		this.bannerStatus = bannerStatus;
 	}
 
 	public String getCreatedBy() {
