@@ -57,4 +57,11 @@ public class Constants {
 	public static final String BANNER_STATUS_NOT_PUBLISHED = "Not Published";
 	public static final String BANNER_STATUS_PUBLISHED = "Published";
 	
+//	Email OTP Verification
+	public static final int OTP_LENGTH = 6;
+	public static final String OTP_SUBJECT = "Traditional Yoga Email Verification";
+	public static final String OTP_BODY = "Hi, ,\r\n"
+			+ "\r\n"
+			+ "OTP for Email Verification.";
+	
 }

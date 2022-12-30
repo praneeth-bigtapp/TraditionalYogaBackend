@@ -12,4 +12,7 @@ public interface QualificationRepository extends JpaRepository<QualificationMode
 
 	@Query(value = "SELECT * FROM `qualification` WHERE `qualification_id`= :qualificationId", nativeQuery = true)
 	QualificationModel getQualificationById(@Param("qualificationId") int qualificationId);
+	
+	@Query(value = "SELECT * FROM `qualification` WHERE `qualification_name`= :qualificationName", nativeQuery = true)
+	QualificationModel getQualificationByName(@Param("qualificationName") String qualificationName);
 }

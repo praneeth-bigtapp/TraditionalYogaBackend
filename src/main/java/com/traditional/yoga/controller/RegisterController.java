@@ -42,4 +42,16 @@ public class RegisterController {
 		LOG.info("Entering into register Method");
 		return registerService.enrollFullStudent(registrationDto);
 	}
+	
+	@PostMapping("/verifyEmail")
+	public Object emailVerify(@RequestBody RegistrationRequest registrationDto) {
+		LOG.info("Entering into email verification Method");
+		return registerService.verifyEmail(registrationDto.getEmailId());
+	}
+	
+//	@PostMapping("/otp")
+//	public Object otpVerify(@RequestBody RegistrationRequest registrationDto) {
+//		LOG.info("Entering into otp verification Method");
+//		return "OPT validated";
+//	}
 }

@@ -9,11 +9,16 @@ import org.springframework.stereotype.Service;
 
 import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.RegistrationRequest;
+import com.traditional.yoga.dto.response.EmailOtpResponse;
+import com.traditional.yoga.interfaces.EmailService;
+import com.traditional.yoga.model.QualificationModel;
 import com.traditional.yoga.model.RegistrationModel;
 import com.traditional.yoga.repository.AboutUsRepository;
 import com.traditional.yoga.repository.MaritalStatusRepository;
+import com.traditional.yoga.repository.QualificationRepository;
 import com.traditional.yoga.repository.RegistrationRepository;
 import com.traditional.yoga.utils.Constants;
+import com.traditional.yoga.utils.GeneralUtils;
 
 @Service
 public class RegisterService {
@@ -28,6 +33,15 @@ public class RegisterService {
 
 	@Autowired
 	MaritalStatusRepository maritalStatusRepository;
+
+	@Autowired
+	QualificationRepository qualificationRepository;
+
+	@Autowired
+	GeneralUtils generalUtils;
+
+	@Autowired
+	EmailService emailService;
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -119,10 +133,6 @@ public class RegisterService {
 				if (Boolean.FALSE.equals(professionStatus))
 					newEnroll.setProfessionId(registrationDto.getProfessionId());
 
-				Boolean educationalStatus = registrationDto.getEducationalId().getQualificationId() == 0;
-				if (Boolean.FALSE.equals(educationalStatus))
-					newEnroll.setEducationalId(registrationDto.getEducationalId());
-
 				Boolean maritalStatus = registrationDto.getMaritalStatus().getMaritalStatusId() == 0;
 				if (Boolean.FALSE.equals(maritalStatus))
 					newEnroll.setMaritalStatus(registrationDto.getMaritalStatus());
@@ -130,6 +140,20 @@ public class RegisterService {
 				if (registrationDto.getParticipatingFamily().equals(Constants.YES)) {
 					newEnroll.setParticipateName(registrationDto.getParticipateName());
 				}
+
+				Boolean educationalStatus = registrationDto.getEducationalId().getQualificationId() == 0;
+				if (Boolean.FALSE.equals(educationalStatus)) {
+					Boolean otherStatus = registrationDto.getEducationalId().getQualificationId() == -1;
+					if (Boolean.TRUE.equals(otherStatus)) {
+						addQualification(registrationDto.getOtherEducationalName());
+						QualificationModel qualificationDb = qualificationRepository
+								.getQualificationByName(registrationDto.getOtherEducationalName());
+						newEnroll.setEducationalId(qualificationDb);
+					} else {
+						newEnroll.setEducationalId(registrationDto.getEducationalId());
+					}
+				}
+
 				registrationRepository.save(newEnroll);
 				message = "User Registered Sucessfully";
 				httpStatus = HttpStatus.OK;
@@ -146,6 +170,43 @@ public class RegisterService {
 
 		} catch (Exception e) {
 			message = "Exception in Detailed Registation";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+			return new ResponseEntity<>(response, httpStatus);
+		}
+	}
+
+	private void addQualification(String qualificationName) {
+		LOG.info("Adding new Qualification");
+		QualificationModel newQualification = new QualificationModel();
+		newQualification.setQualificationName(qualificationName);
+		newQualification.setCreatedBy("Praneeth");
+		newQualification.setCreatedDate(generalUtils.getCurrentDate());
+		qualificationRepository.save(newQualification);
+		LOG.info("Qualification Adding Sucessfully");
+	}
+
+//	Email OTP Verification service
+	public Object verifyEmail(String emailId) {
+		EmailOtpResponse otpResponse = new EmailOtpResponse();
+		try {
+			String otp = emailService.generateOtp();
+			String to = emailId;
+			String subject = Constants.OTP_SUBJECT;
+			String text = Constants.OTP_BODY + otp;
+			emailService.sendSimpleMessage(to, subject, text);
+			
+			message = "OTP send Sucessfully to mail ID : " + emailId;
+			httpStatus = HttpStatus.OK;
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+			otpResponse.setOtp(otp);
+			otpResponse.setResponse(response);
+			return new ResponseEntity<>(otpResponse, httpStatus);
+		} catch (Exception e) {
+			message = "Unable to send mail, Exception!!";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());

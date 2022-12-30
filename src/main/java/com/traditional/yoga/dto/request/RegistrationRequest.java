@@ -45,6 +45,7 @@ public class RegistrationRequest {
 	private String referenceRelationship;
 	private Long referenceMobile;
 	private String courseBriefly;
+	private String otp;
 
 	public int getRegistrationId() {
 		return registrationId;
@@ -340,6 +341,14 @@ public class RegistrationRequest {
 
 	public void setCourseBriefly(String courseBriefly) {
 		this.courseBriefly = courseBriefly;
+	}
+
+	public String getOtp() {
+		return otp;
+	}
+
+	public void setOtp(String otp) {
+		this.otp = otp;
 	}
 
 }
