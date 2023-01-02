@@ -12,4 +12,7 @@ public interface RegistrationRepository extends JpaRepository<RegistrationModel,
 
 	@Query(value = "SELECT * FROM `registration` WHERE `registration_id`= :registrationId ", nativeQuery = true)
 	RegistrationModel getRegistrationById(@Param("registrationId") int registrationId);
+	
+	@Query(value = "SELECT * FROM `registration` WHERE `email_id`= :emailId ", nativeQuery = true)
+	RegistrationModel getRegistrationByEmail(@Param("emailId") String emailId);
 }

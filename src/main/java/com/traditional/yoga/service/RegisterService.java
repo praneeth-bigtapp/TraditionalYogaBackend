@@ -19,6 +19,7 @@ import com.traditional.yoga.repository.QualificationRepository;
 import com.traditional.yoga.repository.RegistrationRepository;
 import com.traditional.yoga.utils.Constants;
 import com.traditional.yoga.utils.GeneralUtils;
+import com.traditional.yoga.utils.PasswordGenerator;
 
 @Service
 public class RegisterService {
@@ -39,9 +40,15 @@ public class RegisterService {
 
 	@Autowired
 	GeneralUtils generalUtils;
+	
+	@Autowired
+	PasswordGenerator passwordGenerator;
 
 	@Autowired
 	EmailService emailService;
+	
+	@Autowired
+	UserManagementService userManagementService;
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -98,6 +105,14 @@ public class RegisterService {
 			httpStatus = HttpStatus.OK;
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
+			
+			LOG.info("Generating Password");
+			String pwd = generatePassword(registrationDto.getEmailId());
+			
+			LOG.info("Saving User Credentions");
+			RegistrationModel enrollDb = registrationRepository.getRegistrationByEmail(newEnroll.getEmailId());
+			userManagementService.registerUsers(enrollDb,pwd);
+			
 			return new ResponseEntity<>(response, httpStatus);
 		} catch (Exception e) {
 			message = "Exception in Basic Registation";
@@ -214,4 +229,29 @@ public class RegisterService {
 			return new ResponseEntity<>(response, httpStatus);
 		}
 	}
+	
+//	Generate Password
+	private String generatePassword(String emailId) {
+		String password = passwordGenerator.generatePassword();
+		try {
+			LOG.info("Password Generated sucessfully");
+			String to = emailId;
+			String subject = Constants.PASSWORD_SUBJECT;
+			String text = Constants.PASSWORD_BODY + password;
+			emailService.sendSimpleMessage(to, subject, text);
+			
+			message = "OTP send Sucessfully to mail ID : " + emailId;
+			httpStatus = HttpStatus.OK;
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} catch (Exception e) {
+			message = "Unable to send mail, Exception!!";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return password;
+	}
+	
 }

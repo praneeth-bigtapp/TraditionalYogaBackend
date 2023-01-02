@@ -5,64 +5,76 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user_password")
 public class UserModel {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID")
-	private int id;
-	
-	@Column(name = "name")
-	private String userName;
-	
+	@Column(name = "user_password_id")
+	private int userPasswordId;
+
+	@ManyToOne
+	@JoinColumn(name = "registration_id", referencedColumnName = "registration_id")
+	private RegistrationModel registrationId;
+
+	@ManyToOne
+	@JoinColumn(name = "role_id", referencedColumnName = "role_id")
+	private RoleModel roleId;
+
 	@Column(name = "password")
 	private String password;
-	
-	@Column(name = "email_address")
-	private String email;
-	
-	@Column(name = "mobile")
-	private Long mobile;
-	
-	@Column(name = "role_id")
-	private Integer roleId;
-	
-	@Column(name = "age_from")
-	private Integer ageFrom;
-	
-	@Column(name = "age_to")
-	private Integer ageTo;
-	
-	@Column(name = "region")
-	private String region;
-	
-	@Column(name = "gender")
-	private String gender;
-	
-	@Column(name = "country")
-	private String country;
-	
+
 	@Column(name = "status")
 	private String status;
 
-	public int getId() {
-		return id;
+	@Column(name = "last_logged_in_date")
+	private String lastLoggedInDate;
+
+	@Column(name = "last_password_updated_date")
+	private String lastPasswordUpdatedDate;
+
+	@Column(name = "created_by")
+	private String createdBy;
+
+	@Column(name = "created_date")
+	private String createdDate;
+
+	@Column(name = "updated_by")
+	private String updateBy;
+
+	@Column(name = "updated_date")
+	private String updateDate;
+
+	@Column(name = "delete_flage")
+	private String deleteFlage;
+
+	public int getUserPasswordId() {
+		return userPasswordId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setUserPasswordId(int userPasswordId) {
+		this.userPasswordId = userPasswordId;
 	}
 
-	public String getUserName() {
-		return userName;
+	public RegistrationModel getRegistrationId() {
+		return registrationId;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setRegistrationId(RegistrationModel registrationId) {
+		this.registrationId = registrationId;
+	}
+
+	public RoleModel getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(RoleModel roleId) {
+		this.roleId = roleId;
 	}
 
 	public String getPassword() {
@@ -73,76 +85,68 @@ public class UserModel {
 		this.password = password;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Long getMobile() {
-		return mobile;
-	}
-
-	public void setMobile(Long mobile) {
-		this.mobile = mobile;
-	}
-
-	public Integer getRoleId() {
-		return roleId;
-	}
-
-	public void setRoleId(Integer roleId) {
-		this.roleId = roleId;
-	}
-
-	public Integer getAgeFrom() {
-		return ageFrom;
-	}
-
-	public void setAgeFrom(Integer ageFrom) {
-		this.ageFrom = ageFrom;
-	}
-
-	public Integer getAgeTo() {
-		return ageTo;
-	}
-
-	public void setAgeTo(Integer ageTo) {
-		this.ageTo = ageTo;
-	}
-
-	public String getRegion() {
-		return region;
-	}
-
-	public void setRegion(String region) {
-		this.region = region;
-	}
-
-	public String getGender() {
-		return gender;
-	}
-
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
-
-	public String getCountry() {
-		return country;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
-	}
-
 	public String getStatus() {
 		return status;
 	}
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getLastLoggedInDate() {
+		return lastLoggedInDate;
+	}
+
+	public void setLastLoggedInDate(String lastLoggedInDate) {
+		this.lastLoggedInDate = lastLoggedInDate;
+	}
+
+	public String getLastPasswordUpdatedDate() {
+		return lastPasswordUpdatedDate;
+	}
+
+	public void setLastPasswordUpdatedDate(String lastPasswordUpdatedDate) {
+		this.lastPasswordUpdatedDate = lastPasswordUpdatedDate;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getUpdateBy() {
+		return updateBy;
+	}
+
+	public void setUpdateBy(String updateBy) {
+		this.updateBy = updateBy;
+	}
+
+	public String getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(String updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	public String getDeleteFlage() {
+		return deleteFlage;
+	}
+
+	public void setDeleteFlage(String deleteFlage) {
+		this.deleteFlage = deleteFlage;
 	}
 
 }

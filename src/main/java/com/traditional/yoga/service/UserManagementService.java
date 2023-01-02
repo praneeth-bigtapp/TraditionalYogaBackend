@@ -17,6 +17,7 @@ import com.traditional.yoga.dto.request.RoleRequest;
 import com.traditional.yoga.dto.request.SubMenuRequest;
 import com.traditional.yoga.dto.request.UserRequest;
 import com.traditional.yoga.model.ModuleModel;
+import com.traditional.yoga.model.RegistrationModel;
 import com.traditional.yoga.model.RoleModel;
 import com.traditional.yoga.model.RolePermissionModel;
 import com.traditional.yoga.model.SubModuleModel;
@@ -28,6 +29,7 @@ import com.traditional.yoga.repository.RoleRepository;
 import com.traditional.yoga.repository.SubModelRepository;
 import com.traditional.yoga.repository.UserRepository;
 import com.traditional.yoga.utils.Constants;
+import com.traditional.yoga.utils.GeneralUtils;
 import com.traditional.yoga.utils.UserManagementUtil;
 
 @Service
@@ -55,6 +57,9 @@ public class UserManagementService {
 
 	@Autowired
 	UserManagementUtil userManagementUtil;
+
+	@Autowired
+	GeneralUtils generalUtils;
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -95,11 +100,28 @@ public class UserManagementService {
 	}
 
 //	User
+	public Object registerUsers(RegistrationModel enrollDb, String password) {
+		UserModel newUser = new UserModel();
+		newUser.setRegistrationId(enrollDb);
+		newUser.setRoleId(roleRepository.getRoleById(Constants.DEFAULT_ROLE));
+		newUser.setPassword(generalUtils.enCrypt(password));
+		newUser.setStatus(Constants.YES);
+		newUser.setLastLoggedInDate(generalUtils.getCurrentDate());
+		newUser.setLastPasswordUpdatedDate(generalUtils.getCurrentDate());
+		newUser.setCreatedBy("praneeth");
+		newUser.setCreatedDate(generalUtils.getCurrentDate());
+		userRepository.save(newUser);
+		message = "User added sucessfully";
+		LOG.info(message);
+		response = new Response(message, httpStatus.value(), null);
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
 	public Object manageUsers(String operation, UserRequest userDto) {
 
 		this.httpStatus = HttpStatus.OK;
 		UserModel userReq = new UserModel();
-		userReq.setUserName(userDto.getUserName());
+//		userReq.setUserName(userDto.getUserName());
 		userReq.setPassword(userDto.getPassword());
 		try {
 
@@ -147,18 +169,18 @@ public class UserManagementService {
 		if (userDb != null) {
 			UserModel userCheck = userRepository.getUserByName(userDto.getUserName());
 			if (userCheck == null) {
-				userDb.setId(userDto.getId());
-				userDb.setUserName(userDto.getUserName());
-				userDb.setPassword(userDto.getPassword());
-				userDb.setEmail(userDto.getEmail());
-				userDb.setRegion(userDto.getRegion());
-				userDb.setCountry(userDto.getCountry());
-				userDb.setGender(userDto.getGender());
-				userDb.setRoleId(userDto.getRoleId());
-				userDb.setAgeFrom(userDto.getAgeFrom());
-				userDb.setAgeTo(userDto.getAgeTo());
-				userDb.setStatus(userDto.getStatus());
-				userDb.setMobile(userDto.getMobile());
+//				userDb.setId(userDto.getId());
+//				userDb.setUserName(userDto.getUserName());
+//				userDb.setPassword(userDto.getPassword());
+//				userDb.setEmail(userDto.getEmail());
+//				userDb.setRegion(userDto.getRegion());
+//				userDb.setCountry(userDto.getCountry());
+//				userDb.setGender(userDto.getGender());
+//				userDb.setRoleId(userDto.getRoleId());
+//				userDb.setAgeFrom(userDto.getAgeFrom());
+//				userDb.setAgeTo(userDto.getAgeTo());
+//				userDb.setStatus(userDto.getStatus());
+//				userDb.setMobile(userDto.getMobile());
 				userRepository.save(userDb);
 				message = "User saved sucessfully";
 				LOG.info(message);
@@ -181,18 +203,18 @@ public class UserManagementService {
 	private void activeUsers(UserRequest userDto) {
 		UserModel userDb = userRepository.getUserById(userDto.getId());
 		if (userDb != null) {
-			userDb.setId(userDto.getId());
-			userDb.setUserName(userDto.getUserName());
-			userDb.setPassword(userDto.getPassword());
-			userDb.setEmail(userDto.getEmail());
-			userDb.setRegion(userDto.getRegion());
-			userDb.setCountry(userDto.getCountry());
-			userDb.setGender(userDto.getGender());
-			userDb.setRoleId(userDto.getRoleId());
-			userDb.setAgeFrom(userDto.getAgeFrom());
-			userDb.setAgeTo(userDto.getAgeTo());
-			userDb.setStatus(userDto.getStatus());
-			userDb.setMobile(userDto.getMobile());
+//			userDb.setId(userDto.getId());
+//			userDb.setUserName(userDto.getUserName());
+//			userDb.setPassword(userDto.getPassword());
+//			userDb.setEmail(userDto.getEmail());
+//			userDb.setRegion(userDto.getRegion());
+//			userDb.setCountry(userDto.getCountry());
+//			userDb.setGender(userDto.getGender());
+//			userDb.setRoleId(userDto.getRoleId());
+//			userDb.setAgeFrom(userDto.getAgeFrom());
+//			userDb.setAgeTo(userDto.getAgeTo());
+//			userDb.setStatus(userDto.getStatus());
+//			userDb.setMobile(userDto.getMobile());
 			userRepository.save(userDb);
 			message = "User saved sucessfully";
 			LOG.info(message);
@@ -210,18 +232,18 @@ public class UserManagementService {
 		UserModel userNew = userRepository.getUserByName(userDto.getUserName());
 		if (userNew == null) {
 			UserModel newUser = new UserModel();
-			newUser.setId(userDto.getId());
-			newUser.setUserName(userDto.getUserName());
-			newUser.setPassword(userDto.getPassword());
-			newUser.setEmail(userDto.getEmail());
-			newUser.setRegion(userDto.getRegion());
-			newUser.setCountry(userDto.getCountry());
-			newUser.setGender(userDto.getGender());
-			newUser.setRoleId(userDto.getRoleId());
-			newUser.setAgeFrom(userDto.getAgeFrom());
-			newUser.setAgeTo(userDto.getAgeTo());
-			newUser.setStatus(userDto.getStatus());
-			newUser.setMobile(userDto.getMobile());
+//			newUser.setId(userDto.getId());
+//			newUser.setUserName(userDto.getUserName());
+//			newUser.setPassword(userDto.getPassword());
+//			newUser.setEmail(userDto.getEmail());
+//			newUser.setRegion(userDto.getRegion());
+//			newUser.setCountry(userDto.getCountry());
+//			newUser.setGender(userDto.getGender());
+//			newUser.setRoleId(userDto.getRoleId());
+//			newUser.setAgeFrom(userDto.getAgeFrom());
+//			newUser.setAgeTo(userDto.getAgeTo());
+//			newUser.setStatus(userDto.getStatus());
+//			newUser.setMobile(userDto.getMobile());
 			userRepository.save(newUser);
 			message = "User added sucessfully";
 			LOG.info(message);

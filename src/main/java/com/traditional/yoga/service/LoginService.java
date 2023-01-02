@@ -68,17 +68,17 @@ public class LoginService {
 			UserModel userData = loginUserRepository.getUserByName(userDetails.getUserName());
 			Boolean validateUser = validatingUser(userData, userDetails);
 			if (Boolean.TRUE.equals(validateUser)) {
-				loginResponse.setUserId(userData.getUserName());
-				loginResponse.setRoleId(userData.getRoleId());
+				loginResponse.setUserId(userData.getRegistrationId().getEmailId());
+				loginResponse.setRoleId(userData.getRoleId().getRoleId());
 
-				RoleModel role = roleRepository.getRoleById(userData.getRoleId());
+				RoleModel role = roleRepository.getRoleById(userData.getRoleId().getRoleId());
 				loginResponse.setUserRole(role.getRoleName());
 				loginResponse.setRoleStatus(role.getActive());
 
 				LOG.info("Fletching Role Permissions");
 				List<RolePermissionModel> permissionData = rolePermissionRepository
-						.getPermissionByroleId(userData.getRoleId());
-				List<RolePermissions> permission = getModuleScreenMap(permissionData, userData.getRoleId());
+						.getPermissionByroleId(userData.getRoleId().getRoleId());
+				List<RolePermissions> permission = getModuleScreenMap(permissionData, userData.getRoleId().getRoleId());
 				loginResponse.setPermissions(permission);
 
 				LOG.info("Assiging Token");
@@ -113,7 +113,7 @@ public class LoginService {
 	 */
 	private Boolean validatingUser(UserModel userData, LoginRequest userDetails) {
 		LOG.info("Checking for user exsits");
-		Boolean validateUser = userData == null || userData.getUserName().isBlank();
+		Boolean validateUser = userData == null || userData.getRegistrationId().getEmailId().isBlank();
 		Boolean checkingPassword = userDetails.getPassword() == null || userDetails.getPassword().isBlank();
 		if (Boolean.TRUE.equals(validateUser)) {
 			message = "Unauthorized user, Please check the user details";
