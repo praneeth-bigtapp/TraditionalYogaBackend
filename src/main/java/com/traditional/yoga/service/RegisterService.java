@@ -14,6 +14,8 @@ import com.traditional.yoga.interfaces.EmailService;
 import com.traditional.yoga.model.QualificationModel;
 import com.traditional.yoga.model.RegistrationModel;
 import com.traditional.yoga.repository.AboutUsRepository;
+import com.traditional.yoga.repository.CountryRepository;
+import com.traditional.yoga.repository.GenderRepository;
 import com.traditional.yoga.repository.MaritalStatusRepository;
 import com.traditional.yoga.repository.QualificationRepository;
 import com.traditional.yoga.repository.RegistrationRepository;
@@ -37,16 +39,22 @@ public class RegisterService {
 
 	@Autowired
 	QualificationRepository qualificationRepository;
+	
+	@Autowired
+	GenderRepository genderRepository;
+	
+	@Autowired
+	CountryRepository countryRepository;
 
 	@Autowired
 	GeneralUtils generalUtils;
-	
+
 	@Autowired
 	PasswordGenerator passwordGenerator;
 
 	@Autowired
 	EmailService emailService;
-	
+
 	@Autowired
 	UserManagementService userManagementService;
 
@@ -64,6 +72,12 @@ public class RegisterService {
 			} else if (operationType.equals("maritalStatus")) {
 				httpStatus = HttpStatus.OK;
 				return maritalStatusRepository.findAll();
+			} else if (operationType.equals("gender")) {
+				httpStatus = HttpStatus.OK;
+				return genderRepository.findAll();
+			} else if (operationType.equals("country")) {
+				httpStatus = HttpStatus.OK;
+				return countryRepository.findAll();
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -105,14 +119,14 @@ public class RegisterService {
 			httpStatus = HttpStatus.OK;
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
-			
+
 			LOG.info("Generating Password");
 			String pwd = generatePassword(registrationDto.getEmailId());
-			
+
 			LOG.info("Saving User Credentions");
 			RegistrationModel enrollDb = registrationRepository.getRegistrationByEmail(newEnroll.getEmailId());
-			userManagementService.registerUsers(enrollDb,pwd);
-			
+			userManagementService.registerUsers(enrollDb, pwd);
+
 			return new ResponseEntity<>(response, httpStatus);
 		} catch (Exception e) {
 			message = "Exception in Basic Registation";
@@ -212,7 +226,7 @@ public class RegisterService {
 			String subject = Constants.OTP_SUBJECT;
 			String text = Constants.OTP_BODY + otp;
 			emailService.sendSimpleMessage(to, subject, text);
-			
+
 			message = "OTP send Sucessfully to mail ID : " + emailId;
 			httpStatus = HttpStatus.OK;
 			LOG.info(message);
@@ -229,7 +243,7 @@ public class RegisterService {
 			return new ResponseEntity<>(response, httpStatus);
 		}
 	}
-	
+
 //	Generate Password
 	private String generatePassword(String emailId) {
 		String password = passwordGenerator.generatePassword();
@@ -239,7 +253,7 @@ public class RegisterService {
 			String subject = Constants.PASSWORD_SUBJECT;
 			String text = Constants.PASSWORD_BODY + password;
 			emailService.sendSimpleMessage(to, subject, text);
-			
+
 			message = "OTP send Sucessfully to mail ID : " + emailId;
 			httpStatus = HttpStatus.OK;
 			LOG.info(message);
@@ -253,5 +267,5 @@ public class RegisterService {
 		}
 		return password;
 	}
-	
+
 }
