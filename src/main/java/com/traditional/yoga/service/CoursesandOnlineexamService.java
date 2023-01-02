@@ -612,8 +612,6 @@ public class CoursesandOnlineexamService {
 				updateMaterial(materialDto);
 			} else if (operation.equals(Constants.DELETE)) {
 				deleteMaterials(materialDto);
-			} else if (operation.equals(Constants.VIEW)) {
-				viewMaterials(materialDto);
 			} else {
 				success = false;
 				message = Constants.OPERATION_ERROR;
@@ -623,17 +621,15 @@ public class CoursesandOnlineexamService {
 			}
 		} catch (Exception e) {
 			success = false;
-			message = "Exception in adding materials";
+			message = Constants.EXCEPTION_MATERIALS;
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());
 			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
 		}
-		if (success) {
-			return new ResponseEntity<>(response, httpStatus);
-		} else {
-			return new ResponseEntity<>(response, httpStatus);
-		}
+
+		return new ResponseEntity<>(response, httpStatus);
+
 	}
 
 	private void addmaterials(AddCoursemateialRequest materialDto) {
@@ -662,7 +658,7 @@ public class CoursesandOnlineexamService {
 				}
 			}
 			addMaterialRepository.save(materialList);
-			message = "material to courses is added sucessfully";
+			message = Constants.MATERIAL_ADD;
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
@@ -724,19 +720,6 @@ public class CoursesandOnlineexamService {
 			httpStatus = HttpStatus.NOT_FOUND;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
-		}
-	}
-
-	private AddCoursesMaterialModel viewMaterials(AddCoursemateialRequest materialDto) {
-		AddCoursesMaterialModel material = addMaterialRepository.getMaterialById(materialDto.getCourseMaterialId());
-		if (material != null) {
-			return material;
-		} else {
-			message = "material with ID not found";
-			httpStatus = HttpStatus.NOT_FOUND;
-			LOG.error(message);
-			response = new Response(message, httpStatus.value(), message);
-			return null;
 		}
 	}
 

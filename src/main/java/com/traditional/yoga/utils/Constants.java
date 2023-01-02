@@ -63,5 +63,14 @@ public class Constants {
 	public static final String OTP_BODY = "Hi, ,\r\n"
 			+ "\r\n"
 			+ "OTP for Email Verification.";
+	///ADD course Material
 	
+	
+	
+	
+	public static final String EXCEPTION_MATERIALS ="Exception in adding materials";
+	
+	public static final String MATERIAL_ADD="material to courses is added sucessfully";
+	
+	public static final String MATERIAL_EXEPTION="material to courses is added sucessfully";
 }

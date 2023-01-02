@@ -18,6 +18,7 @@ import com.traditional.yoga.model.ClassMediaLiveClassModel;
 import com.traditional.yoga.model.ClassMediaShortVideoModel;
 import com.traditional.yoga.model.LanguageModel;
 import com.traditional.yoga.model.PraticeLibaryModel;
+import com.traditional.yoga.model.QualificationModel;
 import com.traditional.yoga.repository.CategoryLibaryRepository;
 import com.traditional.yoga.repository.ClassMediaGlipsesRepository;
 import com.traditional.yoga.repository.ClassMediaLiveClassRepository;
@@ -436,6 +437,20 @@ public class PraticeLibaryService {
 			classlist.setLanguage(glimpsesDto.getLanguage());
 			classlist.setCreatedDate(generalUtils.getCurrentDate());
 			classlist.setIsActive("Y");
+			Boolean languageStatus = glimpsesDto.getLanguage().getLanguageId() == 0;
+			if (Boolean.FALSE.equals(languageStatus)) {
+				Boolean otherStatus = glimpsesDto.getLanguage().getLanguageId() == -1;
+				if (Boolean.TRUE.equals(otherStatus)) {
+					LanguageModel languageDb = languageRepository.getlanguageByName(glimpsesDto.getOtherLangauge());
+					if (languageDb == null) {
+						addLangauge(glimpsesDto.getOtherLangauge());
+						languageDb = languageRepository.getlanguageByName(glimpsesDto.getOtherLangauge());
+					}
+					classlist.setLanguage(languageDb);
+				} else {
+					classlist.setLanguage(glimpsesDto.getLanguage());
+				}
+			}
 			classMediaGlipsesRepository.save(classlist);
 			message = "new Glimpses added to ClassMedia sucessfully";
 			LOG.info(message);
@@ -450,48 +465,38 @@ public class PraticeLibaryService {
 	}
 
 	private void updateGlimpses(ClassMediaGlipmses glimpsesDto) {
-	    // Check if a record with the same ID exists in the database
-	    ClassMediaGlimpsesModel existingGlimpses = classMediaGlipsesRepository
-	            .getGlimpsesById(glimpsesDto.getGlimpsesId());
-	    if (existingGlimpses != null) {
-	        boolean updateRecord = false;
-	        // Compare the new data with the existing data and set updateRecord to true if any of the data is different
-	        if (!existingGlimpses.getCoursesId().equals(glimpsesDto.getCoursesId())) {
-	            updateRecord = true;
-	        }
-	        if (!existingGlimpses.getDate().equals(glimpsesDto.getDate())) {
-	            updateRecord = true;
-	        }
-	        if (!existingGlimpses.getFileUpload().equals(glimpsesDto.getFileUpload())) {
-	            updateRecord = true;
-	        }
-	        if (!existingGlimpses.getLanguage().equals(glimpsesDto.getLanguage())) {
-	            updateRecord = true;
-	        }
-	        if (updateRecord) {
-	            // Update the existing record with the new data
-	            existingGlimpses.setCoursesId(glimpsesDto.getCoursesId());
-	            existingGlimpses.setDate(glimpsesDto.getDate());
-	            existingGlimpses.setFileUpload(glimpsesDto.getFileUpload());
-	            existingGlimpses.setLanguage(glimpsesDto.getLanguage());
-	            classMediaGlipsesRepository.save(existingGlimpses);
-	            message = "Glimpses updated in ClassMedia sucessfully";
-	            LOG.info(message);
-	            response = new Response(message, httpStatus.value(), null);
-	        } else {
-	            message = "No changes detected in Glimpses data";
-	            httpStatus = HttpStatus.OK;
-	            LOG.info(message);
-	            response = new Response(message, httpStatus.value(), null);
-	        }
-	    } else {
-	        message = "Glimpses with ID " + glimpsesDto.getGlimpsesId() + " not found";
-	        httpStatus = HttpStatus.NOT_FOUND;
-	        LOG.error(message);
-	        response = new Response(message, httpStatus.value(), message);
-	    }
+		ClassMediaGlimpsesModel classNew = classMediaGlipsesRepository.getGlimpsesById(glimpsesDto.getGlimpsesId());
+		if (classNew == null) {
+			message = "class media glimpse with ID " + glimpsesDto.getGlimpsesId() + " does not exist";
+			httpStatus = HttpStatus.NOT_FOUND;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		} else {
+			classNew.setCoursesId(glimpsesDto.getCoursesId());
+			classNew.setDate(glimpsesDto.getDate());
+			classNew.setFileUpload(glimpsesDto.getFileUpload());
+			classNew.setLanguage(glimpsesDto.getLanguage());
+			classNew.setUpdatedDate(generalUtils.getCurrentDate());
+			Boolean languageStatus = glimpsesDto.getLanguage().getLanguageId() == 0;
+			if (Boolean.FALSE.equals(languageStatus)) {
+				Boolean otherStatus = glimpsesDto.getLanguage().getLanguageId() == -1;
+				if (Boolean.TRUE.equals(otherStatus)) {
+					LanguageModel languageDb = languageRepository.getlanguageByName(glimpsesDto.getOtherLangauge());
+					if (languageDb == null) {
+						addLangauge(glimpsesDto.getOtherLangauge());
+						languageDb = languageRepository.getlanguageByName(glimpsesDto.getOtherLangauge());
+					}
+					classNew.setLanguage(languageDb);
+				} else {
+					classNew.setLanguage(glimpsesDto.getLanguage());
+				}
+			}
+			classMediaGlipsesRepository.save(classNew);
+			message = "class media glimpse with ID " + glimpsesDto.getGlimpsesId() + " updated successfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		}
 	}
-
 
 	private void deleteGlimpses(int glimpsesId) {
 		// Check if a record with the given ID exists in the database
@@ -508,6 +513,16 @@ public class PraticeLibaryService {
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
 		}
+	}
+
+	private void addLangauge(String qualificationName) {
+		LOG.info("Adding new Langauge");
+		LanguageModel languagelist = new LanguageModel();
+		languagelist.setLanguageName(qualificationName);
+		languagelist.setCreatedDate(generalUtils.getCurrentDate());
+		languagelist.setIsActive("Y");
+		languageRepository.save(languagelist);
+		LOG.info("Language Adding Sucessfully");
 	}
 
 	public Object managelangauge(String operation, LanguageRequest languageDto) {
@@ -538,7 +553,7 @@ public class PraticeLibaryService {
 			languagelist.setLanguageName(languageDto.getLanguageName());
 			languagelist.setCreatedDate(generalUtils.getCurrentDate());
 			languagelist.setIsActive("Y");
-			
+
 			languageRepository.save(languagelist);
 			message = "new language is add sucessfully";
 			LOG.info(message);

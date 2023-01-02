@@ -10,6 +10,7 @@ public class ClassMediaGlipmses {
 	private String date;
 	private String fileUpload;
 	private LanguageModel language;
+	private String otherLangauge;
 	private String createdBy;
 	private String createdDate;
 	private String updatedBy;
@@ -54,6 +55,14 @@ public class ClassMediaGlipmses {
 
 	public void setLanguage(LanguageModel language) {
 		this.language = language;
+	}
+
+	public String getOtherLangauge() {
+		return otherLangauge;
+	}
+
+	public void setOtherLangauge(String otherLangauge) {
+		this.otherLangauge = otherLangauge;
 	}
 
 	public String getCreatedBy() {

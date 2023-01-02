@@ -9,6 +9,10 @@ import com.traditional.yoga.model.LanguageModel;
 public interface LanguageRepository extends JpaRepository<LanguageModel, Integer> {
 
 	@Query(value = "SELECT * FROM `m_language` WHERE `language_id`= :languageId", nativeQuery = true)
-	LanguageModel getlanguageById(@Param("languageId") int genderId);
+	LanguageModel getlanguageById(@Param("languageId") int languageId);
+	
+	
+	@Query(value = "SELECT * FROM `m_language` WHERE `language_name`= :languageName", nativeQuery = true)
+	LanguageModel getlanguageByName(@Param("languageName") String languageId);
 
 }
