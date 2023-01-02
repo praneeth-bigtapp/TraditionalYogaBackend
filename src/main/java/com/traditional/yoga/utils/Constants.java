@@ -38,10 +38,10 @@ public class Constants {
 	public static final String ROLE_EXIST = ROLE + " " + ALREADY_EXIST;
 	public static final String MENU_ERROR = MENU + " " + DOES_NOT_EXIST;
 	public static final String MENU_EXIST = MENU + " " + ALREADY_EXIST;
-	
+
 //	Users
 	public static final int DEFAULT_ROLE = 2;
-	
+
 //	Role Permission
 	public static final int DEFAULT_PERMISSION = 6;
 
@@ -54,28 +54,21 @@ public class Constants {
 	public static final int RECORDED_SESSION = 1;
 	public static final int GLIMPSES = 3;
 	public static final int SHORT_VIDEOS = 4;
-	
+
 //	Banner Status
 	public static final String BANNER_STATUS_DRAFT = "Draft";
 	public static final String BANNER_STATUS_NOT_PUBLISHED = "Not Published";
 	public static final String BANNER_STATUS_PUBLISHED = "Published";
-	
+
 //	Email OTP Verification
 	public static final int OTP_LENGTH = 6;
 	public static final String OTP_SUBJECT = "Traditional Yoga Email Verification";
-	public static final String OTP_BODY = "Hi, ,\r\n"
-			+ "\r\n"
-			+ "OTP for Email Verification.";
-	
+
 //	Email Password Verification
-	public static final String PASSWORD_SUBJECT = "Traditional Yoga Password";
-	public static final String PASSWORD_BODY = "Hi, ,\r\n"
-			+ "\r\n"
-			+ "This the Password for Traditional Yoga.";
-	
-	
+	public static final String PASSWORD_SUBJECT = "Traditional Yoga Login Credentials";
+
 //	ADD course Material
-	public static final String EXCEPTION_MATERIALS ="Exception in adding materials";
-	public static final String MATERIAL_ADD="material to courses is added sucessfully";
-	public static final String MATERIAL_EXEPTION="material to courses is added sucessfully";
+	public static final String EXCEPTION_MATERIALS = "Exception in adding materials";
+	public static final String MATERIAL_ADD = "material to courses is added sucessfully";
+	public static final String MATERIAL_EXEPTION = "material to courses is added sucessfully";
 }

@@ -32,7 +32,7 @@ public class RegistrationModel {
 	private String emailId;
 
 	@Column(name = "mobile_number")
-	private Long mobileNumber;
+	private String mobileNumber;
 
 	@Column(name = "date_of_birth")
 	private String dateOfBirth;
@@ -125,7 +125,7 @@ public class RegistrationModel {
 	private String referenceRelationship;
 
 	@Column(name = "reference_mobile")
-	private Long referenceMobile;
+	private String referenceMobile;
 
 	@Column(name = "course_briefly")
 	private String courseBriefly;
@@ -170,12 +170,16 @@ public class RegistrationModel {
 		this.emailId = emailId;
 	}
 
-	public Long getMobileNumber() {
+	public String getMobileNumber() {
 		return mobileNumber;
 	}
 
-	public void setMobileNumber(Long mobileNumber) {
+	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
+	}
+
+	public void setReferenceMobile(String referenceMobile) {
+		this.referenceMobile = referenceMobile;
 	}
 
 	public String getDateOfBirth() {
@@ -402,12 +406,8 @@ public class RegistrationModel {
 		this.referenceRelationship = referenceRelationship;
 	}
 
-	public Long getReferenceMobile() {
+	public String getReferenceMobile() {
 		return referenceMobile;
-	}
-
-	public void setReferenceMobile(Long referenceMobile) {
-		this.referenceMobile = referenceMobile;
 	}
 
 	public String getCourseBriefly() {

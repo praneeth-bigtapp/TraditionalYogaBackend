@@ -18,11 +18,13 @@ import com.traditional.yoga.dto.RolePermissions;
 import com.traditional.yoga.dto.SubModulesScreen;
 import com.traditional.yoga.dto.request.LoginRequest;
 import com.traditional.yoga.dto.response.LoginResponse;
+import com.traditional.yoga.model.RegistrationModel;
 import com.traditional.yoga.model.RoleModel;
 import com.traditional.yoga.model.RolePermissionModel;
 import com.traditional.yoga.model.UserModel;
 import com.traditional.yoga.repository.ModelRepository;
 import com.traditional.yoga.repository.PermissionRepository;
+import com.traditional.yoga.repository.RegistrationRepository;
 import com.traditional.yoga.repository.RolePermissionRepository;
 import com.traditional.yoga.repository.RoleRepository;
 import com.traditional.yoga.repository.SubModelRepository;
@@ -37,11 +39,14 @@ public class LoginService {
 	UserRepository loginUserRepository;
 
 	@Autowired
+	RegistrationRepository registrationRepository;
+
+	@Autowired
 	RoleRepository roleRepository;
 
 	@Autowired
 	ModelRepository modelRepository;
-	
+
 	@Autowired
 	SubModelRepository subModelRepository;
 
@@ -65,10 +70,14 @@ public class LoginService {
 		LOG.info("Checking for bad Request");
 		Boolean checkingUser = userDetails.getUserName() == null || userDetails.getUserName().isBlank();
 		if (Boolean.FALSE.equals(checkingUser)) {
-			UserModel userData = loginUserRepository.getUserByName(userDetails.getUserName());
+			RegistrationModel reg = registrationRepository.getRegistrationByEmail(userDetails.getUserName());
+			UserModel userData = loginUserRepository.getUserByRegId(reg.getRegistrationId());
 			Boolean validateUser = validatingUser(userData, userDetails);
 			if (Boolean.TRUE.equals(validateUser)) {
-				loginResponse.setUserId(userData.getRegistrationId().getEmailId());
+				String fName = userData.getRegistrationId().getFirstName();
+				String lName = userData.getRegistrationId().getLastName();
+				String fullName = fName + " " + lName;
+				loginResponse.setUserId(fullName);
 				loginResponse.setRoleId(userData.getRoleId().getRoleId());
 
 				RoleModel role = roleRepository.getRoleById(userData.getRoleId().getRoleId());
@@ -164,24 +173,23 @@ public class LoginService {
 //			int permissionCount = rolePermissionRepository.findCountOfSubModulesPermissions(roleId,
 //					eachModuleScreen.getSubModuleId());
 //			if (permissionCount > 0) {
-				SubModulesScreen subModules = new SubModulesScreen();
+			SubModulesScreen subModules = new SubModulesScreen();
 
-				subModules.setSubModuleId(eachModuleScreen.getSubModuleId());
-				subModules.setSubModuleName(eachModuleScreen.getSubModuleName());
-				subModules.setRoutingLink(eachModuleScreen.getRoutingLink());
-				subModules.setIcon(eachModuleScreen.getIcon());
-				subModules.setPermissionId(eachModuleScreen.getPermissionId());
-				subModules.setPermissionName(eachModuleScreen.getPermissionName());
+			subModules.setSubModuleId(eachModuleScreen.getSubModuleId());
+			subModules.setSubModuleName(eachModuleScreen.getSubModuleName());
+			subModules.setRoutingLink(eachModuleScreen.getRoutingLink());
+			subModules.setIcon(eachModuleScreen.getIcon());
+			subModules.setPermissionId(eachModuleScreen.getPermissionId());
+			subModules.setPermissionName(eachModuleScreen.getPermissionName());
 
-				if (!moduleSubmoduleMap.containsKey(eachModuleScreen.getModuleName())) {
-					subModuleMapList = new ArrayList<>();
-					subModuleMapList.add(subModules);
-					moduleSubmoduleMap.put(eachModuleScreen.getModuleName(), subModuleMapList);
-				} else {
-					List<SubModulesScreen> moduleSubmoduleList = moduleSubmoduleMap
-							.get(eachModuleScreen.getModuleName());
-					moduleSubmoduleList.add(subModules);
-				}
+			if (!moduleSubmoduleMap.containsKey(eachModuleScreen.getModuleName())) {
+				subModuleMapList = new ArrayList<>();
+				subModuleMapList.add(subModules);
+				moduleSubmoduleMap.put(eachModuleScreen.getModuleName(), subModuleMapList);
+			} else {
+				List<SubModulesScreen> moduleSubmoduleList = moduleSubmoduleMap.get(eachModuleScreen.getModuleName());
+				moduleSubmoduleList.add(subModules);
+			}
 //			}
 		}
 

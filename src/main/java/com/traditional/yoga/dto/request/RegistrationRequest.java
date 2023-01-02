@@ -13,7 +13,7 @@ public class RegistrationRequest {
 	private String middleName;
 	private String lastName;
 	private String emailId;
-	private Long mobileNumber;
+	private String mobileNumber;
 	private String dateOfBirth;
 	private GenderModel genderId;
 	private String houseNumber;
@@ -43,7 +43,7 @@ public class RegistrationRequest {
 	private String hobbiesAside;
 	private String referenceName;
 	private String referenceRelationship;
-	private Long referenceMobile;
+	private String referenceMobile;
 	private String courseBriefly;
 	private String otp;
 
@@ -87,11 +87,11 @@ public class RegistrationRequest {
 		this.emailId = emailId;
 	}
 
-	public Long getMobileNumber() {
+	public String getMobileNumber() {
 		return mobileNumber;
 	}
 
-	public void setMobileNumber(Long mobileNumber) {
+	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
 	}
 
@@ -327,11 +327,11 @@ public class RegistrationRequest {
 		this.referenceRelationship = referenceRelationship;
 	}
 
-	public Long getReferenceMobile() {
+	public String getReferenceMobile() {
 		return referenceMobile;
 	}
 
-	public void setReferenceMobile(Long referenceMobile) {
+	public void setReferenceMobile(String referenceMobile) {
 		this.referenceMobile = referenceMobile;
 	}
 

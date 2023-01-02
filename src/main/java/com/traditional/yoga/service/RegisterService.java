@@ -1,8 +1,11 @@
 package com.traditional.yoga.service;
 
+import java.text.MessageFormat;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -57,6 +60,13 @@ public class RegisterService {
 
 	@Autowired
 	UserManagementService userManagementService;
+	
+	@Value("${yoga.credentials.body}")
+	private String emailCredentialsBody;
+	
+	@Value("${yoga.otp.body}")
+	private String emailOtpBody;
+	
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -224,7 +234,7 @@ public class RegisterService {
 			String otp = emailService.generateOtp();
 			String to = emailId;
 			String subject = Constants.OTP_SUBJECT;
-			String text = Constants.OTP_BODY + otp;
+			String text = MessageFormat.format(emailOtpBody, otp);
 			emailService.sendSimpleMessage(to, subject, text);
 
 			message = "OTP send Sucessfully to mail ID : " + emailId;
@@ -251,7 +261,7 @@ public class RegisterService {
 			LOG.info("Password Generated sucessfully");
 			String to = emailId;
 			String subject = Constants.PASSWORD_SUBJECT;
-			String text = Constants.PASSWORD_BODY + password;
+			String text = MessageFormat.format(emailCredentialsBody, emailId, password);
 			emailService.sendSimpleMessage(to, subject, text);
 
 			message = "OTP send Sucessfully to mail ID : " + emailId;
