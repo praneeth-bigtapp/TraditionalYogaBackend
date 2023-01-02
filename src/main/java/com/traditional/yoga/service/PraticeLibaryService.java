@@ -18,7 +18,6 @@ import com.traditional.yoga.model.ClassMediaLiveClassModel;
 import com.traditional.yoga.model.ClassMediaShortVideoModel;
 import com.traditional.yoga.model.LanguageModel;
 import com.traditional.yoga.model.PraticeLibaryModel;
-import com.traditional.yoga.model.QualificationModel;
 import com.traditional.yoga.repository.CategoryLibaryRepository;
 import com.traditional.yoga.repository.ClassMediaGlipsesRepository;
 import com.traditional.yoga.repository.ClassMediaLiveClassRepository;
@@ -227,7 +226,7 @@ public class PraticeLibaryService {
 				response = new Response(message, httpStatus.value(), message);
 			}
 		} catch (Exception e) {
-			message = "Exception in adding tasks";
+			message = "Exception in ClassMediaLive";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());
@@ -269,7 +268,7 @@ public class PraticeLibaryService {
 		ClassMediaLiveClassModel classToUpdate = classMediaLiveClassRepository
 				.getClassMediaLiveclass(classDto.getLiveClassId());
 		if (classToUpdate == null) {
-			message = "Live class with ID " + classDto.getLiveClassId() + " not found";
+			message = "Live class not found";
 			httpStatus = HttpStatus.NOT_FOUND;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
@@ -363,7 +362,7 @@ public class PraticeLibaryService {
 		ClassMediaShortVideoModel classNew = classMediaShortVideoRepository
 				.getshortVideobyId(shortDto.getShortVideoId());
 		if (classNew == null) {
-			message = "Short Video with ID " + shortDto.getShortVideoId() + " does not exist";
+			message = "Short Video does not exist";
 			httpStatus = HttpStatus.NOT_FOUND;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
@@ -371,7 +370,6 @@ public class PraticeLibaryService {
 			classNew.setCoursesId(shortDto.getCoursesId());
 			classNew.setPraticeLibaryId(shortDto.getPraticeLibaryId());
 			classNew.setSubCategoryId(subCategoryPraticeRepsoitory.getsubCategorybyId(shortDto.getSubCategoryId()));
-			;
 			classNew.setVideoLink(shortDto.getVideoLink());
 			classNew.setTitle(shortDto.getTitle());
 			classNew.setDescription(shortDto.getDescription());
@@ -379,7 +377,7 @@ public class PraticeLibaryService {
 			classNew.setDuration(shortDto.getDuration());
 			classNew.setUpdatedDate(generalUtils.getCurrentDate());
 			classMediaShortVideoRepository.save(classNew);
-			message = "Short video with ID " + shortDto.getShortVideoId() + " updated successfully";
+			message = "Short video with ID updated successfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		}
@@ -434,7 +432,6 @@ public class PraticeLibaryService {
 			classlist.setCoursesId(glimpsesDto.getCoursesId());
 			classlist.setDate(glimpsesDto.getDate());
 			classlist.setFileUpload(glimpsesDto.getFileUpload());
-			classlist.setLanguage(glimpsesDto.getLanguage());
 			classlist.setCreatedDate(generalUtils.getCurrentDate());
 			classlist.setIsActive("Y");
 			Boolean languageStatus = glimpsesDto.getLanguage().getLanguageId() == 0;
@@ -475,7 +472,6 @@ public class PraticeLibaryService {
 			classNew.setCoursesId(glimpsesDto.getCoursesId());
 			classNew.setDate(glimpsesDto.getDate());
 			classNew.setFileUpload(glimpsesDto.getFileUpload());
-			classNew.setLanguage(glimpsesDto.getLanguage());
 			classNew.setUpdatedDate(generalUtils.getCurrentDate());
 			Boolean languageStatus = glimpsesDto.getLanguage().getLanguageId() == 0;
 			if (Boolean.FALSE.equals(languageStatus)) {
@@ -529,7 +525,7 @@ public class PraticeLibaryService {
 		this.httpStatus = HttpStatus.OK;
 		try {
 			if (operation.equals(Constants.ADD)) {
-				addlangauge(languageDto);
+				addLangauge(languageDto);
 			} else {
 				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
@@ -546,7 +542,7 @@ public class PraticeLibaryService {
 		return new ResponseEntity<>(response, httpStatus);
 	}
 
-	private void addlangauge(LanguageRequest languageDto) {
+	private void addLangauge(LanguageRequest languageDto) {
 		LanguageModel classNew = languageRepository.getlanguageById(languageDto.getLanguageId());
 		if (classNew == null) {
 			LanguageModel languagelist = new LanguageModel();
@@ -559,7 +555,7 @@ public class PraticeLibaryService {
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = "Task " + Constants.ALREADY_EXIST;
+			message = "language" + Constants.ALREADY_EXIST;
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
