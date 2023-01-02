@@ -89,7 +89,7 @@ public class CoursesListAndOnlineExamController {
 			@RequestParam("operation") String operation) {
 		authenticate(token);
 		LOG.info("Entering into addMaterial{} Method", operation);
-		return coursesListService.managemateials(operation, materialDto);
+		return coursesListService.manageMateials(operation, materialDto);
 	}
 
 	@PostMapping("/addcategoryMaterial")

@@ -12,4 +12,6 @@ public interface AddMaterialRepository extends JpaRepository<AddCoursesMaterialM
 
 	@Query(value = "SELECT * FROM `add_course_materials` WHERE `course_material_id`= :courseMaterialId", nativeQuery = true)
 	AddCoursesMaterialModel getMaterialById(@Param("courseMaterialId") int courseMaterialId);
+	
+	
 }

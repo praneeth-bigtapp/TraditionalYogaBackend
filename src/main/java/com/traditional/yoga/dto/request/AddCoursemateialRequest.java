@@ -19,6 +19,7 @@ public class AddCoursemateialRequest {
 	private String updatedBy;
 	private String updatedDate;
 	private String isActive;
+	private String otherCategoryName;
 
 	public int getCourseMaterialId() {
 		return courseMaterialId;
@@ -122,6 +123,14 @@ public class AddCoursemateialRequest {
 
 	public void setIsActive(String isActive) {
 		this.isActive = isActive;
+	}
+
+	public String getOtherCategoryName() {
+		return otherCategoryName;
+	}
+
+	public void setOtherCategoryName(String otherCategoryName) {
+		this.otherCategoryName = otherCategoryName;
 	}
 
 }

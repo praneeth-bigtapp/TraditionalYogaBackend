@@ -24,6 +24,7 @@ import com.traditional.yoga.model.OnlineExamsModel;
 import com.traditional.yoga.model.PraticeDocumentModel;
 import com.traditional.yoga.model.PraticeImageModel;
 import com.traditional.yoga.model.PraticeMediaModel;
+import com.traditional.yoga.model.QualificationModel;
 import com.traditional.yoga.model.TaskModel;
 import com.traditional.yoga.model.TestimonalsModel;
 import com.traditional.yoga.repository.AddMaterialRepository;
@@ -162,7 +163,7 @@ public class CoursesandOnlineexamService {
 			if (operation.equals(Constants.ADD)) {
 				addcourses(courseListDto);
 			} else if (operation.equals(Constants.UPDATE)) {
-				updatecourses(courseListDto);
+				updateCourses(courseListDto);
 			} else if (operation.equals(Constants.DELETE)) {
 				deletecourses(courseListDto);
 			} else {
@@ -221,41 +222,26 @@ public class CoursesandOnlineexamService {
 	}
 
 	// update courses /////
-	private void updatecourses(CoursesListRequest courseListDto) {
+
+	private void updateCourses(CoursesListRequest courseListDto) {
 		CourseListModel listNew = coursesListRepository.getcoursesListById(courseListDto.getCoursesId());
 		if (listNew != null) {
-			CourseListModel check = coursesListRepository.getcoursesListBycoursesName(courseListDto.getCoursesName());
-			CourseListModel check1 = coursesListRepository.getcoursesListBydescription(courseListDto.getDescription());
-			CourseListModel check2 = coursesListRepository.getcoursesListBystartdate(courseListDto.getStartDate());
-			CourseListModel check3 = coursesListRepository.getcoursesListByenddate(courseListDto.getEndDate());
-			CourseListModel check4 = coursesListRepository
-					.getcoursesListByclouserdate(courseListDto.getApplicationClouserDate());
-
-			if (check == null || check1 == null || check2 == null || check3 == null || check4 == null) {
-				listNew.setCoursesName(courseListDto.getCoursesName());
-				listNew.setCategorieId(courseListDto.getCategorieId());
-				listNew.setDescription(courseListDto.getDescription());
-				listNew.setStartDate(courseListDto.getStartDate());
-				listNew.setEndDate(courseListDto.getEndDate());
-				listNew.setApplicationClouserDate(courseListDto.getApplicationClouserDate());
-				coursesListRepository.save(listNew);
-				message = "courses updated  sucessfully";
-				LOG.info(message);
-				response = new Response(message, httpStatus.value(), null);
-			} else {
-				message = "Updated quote is already exist";
-				httpStatus = HttpStatus.CONFLICT;
-				LOG.error(message);
-				response = new Response(message, httpStatus.value(), message);
-			}
-
+			listNew.setCoursesName(courseListDto.getCoursesName());
+			listNew.setCategorieId(courseListDto.getCategorieId());
+			listNew.setDescription(courseListDto.getDescription());
+			listNew.setStartDate(courseListDto.getStartDate());
+			listNew.setEndDate(courseListDto.getEndDate());
+			listNew.setApplicationClouserDate(courseListDto.getApplicationClouserDate());
+			coursesListRepository.save(listNew);
+			message = "Course updated successfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = "quote Doesn't exist";
+			message = "Course doesn't exist";
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
 		}
-
 	}
 
 	// Manage Exam ////
@@ -616,18 +602,18 @@ public class CoursesandOnlineexamService {
 	}
 
 	/// ADD MATERIAL COURSES///////
-	public Object managemateials(String operation, AddCoursemateialRequest materialDto) {
+	public Object manageMateials(String operation, AddCoursemateialRequest materialDto) {
 		boolean success = true;
 		this.httpStatus = HttpStatus.OK;
 		try {
 			if (operation.equals(Constants.ADD)) {
 				addmaterials(materialDto);
 			} else if (operation.equals(Constants.SAVE)) {
-				updatematerials(materialDto);
+				updateMaterial(materialDto);
 			} else if (operation.equals(Constants.DELETE)) {
 				deleteMaterials(materialDto);
 			} else if (operation.equals(Constants.VIEW)) {
-				viewMaterials(materialDto.getCourseMaterialId());
+				viewMaterials(materialDto);
 			} else {
 				success = false;
 				message = Constants.OPERATION_ERROR;
@@ -655,7 +641,6 @@ public class CoursesandOnlineexamService {
 		if (materialnew == null) {
 			AddCoursesMaterialModel materialList = new AddCoursesMaterialModel();
 			materialList.setCoursesId(materialDto.getCoursesId());
-			materialList.setMaterialCategoryId(materialDto.getMaterialCategoryId());
 			materialList.setMediaId(materialDto.getMediaId());
 			materialList.setCourseMaterialTitle(materialDto.getCourseMaterialTitle());
 			materialList.setVideoLink(materialDto.getVideoLink());
@@ -663,6 +648,19 @@ public class CoursesandOnlineexamService {
 			materialList.setMessage(materialDto.getMessage());
 			materialList.setCreatedDate(generalUtils.getCurrentDate());
 			materialList.setIsActive("Y");
+
+			Boolean categoryStatus = materialDto.getMaterialCategoryId().getMaterialCategoryId() == 0;
+			if (Boolean.FALSE.equals(categoryStatus)) {
+				Boolean otherStatus = materialDto.getMaterialCategoryId().getMaterialCategoryId() == -1;
+				if (Boolean.TRUE.equals(otherStatus)) {
+					addCategory(materialDto.getOtherCategoryName());
+					MaterialCategoryModel categoryDb = materialCategoryRepostiory
+							.getotherByName(materialDto.getOtherCategoryName());
+					materialList.setMaterialCategoryId(categoryDb);
+				} else {
+					materialList.setMaterialCategoryId(materialDto.getMaterialCategoryId());
+				}
+			}
 			addMaterialRepository.save(materialList);
 			message = "material to courses is added sucessfully";
 			LOG.info(message);
@@ -676,25 +674,37 @@ public class CoursesandOnlineexamService {
 
 	}
 
-	private void updatematerials(AddCoursemateialRequest materialDto) {
-		AddCoursesMaterialModel materialnew = addMaterialRepository.getMaterialById(materialDto.getCourseMaterialId());
-		if (materialnew != null) {
-			// Update the existing record with the new data
-			materialnew.setCoursesId(materialDto.getCoursesId());
-			materialnew.setMaterialCategoryId(materialDto.getMaterialCategoryId());
-			materialnew.setMediaId(materialDto.getMediaId());
-			materialnew.setCourseMaterialTitle(materialDto.getCourseMaterialTitle());
-			materialnew.setVideoLink(materialDto.getVideoLink());
-			materialnew.setFileUpload(materialDto.getFileUpload());
-			materialnew.setMessage(materialDto.getMessage());
-			materialnew.setCreatedDate(generalUtils.getCurrentDate());
-			materialnew.setIsActive("Y");
-			addMaterialRepository.save(materialnew);
+	private void updateMaterial(AddCoursemateialRequest materialDto) {
+		AddCoursesMaterialModel material = addMaterialRepository.getMaterialById(materialDto.getCourseMaterialId());
+		if (material != null) {
+			material.setCoursesId(materialDto.getCoursesId());
+			// material.setMaterialCategoryId(materialDto.getMaterialCategoryId());
+			material.setMediaId(materialDto.getMediaId());
+			material.setCourseMaterialTitle(materialDto.getCourseMaterialTitle());
+			material.setVideoLink(materialDto.getVideoLink());
+			material.setFileUpload(materialDto.getFileUpload());
+			material.setMessage(materialDto.getMessage());
+			material.setCreatedDate(generalUtils.getCurrentDate());
+			material.setIsActive("Y");
+
+			Boolean categoryStatus = materialDto.getMaterialCategoryId().getMaterialCategoryId() == 0;
+			if (Boolean.FALSE.equals(categoryStatus)) {
+				Boolean otherStatus = materialDto.getMaterialCategoryId().getMaterialCategoryId() == -1;
+				if (Boolean.TRUE.equals(otherStatus)) {
+					addCategory(materialDto.getOtherCategoryName());
+					MaterialCategoryModel categoryDb = materialCategoryRepostiory
+							.getotherByName(materialDto.getOtherCategoryName());
+					material.setMaterialCategoryId(categoryDb);
+				} else {
+					material.setCourseMaterialId(materialDto.getCourseMaterialId());
+				}
+			}
+			addMaterialRepository.save(material);
 			message = "material to courses is updated sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = "material with ID " + materialDto.getCourseMaterialId() + " not found";
+			message = "material does not exist";
 			httpStatus = HttpStatus.NOT_FOUND;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
@@ -717,17 +727,26 @@ public class CoursesandOnlineexamService {
 		}
 	}
 
-	private AddCoursesMaterialModel viewMaterials(int courseMaterialId) {
-		AddCoursesMaterialModel material = addMaterialRepository.getMaterialById(courseMaterialId);
+	private AddCoursesMaterialModel viewMaterials(AddCoursemateialRequest materialDto) {
+		AddCoursesMaterialModel material = addMaterialRepository.getMaterialById(materialDto.getCourseMaterialId());
 		if (material != null) {
 			return material;
 		} else {
-			message = "material with ID " + courseMaterialId + " not found";
+			message = "material with ID not found";
 			httpStatus = HttpStatus.NOT_FOUND;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
 			return null;
 		}
+	}
+
+	private void addCategory(String categoryName) {
+		LOG.info("Adding new category");
+		MaterialCategoryModel newCategory = new MaterialCategoryModel();
+		newCategory.setCategoryName(categoryName);
+
+		materialCategoryRepostiory.save(newCategory);
+		LOG.info("new Category Adding Sucessfully");
 	}
 
 	//

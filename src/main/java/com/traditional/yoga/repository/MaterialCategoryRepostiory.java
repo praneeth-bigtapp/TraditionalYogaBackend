@@ -14,4 +14,7 @@ public interface MaterialCategoryRepostiory extends JpaRepository<MaterialCatego
 	
 	@Query(value = "SELECT * FROM `material_category` WHERE `material_category_id`= :materialCategoryId=4", nativeQuery = true)
 	MaterialCategoryModel getotherById(@Param("materialCategoryId") int materialCategoryId);
+	
+	@Query(value = "SELECT * FROM `material_category` WHERE `category_name`= :categoryName", nativeQuery = true)
+	MaterialCategoryModel getotherByName(@Param("categoryName") String categoryName);
 }
