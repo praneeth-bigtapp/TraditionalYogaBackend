@@ -15,6 +15,8 @@ import com.traditional.yoga.dto.request.DonationRequest;
 import com.traditional.yoga.dto.request.EPurchaseRequest;
 import com.traditional.yoga.dto.request.StudentRequest;
 import com.traditional.yoga.dto.request.VolunteerRequest;
+import com.traditional.yoga.dto.response.DashBoardCourseResponse;
+import com.traditional.yoga.dto.response.DashBoardOverallResponse;
 import com.traditional.yoga.dto.response.MemberResponse;
 import com.traditional.yoga.dto.response.StudentProfileResponse;
 import com.traditional.yoga.model.BlackListModel;
@@ -31,6 +33,7 @@ import com.traditional.yoga.repository.EpurchaseInformation;
 import com.traditional.yoga.repository.GenderRepository;
 import com.traditional.yoga.repository.ProfessionsRepository;
 import com.traditional.yoga.repository.QualificationRepository;
+import com.traditional.yoga.repository.RegistrationRepository;
 import com.traditional.yoga.repository.RoleRepository;
 import com.traditional.yoga.repository.StudentRepository;
 import com.traditional.yoga.repository.StudentStatusRepostiory;
@@ -85,6 +88,9 @@ public class StudentService {
 
 	@Autowired
 	StudentStatusRepostiory studentStatusRepostiory;
+
+	@Autowired
+	RegistrationRepository registrationRepository;
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -494,6 +500,88 @@ public class StudentService {
 			response = new Response(message, httpStatus.value(), message);
 			return new ResponseEntity<>(response, httpStatus);
 		}
+	}
+
+//	DashBoard
+	public Object mapDashBoardOverall() {
+		DashBoardOverallResponse dashBoardResponse = new DashBoardOverallResponse();
+		try {
+			int regCount = registrationRepository.countRegistration();
+			int donationAmount = donationRepository.sumAmontDonation();
+			int courseCount = courseRepository.countCourse();
+			int subscribersCount = 2015;
+
+			dashBoardResponse.setRegCount(regCount);
+			dashBoardResponse.setDonationAmount(donationAmount);
+			dashBoardResponse.setCourseCount(courseCount);
+			dashBoardResponse.setSubscribersCount(subscribersCount);
+
+			httpStatus = HttpStatus.OK;
+			message = "Dash Board Overall is Mapped sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+			dashBoardResponse.setResponse(response);
+			return new ResponseEntity<>(dashBoardResponse, httpStatus);
+		} catch (Exception e) {
+			message = "Exception in Dash Board Overall";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+			return new ResponseEntity<>(response, httpStatus);
+		}
+	}
+
+	public Object mapDashBoardCourse(StudentRequest studentDto) {
+
+		try {
+			int courseId = studentDto.getCourseId();
+			if (courseId == 0) {
+				int enrollCount = registrationRepository.countRegistration();
+				int activeCount = 1;
+				int droppedCount = blackListUserRepository.countBlacklistUsers();
+				int mentorCount = 57;
+				int chiefMentorCount = 57;
+				return courseDashBoard(enrollCount, activeCount, droppedCount, mentorCount, chiefMentorCount);
+			} else if (courseId > 0) {
+				LOG.info("Course Filter");
+				int enrollCount = registrationRepository.countRegistration();
+				int activeCount = 2;
+				int droppedCount = blackListUserRepository.countBlacklistUsers();
+				int mentorCount = 57;
+				int chiefMentorCount = 57;
+				return courseDashBoard(enrollCount, activeCount, droppedCount, mentorCount, chiefMentorCount);
+			}
+			message = "Student details Doesn't exist for Mentor Region";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+			return new ResponseEntity<>(response, httpStatus);
+		} catch (Exception e) {
+			message = "Exception in Dash Board Overall";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+			return new ResponseEntity<>(response, httpStatus);
+		}
+	}
+
+	private Object courseDashBoard(int enrollCount, int activeCount, int droppedCount, int mentorCount,
+			int chiefMentorCount) {
+		DashBoardCourseResponse dashBoardResponse = new DashBoardCourseResponse();
+		dashBoardResponse.setEnrolledUsers(enrollCount);
+		dashBoardResponse.setActiveUsers(activeCount);
+		dashBoardResponse.setDroppedUsers(droppedCount);
+		dashBoardResponse.setMentors(mentorCount);
+		dashBoardResponse.setCheifMentors(chiefMentorCount);
+		
+		httpStatus = HttpStatus.OK;
+		message = "Dash Board Course is Mapped sucessfully";
+		LOG.info(message);
+		response = new Response(message, httpStatus.value(), null);
+		dashBoardResponse.setResponse(response);
+		return new ResponseEntity<>(dashBoardResponse, httpStatus);
 	}
 
 }

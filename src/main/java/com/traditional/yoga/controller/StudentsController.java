@@ -49,7 +49,7 @@ public class StudentsController {
 		LOG.info("Entering into get Student Method");
 		return studentService.studentProfile(studentDto);
 	}
-	
+
 	@PostMapping("/updateStatus")
 	public Object getStudentStatus(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto) {
 		LOG.info("Entering into get Student Method");
@@ -67,7 +67,7 @@ public class StudentsController {
 		LOG.info("Entering into get purchase Method");
 		return studentService.studentPurchase(studentDto);
 	}
-	
+
 	@PostMapping("/courseProfile")
 	public Object getStudentProfile(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto) {
 		LOG.info("Entering into get purchase Method");
@@ -121,11 +121,23 @@ public class StudentsController {
 		LOG.info("Mapping chief mentor to students");
 		return studentService.mapStudentChiefMentor(studentDto);
 	}
-	
+
 	@PostMapping("/mapMentorRegion")
 	public Object mapMenberRegion(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto) {
 		LOG.info("Mapping Region to Mentor to students");
 		return studentService.mapRegionMentor(studentDto);
+	}
+
+	@GetMapping("/dashBoard/overallReport")
+	public Object mapDashBoard(@RequestHeader("token") String token) {
+		LOG.info("Entring into Dash Board Overall Report Method");
+		return studentService.mapDashBoardOverall();
+	}
+
+	@PostMapping("/dashBoard/courseReport")
+	public Object mapDashBoardCourse(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto) {
+		LOG.info("Entring into Dash Board Course Report Method");
+		return studentService.mapDashBoardCourse(studentDto);
 	}
 
 }

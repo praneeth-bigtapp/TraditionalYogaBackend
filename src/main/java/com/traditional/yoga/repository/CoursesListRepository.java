@@ -37,4 +37,7 @@ public interface CoursesListRepository extends JpaRepository<CourseListModel, In
 	@Query(value = "SELECT * FROM `my_course_material` WHERE `application_closer_date`=:applicationClouserDate", nativeQuery = true)
 	CourseListModel getcoursesListByclouserdate(@Param("applicationClouserDate") String applicationClouserDate);
 	
+	@Query(value = "SELECT COUNT(*) FROM `my_course_material`", nativeQuery = true)
+	int countCourse();
+	
 }

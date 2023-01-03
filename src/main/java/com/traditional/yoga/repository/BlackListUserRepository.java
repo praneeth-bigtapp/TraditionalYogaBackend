@@ -14,4 +14,7 @@ public interface BlackListUserRepository extends JpaRepository<BlackListModel, I
 	
 	@Query(value = "SELECT * FROM `blacklist_users` WHERE `blacklistuser_email`= :blacklistuserEmail",nativeQuery = true)
 	BlackListModel getBlackListByEmail(@Param("blacklistuserEmail") String blacklistuserEmail);
+	
+	@Query(value = "SELECT COUNT(*) FROM `blacklist_users`", nativeQuery = true)
+	int countBlacklistUsers();
 }

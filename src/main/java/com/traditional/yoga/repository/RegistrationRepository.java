@@ -15,4 +15,7 @@ public interface RegistrationRepository extends JpaRepository<RegistrationModel,
 	
 	@Query(value = "SELECT * FROM `registration` WHERE `email_id`= :emailId ", nativeQuery = true)
 	RegistrationModel getRegistrationByEmail(@Param("emailId") String emailId);
+	
+	@Query(value = "SELECT COUNT(*) FROM `registration`", nativeQuery = true)
+	int countRegistration();
 }
