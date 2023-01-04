@@ -205,4 +205,32 @@ public class LoginService {
 		return permissions;
 	}
 
+//	Forgot Password
+	public Object forgotPassword(LoginRequest userDetails) {
+		RegistrationModel checkEmail = registrationRepository.getRegistrationByEmail(userDetails.getUserName());
+		if (checkEmail == null) {
+			message = "Email Id was not in our records, please check the Email";
+			httpStatus = HttpStatus.NOT_ACCEPTABLE;
+			response = new Response(message, httpStatus.value(), message);
+			LOG.error(message);
+		} else {
+			UserModel changePassword = loginUserRepository.getReferenceById(checkEmail.getRegistrationId());
+			if (changePassword.getUserPasswordId() == 0) {
+				message = "User Details not present";
+				httpStatus = HttpStatus.CONFLICT;
+				response = new Response(message, httpStatus.value(), message);
+				LOG.error(message);
+			} else {
+				changePassword.setPassword(userDetails.getPassword());
+				loginUserRepository.save(changePassword);
+
+				message = "Password Changed Sucessfully";
+				httpStatus = HttpStatus.OK;
+				response = new Response(message, httpStatus.value(), null);
+				LOG.info(message);
+			}
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
 }

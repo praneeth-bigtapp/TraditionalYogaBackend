@@ -16,7 +16,7 @@ public interface UserRepository extends JpaRepository<UserModel, Integer> {
 	@Query(value="SELECT * FROM `user_password` WHERE `registration_id`= :registrationId",nativeQuery=true)
 	UserModel getUserByRegId(@Param("registrationId") int registrationId);
 	
-	@Query(value="SELECT * FROM `user` WHERE `name`=:userName",nativeQuery=true)
+	@Query(value="SELECT * FROM `user` WHERE `name`= :userName",nativeQuery=true)
 	UserModel getUserByName(@Param("userName") String userName);
 	
 }

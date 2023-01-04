@@ -40,8 +40,16 @@ public class LoginController {
 
 	@PostMapping("/changePassword")
 	public Object changePassword(@RequestHeader("token") String token,
-			@RequestBody ChangePasswordRequest passwordRequest) {
+			@RequestBody LoginRequest passwordRequest) {
 		LOG.info("Entering into changePassword Method");
-		return null;
+		return loginService.forgotPassword(passwordRequest);
 	}
+	
+	@PostMapping("/forgotPassword")
+	public Object forgotPassword(@RequestBody LoginRequest passwordRequest) {
+		LOG.info("Entering into Forgot Password Method");
+		return loginService.forgotPassword(passwordRequest);
+	}
+	
+	
 }
