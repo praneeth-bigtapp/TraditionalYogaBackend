@@ -22,6 +22,7 @@ import com.traditional.yoga.dto.request.PraticeImageRequest;
 import com.traditional.yoga.dto.request.PraticeMediaRequest;
 import com.traditional.yoga.dto.request.TaskRequest;
 import com.traditional.yoga.dto.request.TestimoalRequest;
+import com.traditional.yoga.dto.request.UserCoursesRequest;
 import com.traditional.yoga.service.CoursesandOnlineexamService;
 
 @CrossOrigin("*")
@@ -124,5 +125,14 @@ public class CoursesListAndOnlineExamController {
 		authenticate(token);
 		LOG.info("Entering into praticeDocument{} Method", operation);
 		return coursesListService.manageDocument(operation, documentDto);
+	}
+	
+	
+	@PostMapping("/mapCourses")
+	public Object manageUserCourses(@RequestHeader("token") String token, @RequestBody  UserCoursesRequest userCoursesDto,
+			@RequestParam("operation") String operation) {
+		authenticate(token);
+		LOG.info("Entering into mapCoursesToUser{} Method", operation);
+		return coursesListService.manageUserCourses(operation, userCoursesDto);
 	}
 }

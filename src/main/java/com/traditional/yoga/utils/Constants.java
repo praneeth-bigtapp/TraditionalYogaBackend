@@ -27,6 +27,7 @@ public class Constants {
 	public static final String ALERT = "alert";
 	public static final String YES = "Y";
 	public static final String NO = "N";
+	public static final String FALSE = "false";
 
 //	Error Message
 	public static final String OPERATION_ERROR = OPERATION + " " + DOES_NOT_EXIST;
@@ -71,4 +72,8 @@ public class Constants {
 	public static final String EXCEPTION_MATERIALS = "Exception in adding materials";
 	public static final String MATERIAL_ADD = "material to courses is added sucessfully";
 	public static final String MATERIAL_EXEPTION = "material to courses is added sucessfully";
+	public static final String MATERIAL_EXISTS = "material  already exists";
+	
+	
+	
 }

@@ -17,6 +17,7 @@ import com.traditional.yoga.dto.request.PraticeImageRequest;
 import com.traditional.yoga.dto.request.PraticeMediaRequest;
 import com.traditional.yoga.dto.request.TaskRequest;
 import com.traditional.yoga.dto.request.TestimoalRequest;
+import com.traditional.yoga.dto.request.UserCoursesRequest;
 import com.traditional.yoga.model.AddCoursesMaterialModel;
 import com.traditional.yoga.model.CourseListModel;
 import com.traditional.yoga.model.MaterialCategoryModel;
@@ -24,9 +25,9 @@ import com.traditional.yoga.model.OnlineExamsModel;
 import com.traditional.yoga.model.PraticeDocumentModel;
 import com.traditional.yoga.model.PraticeImageModel;
 import com.traditional.yoga.model.PraticeMediaModel;
-import com.traditional.yoga.model.QualificationModel;
 import com.traditional.yoga.model.TaskModel;
 import com.traditional.yoga.model.TestimonalsModel;
+import com.traditional.yoga.model.UserCoursesModel;
 import com.traditional.yoga.repository.AddMaterialRepository;
 import com.traditional.yoga.repository.CategoryRepository;
 import com.traditional.yoga.repository.CoursesListRepository;
@@ -40,6 +41,7 @@ import com.traditional.yoga.repository.PraticeMediaRepository;
 import com.traditional.yoga.repository.TaskRepository;
 import com.traditional.yoga.repository.TestimonalRepository;
 import com.traditional.yoga.repository.TypeofTestRepository;
+import com.traditional.yoga.repository.UserCoursesRepository;
 import com.traditional.yoga.utils.Constants;
 import com.traditional.yoga.utils.GeneralUtils;
 
@@ -92,6 +94,9 @@ public class CoursesandOnlineexamService {
 	@Autowired
 	PraticeDocumentRepository praticeDocumentRepository;
 
+	@Autowired
+	UserCoursesRepository userCoursesRepository;
+
 	Response response = new Response();
 
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -139,6 +144,9 @@ public class CoursesandOnlineexamService {
 			} else if (operationType.equals("praticeDocumentMedia")) {
 				httpStatus = HttpStatus.OK;
 				return praticeDocumentRepository.findAll();
+			} else if (operationType.equals("userCourses")) {
+				httpStatus = HttpStatus.OK;
+				return userCoursesRepository.findAll();
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -603,7 +611,6 @@ public class CoursesandOnlineexamService {
 
 	/// ADD MATERIAL COURSES///////
 	public Object manageMateials(String operation, AddCoursemateialRequest materialDto) {
-		boolean success = true;
 		this.httpStatus = HttpStatus.OK;
 		try {
 			if (operation.equals(Constants.ADD)) {
@@ -613,14 +620,12 @@ public class CoursesandOnlineexamService {
 			} else if (operation.equals(Constants.DELETE)) {
 				deleteMaterials(materialDto);
 			} else {
-				success = false;
 				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
 			}
 		} catch (Exception e) {
-			success = false;
 			message = Constants.EXCEPTION_MATERIALS;
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
@@ -662,7 +667,7 @@ public class CoursesandOnlineexamService {
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = "material  already exists";
+			message = Constants.MATERIAL_EXISTS;
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
@@ -674,7 +679,6 @@ public class CoursesandOnlineexamService {
 		AddCoursesMaterialModel material = addMaterialRepository.getMaterialById(materialDto.getCourseMaterialId());
 		if (material != null) {
 			material.setCoursesId(materialDto.getCoursesId());
-			// material.setMaterialCategoryId(materialDto.getMaterialCategoryId());
 			material.setMediaId(materialDto.getMediaId());
 			material.setCourseMaterialTitle(materialDto.getCourseMaterialTitle());
 			material.setVideoLink(materialDto.getVideoLink());
@@ -716,7 +720,7 @@ public class CoursesandOnlineexamService {
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = "material with ID " + materialDto.getCourseMaterialId() + " not found";
+			message = "material with ID " + materialDto.getCourseMaterialId() + "not found";
 			httpStatus = HttpStatus.NOT_FOUND;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
@@ -752,7 +756,7 @@ public class CoursesandOnlineexamService {
 				response = new Response(message, httpStatus.value(), message);
 			}
 		} catch (Exception e) {
-			message = "Exception in adding materials";
+			message = Constants.EXCEPTION_MATERIALS;
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());
@@ -778,11 +782,11 @@ public class CoursesandOnlineexamService {
 			mediaList.setCreatedDate(generalUtils.getCurrentDate());
 			mediaList.setIsActive("Y");
 			praticeMediaRepository.save(mediaList);
-			message = "material to courses is added sucessfully";
+			message = Constants.MATERIAL_ADD;
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = "material  already exists";
+			message = Constants.MATERIAL_EXISTS;
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
@@ -848,7 +852,7 @@ public class CoursesandOnlineexamService {
 				response = new Response(message, httpStatus.value(), message);
 			}
 		} catch (Exception e) {
-			message = "Exception in adding materials";
+			message = "Exception in adding courses to user";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());
@@ -868,7 +872,7 @@ public class CoursesandOnlineexamService {
 			imageList.setCreatedDate(generalUtils.getCurrentDate());
 			imageList.setIsActive("Y");
 			praticeImageRepository.save(imageList);
-			message = "material to courses is added sucessfully";
+			message = "material is added sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
@@ -911,6 +915,7 @@ public class CoursesandOnlineexamService {
 			response = new Response(message, httpStatus.value(), null);
 		}
 	}
+
 
 	public Object manageDocument(String operation, PraticeDocumentRequest documentDto) {
 
@@ -993,5 +998,50 @@ public class CoursesandOnlineexamService {
 			response = new Response(message, httpStatus.value(), null);
 		}
 	}
+	
+	
+	
+	///user courses 
+	
+	public Object manageUserCourses(String operation, UserCoursesRequest userCoursesDto) {
 
+		this.httpStatus = HttpStatus.OK;
+		try {
+
+			if (operation.equals(Constants.ADD)) {
+				addUserCourses(userCoursesDto);
+			} else {
+				message = Constants.OPERATION_ERROR;
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Exception in adding materials";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+	private void addUserCourses( UserCoursesRequest userCoursesDto) {
+		UserCoursesModel addnewCourses =userCoursesRepository.getUserCourses(userCoursesDto.getUserCoursesId());
+		if (addnewCourses == null) {
+			UserCoursesModel coursesList =new UserCoursesModel();
+			coursesList.setStudentId(userCoursesDto.getStudentId());
+			coursesList.setCoursesId(userCoursesDto.getCoursesId());
+			coursesList.setIsActive("Y");
+			userCoursesRepository.save(coursesList);
+			message = "courses is mapped added sucessfully to user";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "material  already exists";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+
+	}
 }
