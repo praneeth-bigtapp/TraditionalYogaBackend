@@ -1,5 +1,7 @@
 package com.traditional.yoga.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.traditional.yoga.dto.request.RegistrationRequest;
+import com.traditional.yoga.model.RegistrationModel;
 import com.traditional.yoga.service.RegisterService;
 
 @CrossOrigin("*")
@@ -55,5 +58,13 @@ public class RegisterController {
 //		return "OPT validated";
 //	}
 	
+	@GetMapping("/suspecousUsers")
+	public List<RegistrationModel> getSuspecousUsers(
+			@RequestParam(name = "firstName", required = false) String firstName,
+			@RequestParam(name = "lastName", required = false) String lastName,
+			@RequestParam(name = "pinCode", required = false) String pinCode,
+			@RequestParam(name = "address", required = false) String address) {
+		return registerService.getSuspecousUsers(firstName, lastName, pinCode, address);
+	}
 
 }

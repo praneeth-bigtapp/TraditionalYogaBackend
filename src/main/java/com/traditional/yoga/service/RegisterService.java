@@ -12,11 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.traditional.yoga.dto.Response;
-import com.traditional.yoga.dto.request.CountryRequest;
 import com.traditional.yoga.dto.request.RegistrationRequest;
 import com.traditional.yoga.dto.response.EmailOtpResponse;
 import com.traditional.yoga.interfaces.EmailService;
-import com.traditional.yoga.model.CountryModel;
 import com.traditional.yoga.model.QualificationModel;
 import com.traditional.yoga.model.RegistrationModel;
 import com.traditional.yoga.repository.AboutUsRepository;
@@ -27,6 +25,7 @@ import com.traditional.yoga.repository.MaritalStatusRepository;
 import com.traditional.yoga.repository.QualificationRepository;
 import com.traditional.yoga.repository.RegistrationRepository;
 import com.traditional.yoga.repository.StatesRepository;
+import com.traditional.yoga.repository.SuspecousUsersRepository;
 import com.traditional.yoga.utils.Constants;
 import com.traditional.yoga.utils.GeneralUtils;
 import com.traditional.yoga.utils.PasswordGenerator;
@@ -71,6 +70,9 @@ public class RegisterService {
 
 	@Autowired
 	UserManagementService userManagementService;
+	
+	@Autowired
+	SuspecousUsersRepository suspecousUsersRepository;
 
 	@Value("${yoga.credentials.body}")
 	private String emailCredentialsBody;
@@ -294,4 +296,8 @@ public class RegisterService {
 		return password;
 	}
 
+	
+	public List<RegistrationModel> getSuspecousUsers(String firstName, String lastName, String pinCode, String address) {
+	    return suspecousUsersRepository.getRegistrationByFilter(firstName, lastName, pinCode, address);
+	}
 }

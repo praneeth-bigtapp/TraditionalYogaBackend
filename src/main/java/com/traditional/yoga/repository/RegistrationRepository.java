@@ -18,4 +18,6 @@ public interface RegistrationRepository extends JpaRepository<RegistrationModel,
 	
 	@Query(value = "SELECT COUNT(*) FROM `registration`", nativeQuery = true)
 	int countRegistration();
+	
+	
 }
