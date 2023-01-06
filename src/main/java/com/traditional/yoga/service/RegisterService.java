@@ -1,6 +1,7 @@
 package com.traditional.yoga.service;
 
 import java.text.MessageFormat;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,17 +12,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.traditional.yoga.dto.Response;
+import com.traditional.yoga.dto.request.CountryRequest;
 import com.traditional.yoga.dto.request.RegistrationRequest;
 import com.traditional.yoga.dto.response.EmailOtpResponse;
 import com.traditional.yoga.interfaces.EmailService;
+import com.traditional.yoga.model.CountryModel;
 import com.traditional.yoga.model.QualificationModel;
 import com.traditional.yoga.model.RegistrationModel;
 import com.traditional.yoga.repository.AboutUsRepository;
 import com.traditional.yoga.repository.CountryRepository;
 import com.traditional.yoga.repository.GenderRepository;
+import com.traditional.yoga.repository.LanguageRepository;
 import com.traditional.yoga.repository.MaritalStatusRepository;
 import com.traditional.yoga.repository.QualificationRepository;
 import com.traditional.yoga.repository.RegistrationRepository;
+import com.traditional.yoga.repository.StatesRepository;
 import com.traditional.yoga.utils.Constants;
 import com.traditional.yoga.utils.GeneralUtils;
 import com.traditional.yoga.utils.PasswordGenerator;
@@ -42,12 +47,18 @@ public class RegisterService {
 
 	@Autowired
 	QualificationRepository qualificationRepository;
-	
+
 	@Autowired
 	GenderRepository genderRepository;
-	
+
 	@Autowired
 	CountryRepository countryRepository;
+
+	@Autowired
+	StatesRepository statesRepository;
+
+	@Autowired
+	LanguageRepository languageRepository;
 
 	@Autowired
 	GeneralUtils generalUtils;
@@ -60,13 +71,12 @@ public class RegisterService {
 
 	@Autowired
 	UserManagementService userManagementService;
-	
+
 	@Value("${yoga.credentials.body}")
 	private String emailCredentialsBody;
-	
+
 	@Value("${yoga.otp.body}")
 	private String emailOtpBody;
-	
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -88,6 +98,12 @@ public class RegisterService {
 			} else if (operationType.equals("country")) {
 				httpStatus = HttpStatus.OK;
 				return countryRepository.findAll();
+			} else if (operationType.equals("states")) {
+				httpStatus = HttpStatus.OK;
+				return statesRepository.findAll();
+			} else if (operationType.equals("languages")) {
+				httpStatus = HttpStatus.OK;
+				return languageRepository.findAll();
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;

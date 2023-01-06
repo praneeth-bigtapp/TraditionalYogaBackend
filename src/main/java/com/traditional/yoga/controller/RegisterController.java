@@ -54,4 +54,6 @@ public class RegisterController {
 //		LOG.info("Entering into otp verification Method");
 //		return "OPT validated";
 //	}
+	
+
 }

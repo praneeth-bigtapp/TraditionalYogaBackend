@@ -17,7 +17,7 @@ public class CountryModel {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "country_id")
 	private int countryId;
-	
+
 	@OneToOne
 	@JoinColumn(name = "region_id", referencedColumnName = "region_id")
 	private MasterRegionModel regionId;
@@ -27,6 +27,9 @@ public class CountryModel {
 
 	@Column(name = "country_code")
 	private String countryCode;
+
+	@Column(name = "dial_code")
+	private String dialCode;
 
 	public int getCountryId() {
 		return countryId;
@@ -58,6 +61,14 @@ public class CountryModel {
 
 	public void setCountryCode(String countryCode) {
 		this.countryCode = countryCode;
+	}
+
+	public String getDialCode() {
+		return dialCode;
+	}
+
+	public void setDialCode(String dialCode) {
+		this.dialCode = dialCode;
 	}
 
 }
