@@ -1,5 +1,7 @@
 package com.traditional.yoga.dto.request;
 
+import java.util.List;
+
 import com.traditional.yoga.model.CourseListModel;
 import com.traditional.yoga.model.RegistrationModel;
 
@@ -7,7 +9,10 @@ public class UserCoursesRequest {
 
 	private int userCoursesId;
 	private RegistrationModel studentId;
-	private CourseListModel coursesId;
+	private List<CourseListModel> coursesId;
+
+	private String certification;
+	private String certificationAlertStatus;
 	private String createdBy;
 	private String createdDate;
 	private String updatedBy;
@@ -30,12 +35,28 @@ public class UserCoursesRequest {
 		this.studentId = studentId;
 	}
 
-	public CourseListModel getCoursesId() {
+	public List<CourseListModel> getCoursesId() {
 		return coursesId;
 	}
 
-	public void setCoursesId(CourseListModel coursesId) {
+	public void setCoursesId(List<CourseListModel> coursesId) {
 		this.coursesId = coursesId;
+	}
+
+	public String getCertification() {
+		return certification;
+	}
+
+	public void setCertification(String certification) {
+		this.certification = certification;
+	}
+
+	public String getCertificationAlertStatus() {
+		return certificationAlertStatus;
+	}
+
+	public void setCertificationAlertStatus(String certificationAlertStatus) {
+		this.certificationAlertStatus = certificationAlertStatus;
 	}
 
 	public String getCreatedBy() {

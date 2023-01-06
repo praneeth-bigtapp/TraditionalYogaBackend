@@ -103,58 +103,56 @@ public class CoursesandOnlineexamService {
 	String message;
 
 	public Object getAll(String operationType) {
-		LOG.info("Fetching courses List related {} data", operationType);
 		try {
-			if (operationType.equals("coursesList")) {
+			switch (operationType) {
+			case "coursesList":
 				httpStatus = HttpStatus.OK;
 				return coursesListRepository.findAll();
-			} else if (operationType.equals("categoryList")) {
+			case "categoryList":
 				httpStatus = HttpStatus.OK;
 				return categoryRepository.findAll();
-			} else if (operationType.equals("typeoftest")) {
+			case "typeoftest":
 				httpStatus = HttpStatus.OK;
 				return typeofTestRepository.findAll();
-			} else if (operationType.equals("leveloftest")) {
+			case "leveloftest":
 				httpStatus = HttpStatus.OK;
 				return levelofTestRepository.findAll();
-			} else if (operationType.equals("onlineexam")) {
+			case "onlineexam":
 				httpStatus = HttpStatus.OK;
 				return onlineExamRepository.findAll();
-			} else if (operationType.equals("task")) {
+			case "task":
 				httpStatus = HttpStatus.OK;
 				return taskRepository.findAll();
-			} else if (operationType.equals("testimonal")) {
+			case "testimonal":
 				httpStatus = HttpStatus.OK;
 				return testimonalRepository.findAll();
-			} else if (operationType.equals("mediaType")) {
+			case "mediaType":
 				httpStatus = HttpStatus.OK;
 				return mediaRepository.findAll();
-			} else if (operationType.equals("materialCategory")) {
+			case "materialCategory":
 				httpStatus = HttpStatus.OK;
 				return materialCategoryRepostiory.findAll();
-			} else if (operationType.equals("coursematerial")) {
+			case "coursematerial":
 				httpStatus = HttpStatus.OK;
 				return addMaterialRepository.findAll();
-			} else if (operationType.equals("praticeMedia")) {
+			case "praticeMedia":
 				httpStatus = HttpStatus.OK;
 				return praticeMediaRepository.findAll();
-			} else if (operationType.equals("praticeImageMedia")) {
+			case "praticeImageMedia":
 				httpStatus = HttpStatus.OK;
 				return praticeImageRepository.findAll();
-			} else if (operationType.equals("praticeDocumentMedia")) {
+			case "praticeDocumentMedia":
 				httpStatus = HttpStatus.OK;
 				return praticeDocumentRepository.findAll();
-			} else if (operationType.equals("userCourses")) {
+			case "userCourses":
 				httpStatus = HttpStatus.OK;
 				return userCoursesRepository.findAll();
-			} else {
+			default:
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
-				LOG.error(message);
 				response = new Response(message, httpStatus.value(), httpStatus.getReasonPhrase());
 				return new ResponseEntity<>(response, httpStatus);
 			}
-
 		} catch (Exception e) {
 			message = "Unknown Error";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
@@ -876,7 +874,7 @@ public class CoursesandOnlineexamService {
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = "material  already exists";
+			message = "Image already exists";
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
@@ -916,7 +914,6 @@ public class CoursesandOnlineexamService {
 		}
 	}
 
-
 	public Object manageDocument(String operation, PraticeDocumentRequest documentDto) {
 
 		this.httpStatus = HttpStatus.OK;
@@ -924,7 +921,7 @@ public class CoursesandOnlineexamService {
 
 			if (operation.equals(Constants.ADD)) {
 				addDocument(documentDto);
-			} else if (operation.equals(Constants.SAVE)) {
+			} else if (operation.equals("certification")) {
 				updateDocument(documentDto);
 			} else if (operation.equals(Constants.DELETE)) {
 				deleteDocument(documentDto.getDocumentId());
@@ -998,11 +995,9 @@ public class CoursesandOnlineexamService {
 			response = new Response(message, httpStatus.value(), null);
 		}
 	}
-	
-	
-	
-	///user courses 
-	
+
+	/// user courses
+
 	public Object manageUserCourses(String operation, UserCoursesRequest userCoursesDto) {
 
 		this.httpStatus = HttpStatus.OK;
@@ -1025,23 +1020,82 @@ public class CoursesandOnlineexamService {
 		}
 		return new ResponseEntity<>(response, httpStatus);
 	}
-	private void addUserCourses( UserCoursesRequest userCoursesDto) {
-		UserCoursesModel addnewCourses =userCoursesRepository.getUserCourses(userCoursesDto.getUserCoursesId());
+
+	private void addUserCourses(UserCoursesRequest userCoursesDto) {
+		UserCoursesModel addnewCourses = userCoursesRepository.getUserCourses(userCoursesDto.getUserCoursesId());
 		if (addnewCourses == null) {
-			UserCoursesModel coursesList =new UserCoursesModel();
+			UserCoursesModel coursesList = new UserCoursesModel();
 			coursesList.setStudentId(userCoursesDto.getStudentId());
-			coursesList.setCoursesId(userCoursesDto.getCoursesId());
 			coursesList.setIsActive("Y");
 			userCoursesRepository.save(coursesList);
-			message = "courses is mapped added sucessfully to user";
+
+			// add multiple courses for the student
+			for (CourseListModel course : userCoursesDto.getCoursesId()) {
+				  userCoursesRepository.addCourses(userCoursesDto.getStudentId(), course.getCoursesId());
+				}
+
+
+
+			message = "courses are added successfully to user";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = "material  already exists";
+			message = "user courses already exists";
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);
 		}
-
 	}
+
+	public Object manageCertificate(String operation, UserCoursesRequest userCoursesDto, int studentId) {
+		this.httpStatus = HttpStatus.OK;
+		try {
+			if (operation.equals("certification")) {
+				addValue(userCoursesDto, operation, studentId);
+			} else {
+				message = Constants.OPERATION_ERROR;
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Exception in certification";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	private void addValue(UserCoursesRequest userCoursesDto, String operation, int studentId) {
+		if (operation.equals(Constants.ADD)) {
+			addCertificate(userCoursesDto, studentId);
+		} else {
+			message = Constants.OPERATION_ERROR;
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void addCertificate(UserCoursesRequest userCoursesDto, int studentId) {
+		UserCoursesModel addnewCourses = userCoursesRepository.getCertificationalert(userCoursesDto.getStudentId());
+		if (addnewCourses == null) {
+			UserCoursesModel coursesList = new UserCoursesModel();
+			coursesList.setCoursesId(userCoursesDto.getCoursesId());
+			coursesList.setCertification(userCoursesDto.getCertification());
+			coursesList.setCertificationAlertStatus(userCoursesDto.getCertificationAlertStatus());
+			userCoursesRepository.save(coursesList);
+			message = "certification for courses is added sucessfully to user";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "student  already register for courses";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
 }

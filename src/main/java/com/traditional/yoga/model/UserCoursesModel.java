@@ -1,6 +1,10 @@
 package com.traditional.yoga.model;
 
+import java.util.List;
+
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,9 +26,10 @@ public class UserCoursesModel {
 	@JoinColumn(name = "student_id", referencedColumnName = "registration_id")
 	private RegistrationModel studentId;
 
-	@OneToOne
-	@JoinColumn(name = "course_id", referencedColumnName = "courses_id")
-	private CourseListModel coursesId;
+	@ElementCollection
+	@CollectionTable(name = "course_id", joinColumns = @JoinColumn(name = "courses_id"))
+	@Column(name = "course_id")
+	private List<CourseListModel> coursesId;
 
 	@Column(name = "certification")
 	private String certification;
@@ -69,11 +74,11 @@ public class UserCoursesModel {
 		this.studentId = studentId;
 	}
 
-	public CourseListModel getCoursesId() {
+	public List<CourseListModel> getCoursesId() {
 		return coursesId;
 	}
 
-	public void setCoursesId(CourseListModel coursesId) {
+	public void setCoursesId(List<CourseListModel> coursesId) {
 		this.coursesId = coursesId;
 	}
 
