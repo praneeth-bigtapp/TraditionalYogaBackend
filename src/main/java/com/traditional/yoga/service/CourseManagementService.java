@@ -16,11 +16,13 @@ import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.AudioManagementRequest;
 import com.traditional.yoga.dto.request.CourseMediaPracticeRequest;
 import com.traditional.yoga.dto.request.CourseMediaRequest;
+import com.traditional.yoga.dto.request.CreateAlbumRequest;
 import com.traditional.yoga.dto.request.PerformaceRatingRequest;
 import com.traditional.yoga.dto.response.ParameterResponse;
 import com.traditional.yoga.model.AudioManagementModel;
 import com.traditional.yoga.model.CourseMediaModel;
 import com.traditional.yoga.model.CourseMediaPracticeModel;
+import com.traditional.yoga.model.CreateAlbumModel;
 import com.traditional.yoga.model.PerformaceRatingModel;
 import com.traditional.yoga.repository.AudioCategoryLibaryRepository;
 import com.traditional.yoga.repository.AudioManagementRepository;
@@ -28,16 +30,19 @@ import com.traditional.yoga.repository.CourseMediaCategoryRepository;
 import com.traditional.yoga.repository.CourseMediaPracticeRepository;
 import com.traditional.yoga.repository.CourseMediaRepository;
 import com.traditional.yoga.repository.CourseMediaTypeRepository;
+import com.traditional.yoga.repository.CreateAlbumRepository;
 import com.traditional.yoga.repository.MasterAudioRepository;
 import com.traditional.yoga.repository.PerformaceRatingRepository;
 import com.traditional.yoga.utils.Constants;
+import com.traditional.yoga.utils.GeneralUtils;
 
 @Service
 public class CourseManagementService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(CourseManagementService.class);
 
-	
+	@Autowired
+	GeneralUtils generalUtils;
 
 	@Autowired
 	CourseMediaRepository courseMediaRepository;
@@ -62,6 +67,9 @@ public class CourseManagementService {
 
 	@Autowired
 	AudioCategoryLibaryRepository audioCategoryLibaryRepository;
+
+	@Autowired
+	CreateAlbumRepository albumRepository;
 
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -89,6 +97,10 @@ public class CourseManagementService {
 			} else if (operationType.equals("audio-category")) {
 				httpStatus = HttpStatus.OK;
 				return new ResponseEntity<>(audioCategoryLibaryRepository.findAll(), httpStatus);
+			} else if (operationType.equals("createAlbum")) {
+				httpStatus = HttpStatus.OK;
+				return new ResponseEntity<>(albumRepository.findAll(), httpStatus);
+
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -558,6 +570,80 @@ public class CourseManagementService {
 			message = "Audio details are not found";
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	// create Album
+
+	public Object manageAlbum(String operation, CreateAlbumRequest albumDto) {
+		try {
+			if (operation.equals(Constants.ADD)) {
+				addAlbum(albumDto);
+			} else if (operation.equals(Constants.SAVE)) {
+				updateAlbum(albumDto);
+			} else if (operation.equals(Constants.DELETE)) {
+				deleteAlbum(albumDto);
+			} else {
+				message = Constants.OPERATION_ERROR;
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Error in Audio";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			response = new Response(message, httpStatus.value(), httpStatus.getReasonPhrase());
+			return new ResponseEntity<>(response, httpStatus);
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	private void addAlbum(CreateAlbumRequest albumDto) {
+		CreateAlbumModel listNew = albumRepository.getAlbumById(albumDto.getAlbumId());
+		if (listNew == null) {
+			CreateAlbumModel album = new CreateAlbumModel();
+			album.setAlbumName(albumDto.getAlbumName());
+			album.setCreatedDate(generalUtils.getCurrentDate());
+			album.setIsActive("Y");
+			albumRepository.save(album);
+			message = "new courses  added sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "course is already exist";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void updateAlbum(CreateAlbumRequest albumDto) {
+		CreateAlbumModel album = albumRepository.getAlbumById(albumDto.getAlbumId());
+		if (album != null) {
+			album.setAlbumName(albumDto.getAlbumName());
+			album.setUpdatedDate(generalUtils.getCurrentDate());
+			albumRepository.save(album);
+			message = "Album updated successfully";
+			httpStatus = HttpStatus.OK;
+			response = new Response(message, httpStatus.value(), message);
+		} else {
+			message = "Album not found";
+			httpStatus = HttpStatus.NOT_FOUND;
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void deleteAlbum(CreateAlbumRequest albumDto) {
+		CreateAlbumModel album = albumRepository.getAlbumById(albumDto.getAlbumId());
+		if (album != null) {
+			albumRepository.delete(album);
+			message = "Album deleted successfully";
+			httpStatus = HttpStatus.OK;
+			response = new Response(message, httpStatus.value(), message);
+		} else {
+			message = "Album not found";
+			httpStatus = HttpStatus.NOT_FOUND;
 			response = new Response(message, httpStatus.value(), message);
 		}
 	}

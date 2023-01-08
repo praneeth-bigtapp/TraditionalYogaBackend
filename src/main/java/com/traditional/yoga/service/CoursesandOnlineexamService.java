@@ -18,6 +18,7 @@ import com.traditional.yoga.dto.request.PraticeMediaRequest;
 import com.traditional.yoga.dto.request.TaskRequest;
 import com.traditional.yoga.dto.request.TestimoalRequest;
 import com.traditional.yoga.dto.request.UserCoursesRequest;
+import com.traditional.yoga.dto.request.VideoAlbumRequest;
 import com.traditional.yoga.model.AddCoursesMaterialModel;
 import com.traditional.yoga.model.CourseListModel;
 import com.traditional.yoga.model.MaterialCategoryModel;
@@ -28,6 +29,7 @@ import com.traditional.yoga.model.PraticeMediaModel;
 import com.traditional.yoga.model.TaskModel;
 import com.traditional.yoga.model.TestimonalsModel;
 import com.traditional.yoga.model.UserCoursesModel;
+import com.traditional.yoga.model.VideoAlbumModel;
 import com.traditional.yoga.repository.AddMaterialRepository;
 import com.traditional.yoga.repository.CategoryRepository;
 import com.traditional.yoga.repository.CoursesListRepository;
@@ -42,6 +44,7 @@ import com.traditional.yoga.repository.TaskRepository;
 import com.traditional.yoga.repository.TestimonalRepository;
 import com.traditional.yoga.repository.TypeofTestRepository;
 import com.traditional.yoga.repository.UserCoursesRepository;
+import com.traditional.yoga.repository.VideoAlbumReposiotry;
 import com.traditional.yoga.utils.Constants;
 import com.traditional.yoga.utils.GeneralUtils;
 
@@ -97,6 +100,9 @@ public class CoursesandOnlineexamService {
 	@Autowired
 	UserCoursesRepository userCoursesRepository;
 
+	@Autowired
+	VideoAlbumReposiotry videoAlbumReposiotry;
+
 	Response response = new Response();
 
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -147,6 +153,9 @@ public class CoursesandOnlineexamService {
 			case "userCourses":
 				httpStatus = HttpStatus.OK;
 				return userCoursesRepository.findAll();
+			case "videoAlbum":
+				httpStatus = HttpStatus.OK;
+				return videoAlbumReposiotry.findAll();
 			default:
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -1031,10 +1040,8 @@ public class CoursesandOnlineexamService {
 
 			// add multiple courses for the student
 			for (CourseListModel course : userCoursesDto.getCoursesId()) {
-				  userCoursesRepository.addCourses(userCoursesDto.getStudentId(), course.getCoursesId());
-				}
-
-
+				userCoursesRepository.addCourses(userCoursesDto.getStudentId(), course.getCoursesId());
+			}
 
 			message = "courses are added successfully to user";
 			LOG.info(message);
@@ -1098,4 +1105,87 @@ public class CoursesandOnlineexamService {
 		}
 	}
 
+	/// add video to album
+
+	public ResponseEntity<Response> manageAlbumVideos(String operation, VideoAlbumRequest albumVideoDTO) {
+		this.httpStatus = HttpStatus.OK;
+		try {
+			if (operation.equals(Constants.ADD)) {
+				addVideotoAlbum(albumVideoDTO);
+			} else if (operation.equals(Constants.UPDATE)) {
+				updateVideo(albumVideoDTO);
+			} else if (operation.equals(Constants.DELETE)) {
+				deleteAlbumVideo(albumVideoDTO.getVideoId());
+			} else {
+				message = Constants.OPERATION_ERROR;
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+			}
+		} catch (Exception e) {
+			message = "Exception in managing album videos";
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
+
+	public void addVideotoAlbum(VideoAlbumRequest albumVideoDTO) {
+		VideoAlbumModel newVideo =videoAlbumReposiotry.getvideoById(albumVideoDTO.getVideoId());
+		if(newVideo ==null) {
+			VideoAlbumModel addVideo =new VideoAlbumModel();
+			addVideo.setAlbum(albumVideoDTO.getAlbum());
+			addVideo.setVideoTitle(albumVideoDTO.getVideoTitle());
+			addVideo.setVideoLink(albumVideoDTO.getVideoLink());
+			addVideo.setVisable(albumVideoDTO.getVisable());
+			addVideo.setCreatedDate(generalUtils.getCurrentDate());
+			addVideo.setIsActive("Y");
+			videoAlbumReposiotry.save(addVideo);
+			message = "video is added to album sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "video is already exists in this album";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+		
+	}
+
+	public void updateVideo(VideoAlbumRequest albumVideoDTO) {
+		VideoAlbumModel albumVideo = videoAlbumReposiotry.getvideoById(albumVideoDTO.getVideoId());
+		if (albumVideo != null) {
+			albumVideo.setAlbum(albumVideoDTO.getAlbum());
+			albumVideo.setVideoTitle(albumVideoDTO.getVideoTitle());
+			albumVideo.setVideoLink(albumVideoDTO.getVideoLink());
+			albumVideo.setVisable(albumVideoDTO.getVisable());
+			albumVideo.setUpdateDate(generalUtils.getCurrentDate());
+			albumVideo.setIsActive("Y");
+			videoAlbumReposiotry.save(albumVideo);
+			message = "video is update to album sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+		} else {
+			message = "video is already exists in this album";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+		}
+	}
+
+	private void deleteAlbumVideo(int videoId) {
+		VideoAlbumModel video = videoAlbumReposiotry.getvideoById(videoId);
+		if (video == null) {
+			message = "No video is found with the given ID.";
+			httpStatus = HttpStatus.NOT_FOUND;
+			response = new Response(message, httpStatus.value(), message);
+		} else {
+			videoAlbumReposiotry.delete(video);
+			message = "video is deleted successfully from album.";
+			response = new Response(message, httpStatus.value(), null);
+		}
+	}
 }

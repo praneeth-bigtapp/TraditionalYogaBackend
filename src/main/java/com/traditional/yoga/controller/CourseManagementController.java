@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.traditional.yoga.dto.request.AudioManagementRequest;
 import com.traditional.yoga.dto.request.CourseMediaPracticeRequest;
 import com.traditional.yoga.dto.request.CourseMediaRequest;
+import com.traditional.yoga.dto.request.CoursesListRequest;
+import com.traditional.yoga.dto.request.CreateAlbumRequest;
 import com.traditional.yoga.dto.request.PerformaceRatingRequest;
 import com.traditional.yoga.service.CourseManagementService;
 
@@ -73,5 +75,14 @@ public class CourseManagementController {
 		LOG.info("Entering into audio Method operation is {}", operation);
 		return courseManagementService.manageAudio(operation, audioManagementDto);
 	}
+	
+	
+	@PostMapping("/createAlbum")
+	public Object manageAlbum(@RequestHeader("token") String token,
+			@RequestBody CreateAlbumRequest albumDto, @RequestParam("operation") String operation) {
+		LOG.info("Entering into audio Method operation is {}", operation);
+		return courseManagementService.manageAlbum(operation, albumDto);
+	}
+	
 
 }
