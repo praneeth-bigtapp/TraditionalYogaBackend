@@ -19,6 +19,18 @@ public class CreateAlbumModel {
 	@Column(name = "album_name")
 	private String albumName;
 
+	@Column(name = "event_from_date")
+	private String eventFromDate;
+
+	@Column(name = "event_to_date")
+	private String eventToDate;
+
+	@Column(name = "description")
+	private String description;
+
+	@Column(name = "active_status")
+	private String activeStatus;
+
 	@Column(name = "created_by")
 	private String createdBy;
 
@@ -88,6 +100,38 @@ public class CreateAlbumModel {
 
 	public void setIsActive(String isActive) {
 		this.isActive = isActive;
+	}
+
+	public String getEventFromDate() {
+		return eventFromDate;
+	}
+
+	public void setEventFromDate(String eventFromDate) {
+		this.eventFromDate = eventFromDate;
+	}
+
+	public String getEventToDate() {
+		return eventToDate;
+	}
+
+	public void setEventToDate(String eventToDate) {
+		this.eventToDate = eventToDate;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getActiveStatus() {
+		return activeStatus;
+	}
+
+	public void setActiveStatus(String activeStatus) {
+		this.activeStatus = activeStatus;
 	}
 
 }

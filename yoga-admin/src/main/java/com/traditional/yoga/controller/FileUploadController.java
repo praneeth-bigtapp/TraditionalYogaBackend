@@ -1,5 +1,7 @@
 package com.traditional.yoga.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.traditional.yoga.service.FileUploadservice;
 import com.traditional.yoga.service.WebSiteManagementService;
 
 @CrossOrigin("*")
@@ -28,6 +31,9 @@ public class FileUploadController {
 
 	@Autowired
 	WebSiteManagementService webSiteManagementService;
+	
+	@Autowired
+	FileUploadservice fileUploadservice;
 
 	/**
 	 * Authentication for Generated Token
@@ -47,4 +53,18 @@ public class FileUploadController {
 		LOG.info("Hello");
 		return webSiteManagementService.uploadGallary(file, request);
 	}
+	
+	
+	
+	
+	 @PostMapping("/single")
+	  public String uploadSingleFile(@RequestParam("file") MultipartFile file) {
+		 fileUploadservice.uploadFile(file);
+	    return "File uploaded successfully";
+	  }
+
+	  @PostMapping("/multiple")
+	  public String uploadMultipleFiles(@RequestParam("files") List<MultipartFile> files) {
+	    return fileUploadservice.uploadMultipleFile(files);
+	  }
 }

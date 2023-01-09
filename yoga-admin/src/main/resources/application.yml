@@ -1,0 +1,26 @@
+cloud:
+  aws:
+    credentials:
+      access-key: AKIA5WCZPURQ7G3X5NVT
+      secret-key: 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
+    region:
+      static: ap-southeast-1
+    stack:
+      auto: false
+
+application:
+  bucket:
+    name: traditionalyogabkt
+
+
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 20MB
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+server:
+  port: 9090
+

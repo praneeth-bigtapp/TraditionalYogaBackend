@@ -2,6 +2,7 @@ package com.traditional.yoga.service;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -298,7 +299,12 @@ public class RegisterService {
 	}
 
 	
-	public List<RegistrationModel> getSuspecousUsers(String firstName, String lastName, String pinCode, String address) {
-	    return suspecousUsersRepository.getRegistrationByFilter(firstName, lastName, pinCode, address);
-	}
+	public List<RegistrationModel> filterData(Map<String, String> filters) {
+	    String firstName = filters.get("firstName");
+	    String surName = filters.get("surName");
+	    String pinCode = filters.get("pinCode");
+	    String address = filters.get("address");
+	    return suspecousUsersRepository.getRegistrationByFilter(firstName, surName, pinCode, address);
+	  }
+	
 }

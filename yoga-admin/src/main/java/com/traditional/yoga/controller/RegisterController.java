@@ -1,6 +1,7 @@
 package com.traditional.yoga.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -8,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.traditional.yoga.dto.request.RegistrationRequest;
 import com.traditional.yoga.model.RegistrationModel;
+import com.traditional.yoga.repository.SuspecousUsersRepository;
 import com.traditional.yoga.service.RegisterService;
 
 @CrossOrigin("*")
@@ -32,6 +35,10 @@ public class RegisterController {
 
 	@Autowired
 	private HttpServletRequest request;
+	
+	
+	@Autowired
+	SuspecousUsersRepository suspecousUsersRepository;
 	
 	@GetMapping("/getAll")
 	public Object getAllRegsiterDetails(@RequestParam("operation") String operation) {
@@ -64,13 +71,13 @@ public class RegisterController {
 //		return "OPT validated";
 //	}
 	
-	@GetMapping("/suspecousUsers")
-	public List<RegistrationModel> getSuspecousUsers(
-			@RequestParam(name = "firstName", required = false) String firstName,
-			@RequestParam(name = "lastName", required = false) String lastName,
-			@RequestParam(name = "pinCode", required = false) String pinCode,
-			@RequestParam(name = "address", required = false) String address) {
-		return registerService.getSuspecousUsers(firstName, lastName, pinCode, address);
-	}
+	
+
+	
+	 @PostMapping("/filter")
+	  public List<RegistrationModel> handleFilter(@RequestBody Map<String, String> filters) {
+	    return registerService.filterData(filters);
+	  }
+
 
 }

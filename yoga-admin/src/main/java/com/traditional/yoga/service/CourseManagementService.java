@@ -584,6 +584,8 @@ public class CourseManagementService {
 				updateAlbum(albumDto);
 			} else if (operation.equals(Constants.DELETE)) {
 				deleteAlbum(albumDto);
+			} else if (operation.equals(Constants.ACTIVE)) {
+				toggleAlbumStatus(albumDto);
 			} else {
 				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
@@ -591,7 +593,7 @@ public class CourseManagementService {
 				response = new Response(message, httpStatus.value(), message);
 			}
 		} catch (Exception e) {
-			message = "Error in Audio";
+			message = "Error in Album";
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			response = new Response(message, httpStatus.value(), httpStatus.getReasonPhrase());
 			return new ResponseEntity<>(response, httpStatus);
@@ -604,6 +606,10 @@ public class CourseManagementService {
 		if (listNew == null) {
 			CreateAlbumModel album = new CreateAlbumModel();
 			album.setAlbumName(albumDto.getAlbumName());
+			album.setEventFromDate(albumDto.getEventFromDate());
+			album.setEventToDate(albumDto.getEventToDate());
+			album.setDescription(albumDto.getDescription());
+			album.setActiveStatus(albumDto.getActiveStatus());
 			album.setCreatedDate(generalUtils.getCurrentDate());
 			album.setIsActive("Y");
 			albumRepository.save(album);
@@ -622,6 +628,10 @@ public class CourseManagementService {
 		CreateAlbumModel album = albumRepository.getAlbumById(albumDto.getAlbumId());
 		if (album != null) {
 			album.setAlbumName(albumDto.getAlbumName());
+			album.setEventFromDate(albumDto.getEventFromDate());
+			album.setEventToDate(albumDto.getEventToDate());
+			album.setDescription(albumDto.getDescription());
+			album.setActiveStatus(albumDto.getActiveStatus());
 			album.setUpdatedDate(generalUtils.getCurrentDate());
 			albumRepository.save(album);
 			message = "Album updated successfully";
@@ -647,5 +657,25 @@ public class CourseManagementService {
 			response = new Response(message, httpStatus.value(), message);
 		}
 	}
+
+	private void toggleAlbumStatus(CreateAlbumRequest albumDto) {
+	    CreateAlbumModel album = albumRepository.getAlbumById(albumDto.getAlbumId());
+	    if (album == null) {
+	        message = "album not found";
+	        httpStatus = HttpStatus.NOT_FOUND;
+	        LOG.error(message);
+	        response = new Response(message, httpStatus.value(), message);
+	        return;
+	    }
+	    if (album.getActiveStatus().equals("Visable")) {
+	        album.setActiveStatus("Not Visable");
+	    } else {
+	        album.setActiveStatus("Visable");
+	    }
+	    albumRepository.save(album);
+	    message = "album status updated successfully";
+	    response = new Response(message, httpStatus.value(), null);
+	}
+
 
 }
