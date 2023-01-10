@@ -71,7 +71,7 @@ public class RegisterService {
 
 	@Autowired
 	UserManagementService userManagementService;
-	
+
 	@Autowired
 	SuspecousUsersRepository suspecousUsersRepository;
 
@@ -107,6 +107,9 @@ public class RegisterService {
 			} else if (operationType.equals("languages")) {
 				httpStatus = HttpStatus.OK;
 				return languageRepository.findAll();
+			} else if (operationType.equals("registerStudent")) {
+				httpStatus = HttpStatus.OK;
+				return registrationRepository.findAll();
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -298,13 +301,12 @@ public class RegisterService {
 		return password;
 	}
 
-	
 	public List<RegistrationModel> filterData(Map<String, String> filters) {
-	    String firstName = filters.get("firstName");
-	    String surName = filters.get("surName");
-	    String pinCode = filters.get("pinCode");
-	    String address = filters.get("address");
-	    return suspecousUsersRepository.getRegistrationByFilter(firstName, surName, pinCode, address);
-	  }
-	
+		String firstName = filters.get("firstName");
+		String surName = filters.get("surName");
+		String pinCode = filters.get("pinCode");
+		String address = filters.get("address");
+		return suspecousUsersRepository.getRegistrationByFilter(firstName, surName, pinCode, address);
+	}
+
 }
