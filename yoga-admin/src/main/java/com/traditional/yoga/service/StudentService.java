@@ -13,6 +13,7 @@ import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.BlackListRequest;
 import com.traditional.yoga.dto.request.DonationRequest;
 import com.traditional.yoga.dto.request.EPurchaseRequest;
+import com.traditional.yoga.dto.request.ManageExceptionRequest;
 import com.traditional.yoga.dto.request.StudentRequest;
 import com.traditional.yoga.dto.request.VolunteerRequest;
 import com.traditional.yoga.dto.response.DashBoardCourseResponse;
@@ -23,6 +24,7 @@ import com.traditional.yoga.model.BlackListModel;
 import com.traditional.yoga.model.CourseProfileModel;
 import com.traditional.yoga.model.DonationModel;
 import com.traditional.yoga.model.EPurchaseInformation;
+import com.traditional.yoga.model.ManageExceptionModel;
 import com.traditional.yoga.model.StudentModel;
 import com.traditional.yoga.model.VolunteerModel;
 import com.traditional.yoga.repository.BlackListUserRepository;
@@ -31,6 +33,7 @@ import com.traditional.yoga.repository.CoursesListRepository;
 import com.traditional.yoga.repository.DonationRepository;
 import com.traditional.yoga.repository.EpurchaseInformation;
 import com.traditional.yoga.repository.GenderRepository;
+import com.traditional.yoga.repository.ManageExceptionRepository;
 import com.traditional.yoga.repository.ProfessionsRepository;
 import com.traditional.yoga.repository.QualificationRepository;
 import com.traditional.yoga.repository.RegistrationRepository;
@@ -92,6 +95,9 @@ public class StudentService {
 	@Autowired
 	RegistrationRepository registrationRepository;
 
+	@Autowired
+	ManageExceptionRepository manageExceptionRepository;
+
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
 	String message;
@@ -133,6 +139,9 @@ public class StudentService {
 			} else if (operationType.equals("studentStatus")) {
 				httpStatus = HttpStatus.OK;
 				return studentStatusRepostiory.findAll();
+			} else if (operationType.equals("manageException")) {
+				httpStatus = HttpStatus.OK;
+				return manageExceptionRepository.findAll();
 			} else {
 				message = "Unknown Operation";
 				httpStatus = HttpStatus.NOT_ACCEPTABLE;
@@ -575,13 +584,72 @@ public class StudentService {
 		dashBoardResponse.setDroppedUsers(droppedCount);
 		dashBoardResponse.setMentors(mentorCount);
 		dashBoardResponse.setCheifMentors(chiefMentorCount);
-		
+
 		httpStatus = HttpStatus.OK;
 		message = "Dash Board Course is Mapped sucessfully";
 		LOG.info(message);
 		response = new Response(message, httpStatus.value(), null);
 		dashBoardResponse.setResponse(response);
 		return new ResponseEntity<>(dashBoardResponse, httpStatus);
+	}
+
+	public Object worldWide(StudentRequest studentDto, String type) {
+		StudentModel mapCourse = studentRepository.getStudentById(studentDto.getStudentId());
+		if (mapCourse != null) {
+			if (type.equals("mentor")) {
+				mapCourse.setMentorId(studentDto.getMentorId());
+				studentRepository.save(mapCourse);
+
+				httpStatus = HttpStatus.OK;
+				message = "Mentor Changed sucessfully";
+				LOG.info(message);
+				response = new Response(message, httpStatus.value(), null);
+				return new ResponseEntity<>(response, httpStatus);
+			} else if (type.equals("chiefMentor")) {
+				mapCourse.setChiefMentorId(studentDto.getChiefMentorId());
+				studentRepository.save(mapCourse);
+
+				httpStatus = HttpStatus.OK;
+				message = "Chief Mentor Changed sucessfully";
+				LOG.info(message);
+				response = new Response(message, httpStatus.value(), null);
+				return new ResponseEntity<>(response, httpStatus);
+			} else {
+				message = "Unknown Operation";
+				httpStatus = HttpStatus.NOT_ACCEPTABLE;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+				return new ResponseEntity<>(response, httpStatus);
+			}
+		} else {
+			message = "Student details Doesn't exist for world Wide";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+			return new ResponseEntity<>(response, httpStatus);
+		}
+	}
+
+	public Object manageException(ManageExceptionRequest manageExceptionDto) {
+		ManageExceptionModel manageException = manageExceptionRepository
+				.getManageExceptionById(manageExceptionDto.getExceptionId());
+
+		if (manageException != null) {
+			manageException.setExceptionStatus(manageExceptionDto.getExceptionStatus());
+			manageExceptionRepository.save(manageException);
+			
+			httpStatus = HttpStatus.OK;
+			message = "Exception details Changed sucessfully";
+			LOG.info(message);
+			response = new Response(message, httpStatus.value(), null);
+			return new ResponseEntity<>(response, httpStatus);
+		} else {
+			message = "Exception details Doesn't exist for world Wide";
+			httpStatus = HttpStatus.CONFLICT;
+			LOG.error(message);
+			response = new Response(message, httpStatus.value(), message);
+			return new ResponseEntity<>(response, httpStatus);
+		}
 	}
 
 }

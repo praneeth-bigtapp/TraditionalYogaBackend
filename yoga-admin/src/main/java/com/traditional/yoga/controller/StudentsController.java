@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.traditional.yoga.dto.request.BlackListRequest;
 import com.traditional.yoga.dto.request.DonationRequest;
 import com.traditional.yoga.dto.request.EPurchaseRequest;
+import com.traditional.yoga.dto.request.ManageExceptionRequest;
 import com.traditional.yoga.dto.request.StudentRequest;
 import com.traditional.yoga.dto.request.VolunteerRequest;
 import com.traditional.yoga.service.StudentService;
@@ -138,6 +139,20 @@ public class StudentsController {
 	public Object mapDashBoardCourse(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto) {
 		LOG.info("Entring into Dash Board Course Report Method");
 		return studentService.mapDashBoardCourse(studentDto);
+	}
+
+	@PostMapping("/worldWide")
+	public Object worldWide(@RequestHeader("token") String token, @RequestBody StudentRequest studentDto,
+			@RequestParam("change") String type) {
+		LOG.info("Entring into Dash Board Course Report Method");
+		return studentService.worldWide(studentDto, type);
+	}
+
+	@PostMapping("/manageException")
+	public Object manageException(@RequestHeader("token") String token,
+			@RequestBody ManageExceptionRequest manageExceptionDto) {
+		LOG.info("Entring into Dash Board Course Report Method");
+		return studentService.manageException(manageExceptionDto);
 	}
 
 }
