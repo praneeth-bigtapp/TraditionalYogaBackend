@@ -23,7 +23,7 @@ public class ManageExceptionModel {
 	private RegistrationModel registrationId;
 
 	@ManyToOne
-	@JoinColumn(name = "performance_id", referencedColumnName = "performance_id")
+	@JoinColumn(name = "performance_id", referencedColumnName = "parameters_id")
 	private ParametersModel performanceId;
 
 	@Column(name = "exception_status")
