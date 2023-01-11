@@ -1,5 +1,7 @@
 package com.traditional.yoga.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -148,10 +150,17 @@ public class StudentsController {
 		return studentService.worldWide(studentDto, type);
 	}
 
-	@PostMapping("/manageException")
+	@PostMapping("/worldWide/manageException")
 	public Object manageException(@RequestHeader("token") String token,
-			@RequestBody ManageExceptionRequest manageExceptionDto) {
-		LOG.info("Entring into Dash Board Course Report Method");
+			@RequestBody List<ManageExceptionRequest> manageExceptionDto) {
+		LOG.info("Entring into Manage Exception Method");
+		return studentService.manageException(manageExceptionDto);
+	}
+	
+	@PostMapping("/course/manageException")
+	public Object manageCourseException(@RequestHeader("token") String token,
+			@RequestBody List<ManageExceptionRequest> manageExceptionDto) {
+		LOG.info("Entring into Manage Course Exception Method");
 		return studentService.manageException(manageExceptionDto);
 	}
 

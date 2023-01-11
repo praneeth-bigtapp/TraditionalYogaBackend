@@ -630,26 +630,29 @@ public class StudentService {
 		}
 	}
 
-	public Object manageException(ManageExceptionRequest manageExceptionDto) {
-		ManageExceptionModel manageException = manageExceptionRepository
-				.getManageExceptionById(manageExceptionDto.getExceptionId());
-
-		if (manageException != null) {
-			manageException.setExceptionStatus(manageExceptionDto.getExceptionStatus());
-			manageExceptionRepository.save(manageException);
+	public Object manageException(List<ManageExceptionRequest> manageExceptionList) {
+		for (ManageExceptionRequest manageExceptionDto : manageExceptionList) {
+			ManageExceptionModel manageException = manageExceptionRepository
+					.getManageExceptionById(manageExceptionDto.getExceptionId());
 			
-			httpStatus = HttpStatus.OK;
-			message = "Exception details Changed sucessfully";
-			LOG.info(message);
-			response = new Response(message, httpStatus.value(), null);
-			return new ResponseEntity<>(response, httpStatus);
-		} else {
-			message = "Exception details Doesn't exist for world Wide";
-			httpStatus = HttpStatus.CONFLICT;
-			LOG.error(message);
-			response = new Response(message, httpStatus.value(), message);
-			return new ResponseEntity<>(response, httpStatus);
+			if (manageException != null) {
+				manageException.setExceptionStatus(manageExceptionDto.getExceptionStatus());
+				manageExceptionRepository.save(manageException);
+				
+				httpStatus = HttpStatus.OK;
+				message = "Exception details Changed sucessfully";
+				LOG.info(message);
+				response = new Response(message, httpStatus.value(), null);
+				return new ResponseEntity<>(response, httpStatus);
+			} else {
+				message = "Exception details Doesn't exist for world Wide";
+				httpStatus = HttpStatus.CONFLICT;
+				LOG.error(message);
+				response = new Response(message, httpStatus.value(), message);
+				return new ResponseEntity<>(response, httpStatus);
+			}
 		}
+		return new ResponseEntity<>(response, httpStatus);
 	}
 
 }
