@@ -583,6 +583,7 @@ public class UserManagementService {
 			newMenu.setStatus(Constants.YES);
 			subModelRepository.save(newMenu);
 			message = "Sub-Menu added sucessfully";
+			httpStatus = HttpStatus.OK;
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 			setRolePermission(subMenuDto.getSubMenuName());
@@ -651,9 +652,12 @@ public class UserManagementService {
 	 * @return
 	 */
 	public Object saveRolePermission(RolePermissionRequest rolePermissions) {
-		RolePermissionModel updateRolePermission = new RolePermissionModel();
-		updateRolePermission = userManagementUtil.rolePermissionsDtoToEntity(rolePermissions, updateRolePermission);
+		RolePermissionModel updateRolePermission = rolePermissionRepository
+				.getPermissionById(rolePermissions.getRolePermissionId());
+//		updateRolePermission = userManagementUtil.rolePermissionsDtoToEntity(rolePermissions, updateRolePermission);
 		try {
+			updateRolePermission
+					.setPermission(permissionRepository.getPermissionById(rolePermissions.getPermissionId()));
 			rolePermissionRepository.save(updateRolePermission);
 			message = "Permissions set sucessfully";
 			LOG.info(message);
