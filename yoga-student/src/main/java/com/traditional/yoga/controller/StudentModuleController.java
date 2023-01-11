@@ -15,11 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.traditional.yoga.dto.request.ClassMediaGlipmses;
-import com.traditional.yoga.dto.request.CourseMediaPracticeRequest;
 import com.traditional.yoga.dto.request.GrattitudeMessageRequest;
-import com.traditional.yoga.dto.request.StudentRequest;
-import com.traditional.yoga.dto.request.VideoAlbumRequest;
 import com.traditional.yoga.service.StudentModuleService;
 
 @CrossOrigin("*")
@@ -33,6 +29,8 @@ public class StudentModuleController {
 	StudentModuleService studentModuleService;
 	
 	
+    public static final String PAST_COURSES = "pastCourses";
+    
 	@GetMapping("/getAll")
 	public Object getAllStudentDetails(@RequestHeader("token") String token,
 			@RequestParam("operation") String operation) {
@@ -47,6 +45,9 @@ public class StudentModuleController {
 		return studentModuleService.manageMessage(operation, messageDto);
 	}
 
-	
+	 @GetMapping("pastcourses/{studentId}")
+	    public Object getPastCourses(@PathVariable int studentId) {
+	        return studentModuleService.getPastCourses(studentId);
+	    }
 	
 }

@@ -26,10 +26,9 @@ public class UserCoursesModel {
 	@JoinColumn(name = "student_id", referencedColumnName = "registration_id")
 	private RegistrationModel studentId;
 
-	@ElementCollection
-	@CollectionTable(name = "course_id", joinColumns = @JoinColumn(name = "courses_id"))
-	@Column(name = "course_id")
-	private List<CourseListModel> coursesId;
+	@OneToOne
+	@JoinColumn(name = "course_id", referencedColumnName = "courses_id")
+	private CourseListModel coursesId;
 
 	@Column(name = "certification")
 	private String certification;
@@ -74,11 +73,11 @@ public class UserCoursesModel {
 		this.studentId = studentId;
 	}
 
-	public List<CourseListModel> getCoursesId() {
+	public CourseListModel getCoursesId() {
 		return coursesId;
 	}
 
-	public void setCoursesId(List<CourseListModel> coursesId) {
+	public void setCoursesId(CourseListModel coursesId) {
 		this.coursesId = coursesId;
 	}
 
