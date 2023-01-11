@@ -164,4 +164,18 @@ public class UserManagementController {
 		authenticate(token);
 		return userManagementService.addDefaultPermissions(rolePermissions.getRoleId());
 	}
+	
+	/**
+	 * Refreshing Role Permissions
+	 * 
+	 * @param token
+	 * @param rolePermissions
+	 * @return
+	 */
+	@PostMapping("/refreshRolePermission")
+	public Object refreshRolePermission(@RequestHeader("token") String token,
+			@RequestBody RolePermissionRequest rolePermissions) {
+		authenticate(token);
+		return userManagementService.refreshPermissions(rolePermissions.getRoleId());
+	}
 }

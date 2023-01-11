@@ -711,4 +711,24 @@ public class UserManagementService {
 		}
 		return rolePermissionsList;
 	}
+	
+	public Object refreshPermissions(int roleId) {
+		List<RolePermissionModel> roleDefatultRolePermissions = constructDefaultpermissios(roleId);
+		try {
+			for (RolePermissionModel eachRolePermissions : roleDefatultRolePermissions) {
+				rolePermissionRepository.save(eachRolePermissions);
+			}
+			message = "Default Permissions set sucessfully";
+			LOG.info(message);
+			httpStatus = HttpStatus.OK;
+			response = new Response(message, httpStatus.value(), null);
+		} catch (Exception e) {
+			message = "Exception while saving default permission to role permission";
+			LOG.error(message);
+			LOG.error(e.getLocalizedMessage());
+			httpStatus = HttpStatus.EXPECTATION_FAILED;
+			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+		}
+		return new ResponseEntity<>(response, httpStatus);
+	}
 }
