@@ -585,7 +585,9 @@ public class CourseManagementService {
 			} else if (operation.equals(Constants.DELETE)) {
 				deleteAlbum(albumDto);
 			} else if (operation.equals(Constants.ACTIVE)) {
-				toggleAlbumStatus(albumDto);
+				setAlbumVisible(albumDto);
+			}else if (operation.equals("invisable")) {
+				setAlbumInVisible(albumDto);
 			} else {
 				message = Constants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
@@ -658,7 +660,7 @@ public class CourseManagementService {
 		}
 	}
 
-	private void toggleAlbumStatus(CreateAlbumRequest albumDto) {
+	private void setAlbumVisible(CreateAlbumRequest albumDto) {
 	    CreateAlbumModel album = albumRepository.getAlbumById(albumDto.getAlbumId());
 	    if (album == null) {
 	        message = "album not found";
@@ -667,15 +669,27 @@ public class CourseManagementService {
 	        response = new Response(message, httpStatus.value(), message);
 	        return;
 	    }
-	    if (album.getActiveStatus().equals("Visable")) {
-	        album.setActiveStatus("Not Visable");
-	    } else {
-	        album.setActiveStatus("Visable");
-	    }
+	    album.setActiveStatus("Visible");
 	    albumRepository.save(album);
-	    message = "album status updated successfully";
+	    message = "album status updated to visible successfully";
 	    response = new Response(message, httpStatus.value(), null);
 	}
+
+	private void setAlbumInVisible(CreateAlbumRequest albumDto) {
+	    CreateAlbumModel album = albumRepository.getAlbumById(albumDto.getAlbumId());
+	    if (album == null) {
+	        message = "album not found";
+	        httpStatus = HttpStatus.NOT_FOUND;
+	        LOG.error(message);
+	        response = new Response(message, httpStatus.value(), message);
+	        return;
+	    }
+	    album.setActiveStatus("Not Visible");
+	    albumRepository.save(album);
+	    message = "album status updated to not visible successfully";
+	    response = new Response(message, httpStatus.value(), null);
+	}
+
 
 
 }
