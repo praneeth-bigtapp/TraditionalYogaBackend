@@ -2,6 +2,7 @@ package com.traditional.yoga.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +13,11 @@ import org.springframework.stereotype.Service;
 
 import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.GrattitudeMessageRequest;
-import com.traditional.yoga.model.CourseListModel;
 import com.traditional.yoga.model.GrattitudeMessageModel;
+import com.traditional.yoga.model.NotificationModel;
 import com.traditional.yoga.model.UserCoursesModel;
 import com.traditional.yoga.repository.GrattittudeMessageRepository;
+import com.traditional.yoga.repository.NoticationRepository;
 import com.traditional.yoga.repository.UserCoursesRepository;
 import com.traditional.yoga.utils.Constants;
 
@@ -30,7 +32,10 @@ public class StudentModuleService {
 	
 	@Autowired
 	UserCoursesRepository userCoursesRepository;
-
+	
+	@Autowired
+	NoticationRepository noticationRepository;
+	
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
 	String message;
@@ -61,6 +66,8 @@ public class StudentModuleService {
 	}
 
 	
+	//past courses//
+	
 	 public Object getPastCourses(int studentId) {
 	        this.httpStatus = HttpStatus.OK;
 	        List<UserCoursesModel> pastCourses = new ArrayList<>();
@@ -79,8 +86,7 @@ public class StudentModuleService {
 	        return new ResponseEntity<>(pastCourses, httpStatus);
 	    }
 
-	
-	
+	//Gratitude message//
 	public Object manageMessage(String operation, GrattitudeMessageRequest messageDto) {
 		this.httpStatus = HttpStatus.OK;
 		try {
@@ -163,5 +169,13 @@ public class StudentModuleService {
 	    }
 	}
 
+	
+	///Notification
+	
+	
+	public List<NotificationModel> getNotificationByCategoryId(int categoryId) {
+        List<NotificationModel> allNotification = noticationRepository.findAll();
+        return allNotification.stream().filter(notification -> notification.getCategoryId().getCategoryId() == categoryId).collect(Collectors.toList());
+    }
 	
 }
