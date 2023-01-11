@@ -23,19 +23,19 @@ public class RolePermissionModel {
 	@Column(name = "role_permission_id")
 	private int rolePermissionId;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name = "role_id", referencedColumnName = "role_id")
 	private RoleModel role;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name = "module_id", referencedColumnName = "module_id")
 	private ModuleModel module;
-
-	@OneToOne(cascade = CascadeType.ALL)
+	
+	@OneToOne
 	@JoinColumn(name = "sub_module_id", referencedColumnName = "sub_module_id")
 	private SubModuleModel subModule;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name = "permission_id", referencedColumnName = "permission_id")
 	private PermissionModel permission;
 

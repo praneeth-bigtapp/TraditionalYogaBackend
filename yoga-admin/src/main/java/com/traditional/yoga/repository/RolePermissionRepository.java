@@ -13,7 +13,10 @@ import org.springframework.stereotype.Repository;
 import com.traditional.yoga.model.RolePermissionModel;
 
 @Repository
-public interface RolePermissionRepository extends JpaRepository<RolePermissionModel, Long> {
+public interface RolePermissionRepository extends JpaRepository<RolePermissionModel, Integer> {
+	
+	@Query(value = "SELECT * FROM `role_permissions` WHERE `role_permission_id`= :rolePermissionId ", nativeQuery = true)
+	RolePermissionModel getPermissionById(@Param("rolePermissionId") int rolePermissionId);
 
 	@Query(value = "SELECT * FROM `role_permissions` WHERE `role_Id`= :roleId AND `permission_id`<>6", nativeQuery = true)
 	List<RolePermissionModel> getPermissionByroleId(@Param("roleId") int roleId);
