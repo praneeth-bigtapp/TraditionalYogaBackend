@@ -351,10 +351,11 @@ public class UserManagementService {
 			newRole.setRoleName(roleDto.getRoleName());
 			newRole.setRoleId(roleDto.getRoleId());
 			newRole.setActive(Constants.YES);
-			roleRepository.save(newRole);
+			RoleModel savedRole = roleRepository.save(newRole);
 			message = "Role added sucessfully";
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
+			addDefaultPermissions(savedRole.getRoleId());
 		} else {
 			message = "Role is already exist";
 			httpStatus = HttpStatus.CONFLICT;
@@ -628,7 +629,7 @@ public class UserManagementService {
 	public Object getPermissionsByRole(int roleId) {
 		List<RolePermissionModel> rolePermissions = new ArrayList<>();
 		try {
-			rolePermissions = rolePermissionRepository.getPermissionByroleId(roleId);
+			rolePermissions = rolePermissionRepository.getAllByroleId(roleId);
 			message = "Role permission fetched sucessfully";
 			httpStatus = HttpStatus.OK;
 			LOG.info(message);
@@ -711,24 +712,18 @@ public class UserManagementService {
 		}
 		return rolePermissionsList;
 	}
-	
+
 	public Object refreshPermissions(int roleId) {
-		List<RolePermissionModel> roleDefatultRolePermissions = constructDefaultpermissios(roleId);
 		try {
-			for (RolePermissionModel eachRolePermissions : roleDefatultRolePermissions) {
-				rolePermissionRepository.save(eachRolePermissions);
-			}
-			message = "Default Permissions set sucessfully";
-			LOG.info(message);
-			httpStatus = HttpStatus.OK;
-			response = new Response(message, httpStatus.value(), null);
+			rolePermissionRepository.deleteByRoleId(roleId);
+			return addDefaultPermissions(roleId);
 		} catch (Exception e) {
 			message = "Exception while saving default permission to role permission";
 			LOG.error(message);
 			LOG.error(e.getLocalizedMessage());
 			httpStatus = HttpStatus.EXPECTATION_FAILED;
 			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+			return new ResponseEntity<>(response, httpStatus);
 		}
-		return new ResponseEntity<>(response, httpStatus);
 	}
 }
