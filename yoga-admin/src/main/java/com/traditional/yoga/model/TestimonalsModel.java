@@ -28,6 +28,9 @@ public class TestimonalsModel {
 	@Column(name = "description")
 	private String description;
 
+	@Column(name = "date_of_add")
+	private String dateOfAdd;
+
 	@Column(name = "created_date")
 	private String createdDate;
 
@@ -69,6 +72,14 @@ public class TestimonalsModel {
 
 	public String getVideoLink() {
 		return videoLink;
+	}
+
+	public String getDateOfAdd() {
+		return dateOfAdd;
+	}
+
+	public void setDateOfAdd(String dateOfAdd) {
+		this.dateOfAdd = dateOfAdd;
 	}
 
 	public void setVideoLink(String videoLink) {

@@ -474,6 +474,7 @@ public class CoursesandOnlineexamService {
 			testlist.setGivenByName(testimonalDto.getGivenByName());
 			testlist.setVideoLink(testimonalDto.getVideoLink());
 			testlist.setDescription(testimonalDto.getDescription());
+			testlist.setDateOfAdd(testimonalDto.getDateOfAdd());
 			testlist.setCreatedDate(generalUtils.getCurrentDate());
 			testlist.setIsActive("Y");
 
@@ -501,6 +502,7 @@ public class CoursesandOnlineexamService {
 			testimonalnew.setGivenByName(testimonalDto.getGivenByName());
 			testimonalnew.setVideoLink(testimonalDto.getVideoLink());
 			testimonalnew.setDescription(testimonalDto.getDescription());
+			testimonalnew.setDateOfAdd(testimonalDto.getDateOfAdd());
 			testimonalnew.setUpdateDate(generalUtils.getCurrentDate());
 			testimonalRepository.save(testimonalnew);
 

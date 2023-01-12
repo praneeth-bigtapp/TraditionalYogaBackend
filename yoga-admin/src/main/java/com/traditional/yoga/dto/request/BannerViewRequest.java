@@ -1,5 +1,7 @@
 package com.traditional.yoga.dto.request;
 
+import com.traditional.yoga.model.MasterBannerStatusModel;
+
 public class BannerViewRequest {
 
 	private int bannerId;
@@ -11,6 +13,7 @@ public class BannerViewRequest {
 	private String description;
 	private int categoryId;
 	private String dateOfAdd;
+	private String givenBy;
 	private String bannerStatus;
 	private String createdBy;
 	private String createdDate;
@@ -84,6 +87,14 @@ public class BannerViewRequest {
 
 	public String getDateOfAdd() {
 		return dateOfAdd;
+	}
+
+	public String getGivenBy() {
+		return givenBy;
+	}
+
+	public void setGivenBy(String givenBy) {
+		this.givenBy = givenBy;
 	}
 
 	public String getBannerStatus() {

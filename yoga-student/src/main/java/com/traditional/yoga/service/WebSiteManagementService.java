@@ -409,82 +409,82 @@ public class WebSiteManagementService {
 		}
 	}
 
-	public Object manageNotification(String operation, NotificationRequest notificationdto) {
-		httpStatus = HttpStatus.OK;
-		try {
-			if (operation.equals(Constants.ADD)) {
-				addNotification(notificationdto);
-			} else if (operation.equals(Constants.SAVE)) {
-				updateNotification(notificationdto);
-			} else if (operation.equals(Constants.DELETE)) {
-				deleteNotification(notificationdto);
-			}
-		} catch (Exception e) {
-			message = Constants.EXCEPTION + " in scriptures creation";
-			httpStatus = HttpStatus.EXPECTATION_FAILED;
-			LOG.error(message);
-			LOG.error(e.getLocalizedMessage());
-			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
-		}
-		return new ResponseEntity<>(response, httpStatus);
-	}
-
-	private void addNotification(NotificationRequest notificationdto) {
-		NotificationModel notificationModel = noticationRepository
-				.getnotificationById(notificationdto.getNotificationId());
-		if (notificationModel == null) {
-			NotificationModel notification = new NotificationModel();
-
-			notification.setCategoryId(notificationdto.getCategoryId());
-			notification.setTitle(notificationdto.getTitle());
-			notification.setUploadFile(notificationdto.getUploadFile());
-			notification.setMessage(notificationdto.getMessage());
-			noticationRepository.save(notification);
-			message = "new notification is added successfully";
-			LOG.info(message);
-			response = new Response(message, httpStatus.value(), null);
-		} else {
-			message = Constants.ALREADY_EXIST;
-			httpStatus = HttpStatus.CONFLICT;
-			LOG.error(message);
-			response = new Response(message, httpStatus.value(), message);
-		}
-	}
-
-	private void updateNotification(NotificationRequest notificationdto) {
-		NotificationModel notificationModel = noticationRepository
-				.getnotificationById(notificationdto.getNotificationId());
-		if (notificationModel != null) {
-			notificationModel.setCategoryId(notificationdto.getCategoryId());
-			notificationModel.setTitle(notificationdto.getTitle());
-			notificationModel.setUploadFile(notificationdto.getUploadFile());
-			notificationModel.setMessage(notificationdto.getMessage());
-			noticationRepository.save(notificationModel);
-			message = "notification is updated successfully";
-			LOG.info(message);
-			response = new Response(message, httpStatus.value(), null);
-		} else {
-			message = "notification not found";
-			httpStatus = HttpStatus.NOT_FOUND;
-			LOG.error(message);
-			response = new Response(message, httpStatus.value(), message);
-		}
-	}
-
-	private void deleteNotification(NotificationRequest notificationdto) {
-		NotificationModel notification = noticationRepository.getnotificationById(notificationdto.getNotificationId());
-		if (notification != null) {
-			noticationRepository.deleteById(notificationdto.getNotificationId());
-			message = "notification is deleted successfully";
-			LOG.info(message);
-			response = new Response(message, httpStatus.value(), null);
-		} else {
-			message = Constants.OPERATION_ERROR;
-			httpStatus = HttpStatus.CONFLICT;
-			LOG.error(message);
-			response = new Response(message, httpStatus.value(), message);
-		}
-	}
+//	public Object manageNotification(String operation, NotificationRequest notificationdto) {
+//		httpStatus = HttpStatus.OK;
+//		try {
+//			if (operation.equals(Constants.ADD)) {
+//				addNotification(notificationdto);
+//			} else if (operation.equals(Constants.SAVE)) {
+//				updateNotification(notificationdto);
+//			} else if (operation.equals(Constants.DELETE)) {
+//				deleteNotification(notificationdto);
+//			}
+//		} catch (Exception e) {
+//			message = Constants.EXCEPTION + " in scriptures creation";
+//			httpStatus = HttpStatus.EXPECTATION_FAILED;
+//			LOG.error(message);
+//			LOG.error(e.getLocalizedMessage());
+//			response = new Response(message, httpStatus.value(), e.getLocalizedMessage());
+//		}
+//		return new ResponseEntity<>(response, httpStatus);
+//	}
+//
+//	private void addNotification(NotificationRequest notificationdto) {
+//		NotificationModel notificationModel = noticationRepository
+//				.getnotificationById(notificationdto.getNotificationId());
+//		if (notificationModel == null) {
+//			NotificationModel notification = new NotificationModel();
+//
+//			notification.setCategoryId(notificationdto.getCategoryId());
+//			notification.setTitle(notificationdto.getTitle());
+//			notification.setUploadFile(notificationdto.getUploadFile());
+//			notification.setMessage(notificationdto.getMessage());
+//			noticationRepository.save(notification);
+//			message = "new notification is added successfully";
+//			LOG.info(message);
+//			response = new Response(message, httpStatus.value(), null);
+//		} else {
+//			message = Constants.ALREADY_EXIST;
+//			httpStatus = HttpStatus.CONFLICT;
+//			LOG.error(message);
+//			response = new Response(message, httpStatus.value(), message);
+//		}
+//	}
+//
+//	private void updateNotification(NotificationRequest notificationdto) {
+//		NotificationModel notificationModel = noticationRepository
+//				.getnotificationById(notificationdto.getNotificationId());
+//		if (notificationModel != null) {
+//			notificationModel.setCategoryId(notificationdto.getCategoryId());
+//			notificationModel.setTitle(notificationdto.getTitle());
+//			notificationModel.setUploadFile(notificationdto.getUploadFile());
+//			notificationModel.setMessage(notificationdto.getMessage());
+//			noticationRepository.save(notificationModel);
+//			message = "notification is updated successfully";
+//			LOG.info(message);
+//			response = new Response(message, httpStatus.value(), null);
+//		} else {
+//			message = "notification not found";
+//			httpStatus = HttpStatus.NOT_FOUND;
+//			LOG.error(message);
+//			response = new Response(message, httpStatus.value(), message);
+//		}
+//	}
+//
+//	private void deleteNotification(NotificationRequest notificationdto) {
+//		NotificationModel notification = noticationRepository.getnotificationById(notificationdto.getNotificationId());
+//		if (notification != null) {
+//			noticationRepository.deleteById(notificationdto.getNotificationId());
+//			message = "notification is deleted successfully";
+//			LOG.info(message);
+//			response = new Response(message, httpStatus.value(), null);
+//		} else {
+//			message = Constants.OPERATION_ERROR;
+//			httpStatus = HttpStatus.CONFLICT;
+//			LOG.error(message);
+//			response = new Response(message, httpStatus.value(), message);
+//		}
+//	}
 
 	/////////////////////// PAGE////////////////////////////////////////
 	//// ALL CURD OPERATION FOR THE PAGE /////////////////////////////

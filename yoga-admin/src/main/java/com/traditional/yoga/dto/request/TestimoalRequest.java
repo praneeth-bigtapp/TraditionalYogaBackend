@@ -7,6 +7,7 @@ public class TestimoalRequest {
 	private String givenByName;
 	private String videoLink;
 	private String description;
+	private String dateOfAdd;
 	private String createdDate;
 	private String createdBy;
 	private String updatedBy;
@@ -93,5 +94,12 @@ public class TestimoalRequest {
 		this.isActive = isActive;
 	}
 
-	
+	public String getDateOfAdd() {
+		return dateOfAdd;
+	}
+
+	public void setDateOfAdd(String dateOfAdd) {
+		this.dateOfAdd = dateOfAdd;
+	}
+
 }

@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -33,9 +35,6 @@ public class BannerModel {
 
 	@Column(name = "description")
 	private String description;
-	
-	@Column(name = "banner_status")
-	private String bannerStatus;
 
 	@Column(name = "categeory_id")
 	private int categoryId;
@@ -43,18 +42,25 @@ public class BannerModel {
 	@Column(name = "date_of_add")
 	private String dateOfAdd;
 
+	@Column(name = "given_by")
+	private String givenBy;
+
+	@OneToOne
+	@JoinColumn(name = "banner_status", referencedColumnName = "status_id")
+	private MasterBannerStatusModel bannerStatus;
+
 	@Column(name = "created_by")
 	private String createdBy;
-	
+
 	@Column(name = "created_date")
 	private String createdDate;
-	
+
 	@Column(name = "updated_by")
 	private String updateBy;
-	
+
 	@Column(name = "updated_date")
 	private String updateDate;
-	
+
 	@Column(name = "is_active")
 	private String isActive;
 
@@ -130,14 +136,6 @@ public class BannerModel {
 		this.dateOfAdd = dateOfAdd;
 	}
 
-	public String getBannerStatus() {
-		return bannerStatus;
-	}
-
-	public void setBannerStatus(String bannerStatus) {
-		this.bannerStatus = bannerStatus;
-	}
-
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -164,6 +162,22 @@ public class BannerModel {
 
 	public String getUpdateDate() {
 		return updateDate;
+	}
+
+	public String getGivenBy() {
+		return givenBy;
+	}
+
+	public void setGivenBy(String givenBy) {
+		this.givenBy = givenBy;
+	}
+
+	public MasterBannerStatusModel getBannerStatus() {
+		return bannerStatus;
+	}
+
+	public void setBannerStatus(MasterBannerStatusModel bannerStatus) {
+		this.bannerStatus = bannerStatus;
 	}
 
 	public void setUpdateDate(String updateDate) {
