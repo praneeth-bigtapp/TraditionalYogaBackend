@@ -19,7 +19,7 @@ import com.traditional.yoga.model.UserCoursesModel;
 import com.traditional.yoga.repository.GrattittudeMessageRepository;
 import com.traditional.yoga.repository.NoticationRepository;
 import com.traditional.yoga.repository.UserCoursesRepository;
-import com.traditional.yoga.utils.Constants;
+import com.traditional.yoga.utils.StudentConstants;
 
 @Service
 public class StudentModuleService {
@@ -90,14 +90,14 @@ public class StudentModuleService {
 	public Object manageMessage(String operation, GrattitudeMessageRequest messageDto) {
 		this.httpStatus = HttpStatus.OK;
 		try {
-			if (operation.equals(Constants.ADD)) {
+			if (operation.equals(StudentConstants.ADD)) {
 				addmessage(messageDto);
-			} else if (operation.equals(Constants.UPDATE)) {
+			} else if (operation.equals(StudentConstants.UPDATE)) {
 				updatemessage(messageDto);
-			} else if (operation.equals(Constants.DELETE)) {
+			} else if (operation.equals(StudentConstants.DELETE)) {
 				deletemessage(messageDto.getMessageId());
 			} else {
-				message = Constants.OPERATION_ERROR;
+				message = StudentConstants.OPERATION_ERROR;
 				httpStatus = HttpStatus.CONFLICT;
 				LOG.error(message);
 				response = new Response(message, httpStatus.value(), message);
@@ -127,7 +127,7 @@ public class StudentModuleService {
 			LOG.info(message);
 			response = new Response(message, httpStatus.value(), null);
 		} else {
-			message = Constants.ALREADY_EXIST;
+			message = StudentConstants.ALREADY_EXIST;
 			httpStatus = HttpStatus.CONFLICT;
 			LOG.error(message);
 			response = new Response(message, httpStatus.value(), message);

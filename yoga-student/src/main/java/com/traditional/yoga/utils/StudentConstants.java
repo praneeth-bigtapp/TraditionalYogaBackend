@@ -1,8 +1,8 @@
 package com.traditional.yoga.utils;
 
-public class Constants {
+public class StudentConstants {
 
-	private Constants() {
+	private StudentConstants() {
 		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
 	}
 
@@ -42,33 +42,9 @@ public class Constants {
 	public static final String MENU_ERROR = MENU + " " + DOES_NOT_EXIST;
 	public static final String MENU_EXIST = MENU + " " + ALREADY_EXIST;
 
-//	Users
-	public static final int DEFAULT_ROLE = 2;
-
-//	Role Permission
-	public static final int DEFAULT_PERMISSION = 6;
-
-//	Website Management
-	public static final String BANNER_EXCEPTION = EXCEPTION + " banner creation";
-	public static final String ALERT_EXCEPTION = EXCEPTION + " alert creation";
-	public static final String ALERT_DOES_NOT_EXISTS = ALERT + "" + DOES_NOT_EXIST;
-
-//	Practices Libary
-	public static final int RECORDED_SESSION = 1;
-	public static final int GLIMPSES = 3;
-	public static final int SHORT_VIDEOS = 4;
-
-//	Banner Status
-	public static final String BANNER_STATUS_DRAFT = "Draft";
-	public static final String BANNER_STATUS_NOT_PUBLISHED = "Not Published";
-	public static final String BANNER_STATUS_PUBLISHED = "Published";
-
 //	Email OTP Verification
 	public static final int OTP_LENGTH = 6;
 	public static final String OTP_SUBJECT = "Traditional Yoga Email Verification";
-
-//	Email Password Verification
-	public static final String PASSWORD_SUBJECT = "Traditional Yoga Login Credentials";
 
 //	ADD course Material
 	public static final String EXCEPTION_MATERIALS = "Exception in adding materials";

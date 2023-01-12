@@ -8,7 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
 import com.traditional.yoga.interfaces.EmailService;
-import com.traditional.yoga.utils.Constants;
+import com.traditional.yoga.utils.StudentConstants;
 
 @Component
 public class EmailServiceImpl implements EmailService {
@@ -27,8 +27,8 @@ public class EmailServiceImpl implements EmailService {
 	
 	public String generateOtp() {
         Random rand = new Random();
-        StringBuilder sb = new StringBuilder(Constants.OTP_LENGTH);
-        for (int i = 0; i < Constants.OTP_LENGTH; i++) {
+        StringBuilder sb = new StringBuilder(StudentConstants.OTP_LENGTH);
+        for (int i = 0; i < StudentConstants.OTP_LENGTH; i++) {
             sb.append(rand.nextInt(10));
         }
         return sb.toString();
