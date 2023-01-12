@@ -79,6 +79,7 @@ public class LoginService {
 				String fullName = fName + " " + lName;
 				loginResponse.setUserId(fullName);
 				loginResponse.setRoleId(userData.getRoleId().getRoleId());
+				loginResponse.setRegistrationId(userData.getRegistrationId().getRegistrationId());
 
 				RoleModel role = roleRepository.getRoleById(userData.getRoleId().getRoleId());
 				loginResponse.setUserRole(role.getRoleName());

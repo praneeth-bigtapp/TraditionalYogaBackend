@@ -8,6 +8,7 @@ import com.traditional.yoga.dto.RolePermissions;
 public class LoginResponse {
 
 	private String userId;
+	private int registrationId;
 	private int roleId;
 	private String userRole;
 	private String roleStatus;
@@ -21,6 +22,14 @@ public class LoginResponse {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public int getRegistrationId() {
+		return registrationId;
+	}
+
+	public void setRegistrationId(int registrationId) {
+		this.registrationId = registrationId;
 	}
 
 	public int getRoleId() {
