@@ -1,14 +1,9 @@
 package com.traditional.yoga.dto.request;
 
-import com.traditional.yoga.model.CourseListModel;
-import com.traditional.yoga.model.VolunteeringCategoryModel;
-
-public class VolunteerRequest {
+public class LoggingRequest {
 
 	private int volunteerId;
 	private int studentId;
-	private VolunteeringCategoryModel categoryName;
-	private CourseListModel courseId;
 	private String startDate;
 	private String endDate;
 	private String servedAs;
@@ -28,22 +23,6 @@ public class VolunteerRequest {
 
 	public void setStudentId(int studentId) {
 		this.studentId = studentId;
-	}
-
-	public VolunteeringCategoryModel getCategoryName() {
-		return categoryName;
-	}
-
-	public void setCategoryName(VolunteeringCategoryModel categoryName) {
-		this.categoryName = categoryName;
-	}
-
-	public CourseListModel getCourseId() {
-		return courseId;
-	}
-
-	public void setCourseId(CourseListModel courseId) {
-		this.courseId = courseId;
 	}
 
 	public String getStartDate() {

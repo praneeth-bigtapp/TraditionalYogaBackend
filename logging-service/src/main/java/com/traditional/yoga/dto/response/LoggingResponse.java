@@ -1,16 +1,16 @@
-package com.traditional.yoga.dto;
+package com.traditional.yoga.dto.response;
 
-public class Response {
+public class LoggingResponse {
 
 	private String message;
 	private int statusCode;
 	private String errorMessage;
 
-	public Response() {
+	public LoggingResponse() {
 		super();
 	}
 
-	public Response(String message, int statusCode, String i ) {
+	public LoggingResponse(String message, int statusCode, String i ) {
 		super();
 		this.message = message;
 		this.statusCode = statusCode;
