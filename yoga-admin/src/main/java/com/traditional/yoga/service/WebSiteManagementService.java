@@ -276,6 +276,7 @@ public class WebSiteManagementService {
 		newBanner.setFromDate(bannerDto.getFromDate());
 		newBanner.setToDate(bannerDto.getToDate());
 		newBanner.setDescription(bannerDto.getDescription());
+		newBanner.setBannerStatus("Draft");
 		newBanner.setCategoryId(bannerDto.getCategoryId());
 		newBanner.setDateOfAdd(generalUtils.getCurrentDate());
 		newBanner.setCreatedDate(generalUtils.getCurrentDate());

@@ -1,7 +1,5 @@
 package com.traditional.yoga.dto.request;
 
-import com.traditional.yoga.model.MasterBannerStatusModel;
-
 public class BannerViewRequest {
 
 	private int bannerId;

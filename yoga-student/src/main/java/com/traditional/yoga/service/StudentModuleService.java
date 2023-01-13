@@ -14,9 +14,11 @@ import org.springframework.stereotype.Service;
 import com.traditional.yoga.dto.Response;
 import com.traditional.yoga.dto.request.GrattitudeMessageRequest;
 import com.traditional.yoga.model.GrattitudeMessageModel;
+import com.traditional.yoga.model.GurujiRepliesStudent;
 import com.traditional.yoga.model.NotificationModel;
 import com.traditional.yoga.model.UserCoursesModel;
 import com.traditional.yoga.repository.GrattittudeMessageRepository;
+import com.traditional.yoga.repository.GurujiRepliesStudentRepository;
 import com.traditional.yoga.repository.NoticationRepository;
 import com.traditional.yoga.repository.UserCoursesRepository;
 import com.traditional.yoga.utils.StudentConstants;
@@ -35,6 +37,9 @@ public class StudentModuleService {
 	
 	@Autowired
 	NoticationRepository noticationRepository;
+	
+	@Autowired
+	GurujiRepliesStudentRepository gurujiRepliesStudentRepository;
 	
 	Response response = new Response();
 	HttpStatus httpStatus = HttpStatus.OK;
@@ -178,4 +183,8 @@ public class StudentModuleService {
         return allNotification.stream().filter(notification -> notification.getCategoryId().getCategoryId() == categoryId).collect(Collectors.toList());
     }
 	
+	//guruji reply
+	 public GurujiRepliesStudent getMessagebyId(int studentId) {
+	        return gurujiRepliesStudentRepository.getMessagebyId(studentId);
+	    }
 }
