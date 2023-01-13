@@ -19,18 +19,18 @@ public class RegisteredStudentModel {
 	private int registrationStudentId;
 
 	@ManyToOne
-	@JoinColumn(name = "student_id", referencedColumnName = "student_id")
+	@JoinColumn(name = "student_id", referencedColumnName = "registration_id")
 	private RegistrationModel studentId;
 
 	@Column(name = "courses_id")
 	private int coursesId;
 
 	@ManyToOne
-	@JoinColumn(name = "mentor_id", referencedColumnName = "student_id")
+	@JoinColumn(name = "mentor_id", referencedColumnName = "registration_id")
 	private RegistrationModel mentorId;
 
 	@ManyToOne
-	@JoinColumn(name = "chief_mentor_id", referencedColumnName = "student_id")
+	@JoinColumn(name = "chief_mentor_id", referencedColumnName = "registration_id")
 	private RegistrationModel chiefMentorId;
 
 	public int getRegistrationStudentId() {
